@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Портфоліо — Rodionactive</title>
+<meta name="description" content="Проєкти Rodionactive: сайти, дизайн і переклади.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="portfolio">
+<header data-site-header></header>
+
+<main class="wrap">
+  <section class="article-head" style="padding-bottom:0">
+    <p class="eyebrow rise">Портфоліо</p>
+    <h1 class="rise" style="--d:1;font-size:var(--step-4)">Роботи</h1>
+    <p class="lead rise" style="--d:2">Сайти, дизайн і переклади, над якими я працював. Відкрийте проєкт, щоб побачити деталі.</p>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="section-head" style="margin-bottom:28px">
+      <div class="filters" role="group" aria-label="Фільтр за категорією">
+        <button class="filter" aria-pressed="true" data-filter="">Усі</button>
+        <button class="filter" aria-pressed="false" data-filter="Розробка">Розробка</button>
+        <button class="filter" aria-pressed="false" data-filter="Дизайн">Дизайн</button>
+        <button class="filter" aria-pressed="false" data-filter="Переклад">Переклад</button>
+      </div>
+      <span class="eyebrow" data-count></span>
+    </div>
+    <div class="grid-projects" data-projects>
+      <div class="skeleton" style="aspect-ratio:4/3"></div><div class="skeleton" style="aspect-ratio:4/3"></div><div class="skeleton" style="aspect-ratio:4/3"></div>
+    </div>
+  </section>
+</main>
+
+<footer data-site-footer></footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+  const grid = document.querySelector("[data-projects]");
+  const count = document.querySelector("[data-count]");
+  const plural = n => n % 10 === 1 && n % 100 !== 11 ? "проєкт" : [2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100) ? "проєкти" : "проєктів";
+  fill(grid, "projects", projectCard, { empty: "Проєкти скоро з'являться." }).then(list => {
+    count.textContent = `${list.length} ${plural(list.length)}`;
+  });
+  document.querySelectorAll("[data-filter]").forEach(btn => btn.addEventListener("click", () => {
+    const f = btn.dataset.filter;
+    document.querySelectorAll("[data-filter]").forEach(b => b.setAttribute("aria-pressed", b === btn));
+    let n = 0;
+    grid.querySelectorAll(".project").forEach(card => {
+      const show = !f || card.dataset.cat === f;
+      card.hidden = !show;
+      if (show) { n++; card.classList.remove("in"); requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add("in"))); }
+    });
+    count.textContent = `${n} ${plural(n)}`;
+  }));
+</script>
+</body>
+</html>

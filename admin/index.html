@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Адмінка — Rodionactive</title>
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+  body { background: var(--mist); }
+  .a-top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: #fff; border-bottom: 1px solid var(--line); }
+  .a-top .bar { display: flex; align-items: center; gap: 16px; padding-block: 14px; flex-wrap: wrap; }
+  .a-top .logo small { font-family: var(--f-mono); font-weight: 400; font-size: .75rem; color: var(--muted); margin-left: 10px; letter-spacing: .06em; }
+  .a-top .spacer { flex: 1; }
+  .status { font: 500 .82rem var(--f-mono); display: inline-flex; gap: 8px; align-items: center; color: var(--muted); }
+  .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #c3c5d6; }
+  .status.ok::before { background: #1f9d55; }
+  .status.err::before { background: #d64545; }
+
+  .tabs { display: flex; gap: 6px; background: #fff; padding: 5px; border-radius: 999px; border: 1px solid var(--line); }
+  .tab { border: 0; background: none; font: 600 .92rem var(--f-body); padding: .55em 1.1em; border-radius: 999px; cursor: pointer; color: var(--muted); transition: .25s var(--ease); }
+  .tab[aria-selected="true"] { background: var(--navy); color: #fff; }
+
+  .a-main { display: grid; grid-template-columns: 300px 1fr; gap: 24px; padding-block: 24px 60px; align-items: start; }
+  @media (max-width: 900px) { .a-main { grid-template-columns: 1fr; } }
+  .panel { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+  .list-head { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--line); gap: 10px; }
+  .list-head b { font-family: var(--f-display); font-weight: 600; }
+  .items { list-style: none; margin: 0; padding: 6px; max-height: 70vh; overflow: auto; }
+  .item { width: 100%; text-align: left; border: 0; background: none; padding: 12px; border-radius: 10px; cursor: pointer; display: grid; gap: 4px; font: inherit; color: var(--ink); transition: background .2s; }
+  .item:hover { background: var(--mist); }
+  .item[aria-current="true"] { background: var(--mist); box-shadow: inset 3px 0 0 var(--orange); }
+  .item strong { font-weight: 600; line-height: 1.3; }
+  .item small { font-family: var(--f-mono); font-size: .75rem; color: var(--muted); display: flex; gap: 8px; }
+  .tag-draft { color: var(--orange); }
+
+  .editor { padding: clamp(18px, 3vw, 32px); display: grid; gap: 20px; }
+  .editor h2 { font-size: var(--step-2); }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 16px; }
+  .field { display: grid; gap: 6px; min-width: 0; }
+  .field label, .field .lbl { font: 500 .85rem var(--f-body); color: var(--navy); }
+  .field small { color: var(--muted); font-size: .8rem; }
+  input[type=text], input[type=date], input[type=url], input[type=password], select, textarea {
+    width: 100%; font: 400 1rem var(--f-body); color: var(--ink); background: #fff;
+    border: 1.5px solid var(--line); border-radius: 10px; padding: .65em .8em; transition: border-color .2s, box-shadow .2s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 4px rgba(56,62,101,.1); }
+  textarea { font-family: var(--f-mono); font-size: .92rem; line-height: 1.6; min-height: 340px; resize: vertical; }
+  .input-title { font: 600 1.4rem var(--f-display) !important; }
+
+  .md-bar { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+  .md-bar button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: .35em .65em; font: 500 .85rem var(--f-mono); cursor: pointer; color: var(--navy); }
+  .md-bar button:hover { border-color: var(--navy); }
+  .md-bar .sep { flex: 1; }
+  .md-bar button[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .md-preview { border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 20px; min-height: 340px; background: #fff; }
+  .md-preview.prose { padding-block: 8px 24px; max-width: none; }
+
+  .cover-box { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .cover-thumb { width: 120px; aspect-ratio: 4/3; border-radius: 10px; background: var(--mist) center / cover no-repeat; border: 1px solid var(--line); flex: none; }
+  .cover-box .field { flex: 1; min-width: 200px; }
+
+  .switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500; }
+  .switch input { appearance: none; width: 42px; height: 24px; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; transition: background .25s; margin: 0; }
+  .switch input::after { content: ""; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform .25s var(--ease); box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .switch input:checked { background: var(--orange); }
+  .switch input:checked::after { transform: translateX(18px); }
+
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding-top: 8px; border-top: 1px solid var(--line); }
+  .actions .spacer { flex: 1; }
+  .btn.danger { --bg: #fff; --fg: #c0392b; border-color: #f0c9c4; }
+  .btn.danger.confirm { --bg: #c0392b; --fg: #fff; border-color: #c0392b; }
+  .btn[disabled] { opacity: .5; pointer-events: none; }
+  .dirty { font: 500 .8rem var(--f-mono); color: var(--orange); }
+
+  .settings h2 { font-size: var(--step-2); }
+  .settings { padding: clamp(18px, 3vw, 32px); display: grid; gap: 18px; max-width: 720px; }
+  .note { background: var(--mist); border-radius: 10px; padding: 14px 16px; font-size: .92rem; color: var(--navy); }
+  .note ol { margin: 8px 0 0; padding-left: 1.2em; }
+  .banner { background: #fff4ec; border: 1px solid #ffd2b8; color: #8a3a10; padding: 12px 16px; border-radius: 10px; font-size: .92rem; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: .95rem; transition: .35s var(--ease); z-index: 100; max-width: calc(100% - 32px); }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+  .toast.err { background: #c0392b; }
+  .empty-editor { padding: 60px 24px; text-align: center; color: var(--muted); display: grid; gap: 14px; justify-items: center; }
+</style>
+</head>
+<body>
+<header class="a-top">
+  <div class="wrap bar">
+    <a class="logo" href="../index.html" target="_blank" rel="noopener"><span>Rodionactive</span><span class="dot"></span><small>АДМІНКА</small></a>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-tab="posts">Блог</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="projects">Портфоліо</button>
+    </div>
+    <span class="spacer"></span>
+    <span class="status" id="status">Не підключено</span>
+    <button class="btn small ghost" id="openSettings" type="button">Налаштування</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="bannerBox"></div>
+
+  <section class="panel settings" id="settings" hidden style="margin-top:24px">
+    <h2>Підключення до GitHub</h2>
+    <div class="note">
+      Адмінка зберігає пости й проєкти прямо у ваш репозиторій. Для цього потрібен токен доступу:
+      <ol>
+        <li>GitHub → Settings → Developer settings → Personal access tokens → <b>Fine-grained tokens</b> → Generate new token.</li>
+        <li>Repository access: <b>Only select repositories</b> → репозиторій сайту.</li>
+        <li>Permissions → Repository → <b>Contents: Read and write</b>.</li>
+        <li>Скопіюйте токен і вставте нижче. Він зберігається лише в цьому браузері.</li>
+      </ol>
+    </div>
+    <div class="row">
+      <div class="field"><label for="s-owner">Власник (логін GitHub)</label><input type="text" id="s-owner" autocomplete="off"></div>
+      <div class="field"><label for="s-repo">Репозиторій</label><input type="text" id="s-repo" autocomplete="off"></div>
+      <div class="field"><label for="s-branch">Гілка</label><input type="text" id="s-branch" autocomplete="off"></div>
+    </div>
+    <div class="field"><label for="s-token">Токен доступу</label><input type="password" id="s-token" autocomplete="off" placeholder="github_pat_…"></div>
+    <div class="actions">
+      <button class="btn" id="saveSettings" type="button">Підключити <span class="arr">→</span></button>
+      <button class="btn ghost" id="closeSettings" type="button">Закрити</button>
+      <span class="spacer"></span>
+      <button class="btn small danger" id="logout" type="button">Вийти й забути токен</button>
+    </div>
+  </section>
+
+  <div class="a-main" id="workspace">
+    <aside class="panel">
+      <div class="list-head"><b id="listTitle">Пости</b><button class="btn small" id="newItem" type="button">+ Новий</button></div>
+      <ul class="items" id="items"></ul>
+    </aside>
+    <section class="panel" id="editorPanel"></section>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept="image/*" hidden>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
