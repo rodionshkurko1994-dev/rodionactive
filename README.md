@@ -41,4 +41,4 @@ assets/js/main.js  спільний код + налаштування (пошт�
 
 ## Що замінити
 
-У `assets/js/main.js`, блок `SITE`: пошта й посилання на Telegram.
+У `assets/js/main.js`, блок `SITE`: пошта (зараз порожня й прихована), Telegram, Instagram.

@@ -3,8 +3,9 @@
 // ===== Налаштування сайту (зміни під себе) =====
 const SITE = {
   name: "Rodionactive",
-  email: "hello@rodionactive.com",          // TODO: заміни на свою пошту
-  telegram: "https://t.me/rodionactive",     // TODO: заміни на свій Telegram
+  email: "",                                 // додай пошту, якщо хочеш показувати її на сайті
+  telegram: "https://t.me/rodman_ua",
+  instagram: "https://www.instagram.com/rodman.freeman",
   github: "https://github.com/rodionshkurko1994-dev",
 };
 
@@ -56,6 +57,7 @@ if (footer) {
         <a class="link" href="${root}portfolio.html">Портфоліо</a>
         <a class="link" href="${root}blog.html">Блог</a>
         <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">Telegram</a>
+        <a class="link" href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a>
         <a class="link" href="${SITE.github}" target="_blank" rel="noopener">GitHub</a>
       </nav>
       <small>© ${new Date().getFullYear()} ${SITE.name} · Київ</small>
@@ -163,11 +165,25 @@ if (swap) {
 }
 
 // ----- контакти -----
-document.querySelectorAll("[data-email]").forEach(a => { a.href = "mailto:" + SITE.email; a.querySelector("b").textContent = SITE.email; });
-document.querySelectorAll("[data-telegram]").forEach(a => { a.href = SITE.telegram; a.querySelector("b").textContent = "@" + SITE.telegram.split("/").pop(); });
+document.querySelectorAll("[data-email]").forEach(a => {
+  if (!SITE.email) { a.hidden = true; return; }
+  a.href = "mailto:" + SITE.email; a.querySelector("b").textContent = SITE.email;
+});
+document.querySelectorAll("[data-telegram]").forEach(a => { a.href = SITE.telegram; const b = a.querySelector("b"); if (b) b.textContent = "@" + SITE.telegram.split("/").pop(); });
+document.querySelectorAll("[data-instagram]").forEach(a => { a.href = SITE.instagram; const b = a.querySelector("b"); if (b) b.textContent = "@" + SITE.instagram.replace(/\/$/, "").split("/").pop(); });
 document.querySelectorAll("[data-github]").forEach(a => { a.href = SITE.github; a.querySelector("b").textContent = SITE.github.replace("https://", ""); });
-document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText(SITE.email); b.textContent = "Скопійовано ✓"; }
-  catch { b.textContent = SITE.email; }
-  setTimeout(() => b.innerHTML = 'Скопіювати пошту <span class="arr">→</span>', 2200);
-}));
+
+// ----- лічильники в цифрах -----
+(function () {
+  const els = document.querySelectorAll("[data-count-to]");
+  if (!els.length || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  els.forEach(el => {
+    const to = +el.dataset.countTo, t0 = performance.now(), dur = 1400;
+    const tick = now => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(to * e) + "+";
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+})();

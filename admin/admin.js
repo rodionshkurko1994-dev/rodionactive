@@ -3,7 +3,7 @@
 const DEFAULTS = { owner: "rodionshkurko1994-dev", repo: "rodionactive", branch: "main", token: "" };
 const LS_KEY = "rodionactive-admin";
 const FILES = { posts: "data/posts.json", projects: "data/projects.json" };
-const CATEGORIES = ["Розробка", "Дизайн", "Переклад"];
+const CATEGORIES = ["Розробка", "Дизайн", "Instagram", "Переклад"];
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
