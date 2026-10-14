@@ -341,3 +341,22 @@ section { padding-block: clamp(56px, 9vw, 120px); }
 .prose img { border: 1px solid var(--line); }
 .hero h1 .hero-name { white-space: nowrap; }
 @media (max-width: 520px) { .hero h1 { font-size: clamp(1.9rem, 9.4vw, 2.5rem); } }
+
+/* ---------- перший екран: заголовок на всю ширину, опис і кнопки під ним ---------- */
+.hero { display: grid; gap: clamp(20px, 3vw, 32px); padding-block: clamp(36px, 6vw, 80px) clamp(40px, 6vw, 80px); }
+.hero-title { font-size: clamp(2.4rem, 1.3rem + 4.4vw, 5.4rem); line-height: 1.02; letter-spacing: -0.035em; max-width: none; }
+.hero-title .hero-hello { color: var(--navy); white-space: nowrap; }
+.hero-title .swap { color: inherit; }
+.hero-title .hero-name { white-space: nowrap; }
+.hero-title .caret { margin-left: .08em; }
+.hero-bottom { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; padding-top: clamp(20px, 3vw, 32px); border-top: 1px solid var(--line); }
+.hero-copy { display: grid; gap: 14px; min-width: 0; }
+.hero-copy .lead { max-width: 52ch; }
+.hero-copy .hero-lang { margin: 0; }
+.hero-bottom .hero-actions { justify-content: flex-end; }
+.hero .stats { margin-top: clamp(8px, 2vw, 24px); }
+@media (max-width: 860px) {
+  .hero-bottom { grid-template-columns: 1fr; }
+  .hero-bottom .hero-actions { justify-content: flex-start; }
+}
+@media (max-width: 520px) { .hero-title { font-size: clamp(2rem, 10.5vw, 2.6rem); } }
