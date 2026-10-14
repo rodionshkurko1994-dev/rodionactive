@@ -339,3 +339,5 @@ section { padding-block: clamp(56px, 9vw, 120px); }
 /* скриншоти сайтів показуємо з верху сторінки */
 .project .cover img, .article-cover img { object-position: top center; }
 .prose img { border: 1px solid var(--line); }
+.hero h1 .hero-name { white-space: nowrap; }
+@media (max-width: 520px) { .hero h1 { font-size: clamp(1.9rem, 9.4vw, 2.5rem); } }
