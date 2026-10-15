@@ -190,6 +190,9 @@ ${footerHTML()}
     const next = posts[idx + 1];
     const related = posts.filter(x => x !== p && x !== next && (x.tags || []).some(t => (p.tags || []).includes(t))).slice(0, 3);
     const path = postUrl(p);
+    // якщо анонс дослівно повторює початок статті, не показуємо його двічі
+    const norm = t => String(t || "").replace(/\s+/g, " ").trim().slice(0, 80);
+    const leadRepeats = !!p.excerpt && norm(p.body).startsWith(norm(p.excerpt));
     const jsonld = [{
       "@context": "https://schema.org",
       "@graph": [
@@ -223,7 +226,7 @@ ${(p.tags || []).map(t => `<meta property="article:tag" content="${esc(t)}">`).j
       <a class="back rise" href="/blog/"><span>←</span> Усі статті</a>
       <div class="info rise" style="--d:1"><time datetime="${esc(p.date)}">${fmtDate(p.date)}</time>${(p.tags || []).map(t => `<a class="chip" href="/blog/#${encodeURIComponent(t)}">#${esc(t)}</a>`).join("")}</div>
       <h1 class="rise" style="--d:2">${esc(p.title)}</h1>
-      ${p.excerpt ? `<p class="lead rise" style="--d:3;max-width:52ch">${esc(p.excerpt)}</p>` : ""}
+      ${p.excerpt && !leadRepeats ? `<p class="lead rise" style="--d:3;max-width:52ch">${esc(p.excerpt)}</p>` : ""}
     </header>
     ${p.cover ? `<figure class="article-cover rise" style="--d:4"><img src="${esc(rel(p.cover))}" alt="${esc(p.title)}" fetchpriority="high" decoding="async"></figure>` : ""}
     <div class="prose">
