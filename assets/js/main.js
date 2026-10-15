@@ -148,3 +148,28 @@ document.querySelectorAll("[data-github]").forEach(a => { a.href = SITE.github; 
     requestAnimationFrame(tick);
   });
 })();
+
+// ----- превʼю інших статей справа: стільки, скільки вміщується поруч із текстом -----
+(function () {
+  const asides = document.querySelectorAll("[data-fit-aside]");
+  if (!asides.length) return;
+  const fit = () => asides.forEach(aside => {
+    const prose = aside.parentElement.querySelector(".prose");
+    const cards = [...aside.querySelectorAll(".aside-card")];
+    if (!prose || getComputedStyle(aside).display === "none") return;
+    cards.forEach(c => c.hidden = false);
+    const limit = prose.getBoundingClientRect().bottom;
+    let shown = 0;
+    cards.forEach(c => {
+      const fits = c.getBoundingClientRect().bottom <= limit + 1;
+      if (!fits && shown > 0) c.hidden = true; else shown++;
+    });
+  });
+  let t;
+  const later = () => { clearTimeout(t); t = setTimeout(fit, 120); };
+  fit();
+  addEventListener("resize", later);
+  addEventListener("load", fit);
+  document.fonts && document.fonts.ready.then(fit);
+  document.querySelectorAll(".prose img, .aside-card img").forEach(img => img.complete || img.addEventListener("load", later));
+})();

@@ -370,3 +370,20 @@ section { padding-block: clamp(56px, 9vw, 120px); }
 figure.article-cover { margin: 0; }
 .article-head .info a.chip { text-decoration: none; transition: background .25s var(--ease); }
 .article-head .info a.chip:hover { background: var(--line); }
+
+/* ---------- стаття: текст + превʼю інших статей справа ---------- */
+.post-layout { display: block; }
+.post-aside { display: none; }
+@media (min-width: 1000px) {
+  .post-layout { display: grid; grid-template-columns: minmax(0, 1fr) clamp(260px, 26vw, 330px); gap: clamp(40px, 4.5vw, 64px); align-items: start; }
+  .post-aside { display: grid; gap: 28px; align-content: start; padding-block: 40px 80px; }
+  .post-aside .eyebrow { margin: 0; font-family: var(--f-mono); font-size: var(--step--1); font-weight: 400; padding-bottom: 14px; border-bottom: 1px solid var(--ink); }
+  .related { display: none; }
+}
+.aside-card { display: grid; gap: 10px; text-decoration: none; color: var(--ink); }
+.aside-thumb { display: block; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--mist); max-width: 100%; }
+.aside-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
+.aside-card:hover .aside-thumb img { transform: scale(1.05); }
+.aside-card time { font-family: var(--f-mono); font-size: .78rem; color: var(--muted); }
+.aside-title { font-family: var(--f-display); font-weight: 600; font-size: 1.02rem; line-height: 1.3; letter-spacing: -0.01em; text-wrap: balance; transition: color .3s; }
+.aside-card:hover .aside-title { color: var(--navy); }

@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610151230";
+  const ASSET_V = "202610151500";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -180,6 +180,14 @@ ${footerHTML()}
     </a>`;
   }
 
+  function asideCard(p, hidden) {
+    return `<a class="aside-card" href="${postUrl(p)}"${hidden ? " hidden" : ""}>
+          ${p.cover ? `<span class="aside-thumb"><img src="${esc(rel(p.cover))}" alt="" loading="lazy" decoding="async"></span>` : ""}
+          <time datetime="${esc(p.date)}">${fmtDate(p.date)}</time>
+          <span class="aside-title">${esc(p.title)}</span>
+        </a>`;
+  }
+
   // ---------- сторінка статті ----------
   function renderPost(p, posts, md) {
     const html = md(p.body || "");
@@ -189,6 +197,11 @@ ${footerHTML()}
     const idx = posts.indexOf(p);
     const next = posts[idx + 1];
     const related = posts.filter(x => x !== p && x !== next && (x.tags || []).some(t => (p.tags || []).includes(t))).slice(0, 3);
+    // превʼю справа від тексту: спершу статті з тими самими темами, потім найсвіжіші.
+    // Кількість підганяє main.js під висоту тексту; тут лише орієнтовна для показу без JS.
+    const sameTopic = x => (x.tags || []).some(t => (p.tags || []).includes(t));
+    const aside = [...posts.filter(x => x !== p && sameTopic(x)), ...posts.filter(x => x !== p && !sameTopic(x))].slice(0, 12);
+    const asideVisible = Math.max(1, Math.min(aside.length, Math.floor(String(p.body || "").length / 900)));
     const path = postUrl(p);
     // якщо анонс дослівно повторює початок статті, не показуємо його двічі
     const norm = t => String(t || "").replace(/\s+/g, " ").trim().slice(0, 80);
@@ -229,8 +242,14 @@ ${(p.tags || []).map(t => `<meta property="article:tag" content="${esc(t)}">`).j
       ${p.excerpt && !leadRepeats ? `<p class="lead rise" style="--d:3;max-width:52ch">${esc(p.excerpt)}</p>` : ""}
     </header>
     ${p.cover ? `<figure class="article-cover rise" style="--d:4"><img src="${esc(rel(p.cover))}" alt="${esc(p.title)}" fetchpriority="high" decoding="async"></figure>` : ""}
-    <div class="prose">
+    <div class="post-layout">
+      <div class="prose">
 ${html}
+      </div>
+      ${aside.length ? `<aside class="post-aside" aria-labelledby="aside-title" data-fit-aside>
+        <h2 id="aside-title" class="eyebrow">Інші статті</h2>
+        ${aside.map((x, i) => asideCard(x, i >= asideVisible)).join("\n        ")}
+      </aside>` : ""}
     </div>
   </article>
   ${next ? `<nav aria-label="Наступна стаття"><a class="post-row reveal" href="${postUrl(next)}" style="border-top:1px solid var(--ink)"><span class="eyebrow">Далі</span><div><h3>${esc(next.title)}</h3></div><span class="arrow" aria-hidden="true">→</span></a></nav>` : ""}
