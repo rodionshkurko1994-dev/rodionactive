@@ -6,17 +6,28 @@
 ## Структура
 
 ```
-index.html         головна: привітання, послуги, останні роботи, етапи, блог, контакти
-portfolio.html     усі проєкти з фільтром за категорією
-project.html#slug  сторінка проєкту
-blog.html          усі статті з фільтром за тегами
-post.html#slug     сторінка статті
-admin/             адмінка (пости й проєкти)
-data/posts.json    статті блогу
-data/projects.json проєкти портфоліо
-assets/uploads/    фото, завантажені через адмінку
-assets/js/main.js  спільний код + налаштування (пошта, Telegram, GitHub)
+index.html                 головна (блоки між <!--build:...--> заповнює генератор)
+blog/index.html            список статей            ┐
+blog/<slug>/index.html     окрема сторінка статті   │ генеруються
+blog/feed.xml              RSS-стрічка блогу        │ автоматично,
+portfolio/index.html       список проєктів          │ вручну не редагувати
+portfolio/<slug>/index.html сторінка проєкту        │
+sitemap.xml                карта сайту для Google   ┘
+robots.txt                 правила для пошукових роботів
+data/posts.json            статті блогу (джерело)
+data/projects.json         проєкти портфоліо (джерело)
+assets/js/build.js         генератор сторінок (спільний для адмінки й Node)
+assets/js/main.js          анімації, меню, фільтри + налаштування (пошта, Telegram, Instagram)
+admin/                     адмінка
+blog.html, portfolio.html, post.html, project.html   переадресації зі старих адрес
 ```
+
+## SEO
+
+- Кожна стаття й проєкт мають власну адресу (`/blog/<slug>/`) з повним текстом прямо в HTML.
+- На кожній сторінці: title, description, canonical, Open Graph, Twitter Card, schema.org (BlogPosting, BreadcrumbList, Organization).
+- `sitemap.xml` і `blog/feed.xml` оновлюються при кожному збереженні в адмінці.
+- Після змін у шаблонах або стилях: змініть `ASSET_V` у `assets/js/build.js` і виконайте `npm install && npm run build`.
 
 ## Публікація на GitHub Pages
 

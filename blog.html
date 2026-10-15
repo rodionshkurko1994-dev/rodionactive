@@ -2,51 +2,13 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Блог — Rodionactive</title>
-<meta name="description" content="Блог Rodionactive: про сайти, дизайн, переклади й технології.">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/style.css?v=202610150829">
+<title>Переадресація — Rodionactive</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://rodionactive.com/blog/">
+<script>location.replace("/blog/" + location.hash);</script>
+<noscript><meta http-equiv="refresh" content="0; url=/blog/"></noscript>
 </head>
-<body data-page="blog">
-<header data-site-header></header>
-
-<main class="wrap">
-  <section class="article-head" style="padding-bottom:0">
-    <p class="eyebrow rise">Блог</p>
-    <h1 class="rise" style="--d:1;font-size:var(--step-4)">Нотатки</h1>
-    <p class="lead rise" style="--d:2">Про штучний інтелект, технології, маркетинг і вивчення англійської.</p>
-  </section>
-
-  <section style="padding-top:40px">
-    <div class="filters" data-tags style="margin-bottom:28px"></div>
-    <div class="posts" data-posts></div>
-  </section>
-</main>
-
-<footer data-site-footer></footer>
-
-<script src="assets/js/main.js?v=202610150829"></script>
-<script>
-  const list = document.querySelector("[data-posts]");
-  const tagsBox = document.querySelector("[data-tags]");
-  fill(list, "posts", postRow, { empty: "Перші статті вже в роботі." }).then(posts => {
-    const tags = [...new Set(posts.flatMap(p => p.tags || []))];
-    if (!tags.length) return;
-    tagsBox.innerHTML = `<button class="filter" aria-pressed="true" data-tag="">Усі</button>` +
-      tags.map(t => `<button class="filter" aria-pressed="false" data-tag="${esc(t)}">#${esc(t)}</button>`).join("");
-    tagsBox.addEventListener("click", e => {
-      const b = e.target.closest("[data-tag]"); if (!b) return;
-      tagsBox.querySelectorAll("[data-tag]").forEach(x => x.setAttribute("aria-pressed", x === b));
-      const t = b.dataset.tag;
-      const shown = t ? posts.filter(p => (p.tags || []).includes(t)) : posts;
-      list.innerHTML = shown.map(postRow).join("");
-      list.querySelectorAll(".reveal").forEach(el => el.classList.add("in"));
-    });
-  });
-</script>
+<body>
+<p>Сторінка переїхала: <a href="/blog/">rodionactive.com/blog/</a></p>
 </body>
 </html>

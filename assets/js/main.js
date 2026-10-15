@@ -12,35 +12,30 @@ const SITE = {
 document.documentElement.classList.add("js");
 
 // ----- шапка й підвал -----
+// На згенерованих сторінках шапка й підвал уже є в HTML (так їх бачить Google).
+// Якщо сторінка без них (404, переадресації), будуємо їх тут.
 const page = document.body.dataset.page || "";
-const root = document.body.dataset.root || "";
-const NAV = [
-  ["index.html#services", "Послуги", "services"],
-  ["portfolio.html", "Портфоліо", "portfolio"],
-  ["blog.html", "Блог", "blog"],
-  ["index.html#contact", "Контакти", "contact"],
-];
-
-function logoMarkup() {
-  return [...SITE.name].map(c => `<span>${c}</span>`).join("") + '<span class="dot" aria-hidden="true"></span>';
-}
+const NAV = [["/#services", "Послуги", "services"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
+const logoMarkup = () => [...SITE.name].map(c => `<span>${c}</span>`).join("") + '<span class="dot" aria-hidden="true"></span>';
 
 const header = document.querySelector("[data-site-header]");
-if (header) {
+if (header && !header.children.length) {
   header.className = "site-header";
   header.innerHTML = `
     <div class="wrap bar">
-      <a class="logo" href="${root}index.html" aria-label="${SITE.name} — на головну">${logoMarkup()}</a>
+      <a class="logo" href="/" aria-label="${SITE.name} — на головну">${logoMarkup()}</a>
       <nav class="nav" id="nav">
-        ${NAV.map(([href, label, key]) => `<a href="${root}${href}"${key === page ? ' aria-current="page"' : ""}>${label}</a>`).join("")}
-        <a class="nav-cta link" href="${root}index.html#contact">Обговорити проєкт →</a>
+        ${NAV.map(([href, label, key]) => `<a href="${href}"${key === page ? ' aria-current="page"' : ""}>${label}</a>`).join("")}
+        <a class="nav-cta link" href="/#contact">Обговорити проєкт →</a>
       </nav>
-      <a class="btn small header-cta" href="${root}index.html#contact">Обговорити проєкт <span class="arr">→</span></a>
-      <button class="menu-btn" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i><i></i><i></i></button>
+      <a class="btn small header-cta" href="/#contact">Обговорити проєкт <span class="arr">→</span></a>
+      <button class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i><i></i><i></i></button>
     </div>
     <div class="progress" aria-hidden="true"></div>`;
+}
+if (header) {
   const btn = header.querySelector(".menu-btn");
-  btn.addEventListener("click", () => {
+  btn && btn.addEventListener("click", () => {
     const open = document.body.classList.toggle("nav-open");
     btn.setAttribute("aria-expanded", open);
   });
@@ -48,21 +43,22 @@ if (header) {
 }
 
 const footer = document.querySelector("[data-site-footer]");
-if (footer) {
+if (footer && !footer.children.length) {
   footer.className = "site-footer";
   footer.innerHTML = `
     <div class="wrap row">
-      <a class="logo" href="${root}index.html">${logoMarkup()}</a>
+      <a class="logo" href="/">${logoMarkup()}</a>
       <nav>
-        <a class="link" href="${root}portfolio.html">Портфоліо</a>
-        <a class="link" href="${root}blog.html">Блог</a>
+        <a class="link" href="/portfolio/">Портфоліо</a>
+        <a class="link" href="/blog/">Блог</a>
         <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">Telegram</a>
         <a class="link" href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a>
         <a class="link" href="${SITE.github}" target="_blank" rel="noopener">GitHub</a>
       </nav>
-      <small>© ${new Date().getFullYear()} ${SITE.name} · Київ</small>
+      <small>© <span data-year></span> ${SITE.name} · Київ</small>
     </div>`;
 }
+document.querySelectorAll("[data-year]").forEach(el => el.textContent = new Date().getFullYear());
 
 // ----- прогрес прокрутки та тінь шапки -----
 const progress = document.querySelector(".progress");
@@ -84,68 +80,33 @@ function observeReveal(scope = document) {
 }
 observeReveal();
 
-// ----- дані -----
-const cache = {};
-async function loadJSON(name) {
-  if (!cache[name]) {
-    cache[name] = fetch(`${root}data/${name}.json`, { cache: "no-cache" })
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(list => list.filter(x => !x.draft).sort((a, b) => (b.date || "").localeCompare(a.date || "")));
-  }
-  return cache[name];
-}
-
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const fmtDate = d => d ? new Date(d + "T12:00:00").toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }) : "";
-const img = src => !src ? "" : /^(https?:|data:)/.test(src) ? src : root + src;
-
-function renderMarkdown(md) {
-  if (window.marked) {
-    const html = marked.parse(md || "");
-    return window.DOMPurify ? DOMPurify.sanitize(html) : html;
-  }
-  return (md || "").split(/\n{2,}/).map(p => `<p>${esc(p)}</p>`).join("");
-}
-
-function projectCard(p) {
-  return `
-    <a class="project reveal" href="${root}project.html#${esc(p.slug)}" data-cat="${esc(p.category)}">
-      <div class="cover">
-        ${p.cover ? `<img src="${esc(img(p.cover))}" alt="" loading="lazy">` : ""}
-        <span class="badge">${esc(p.category)}</span>
-        <span class="view" aria-hidden="true">↗</span>
-      </div>
-      <div class="meta"><h3>${esc(p.title)}</h3><span class="year">${esc(p.year || "")}</span></div>
-      <p>${esc(p.summary)}</p>
-    </a>`;
-}
-
-function postRow(p) {
-  return `
-    <a class="post-row reveal" href="${root}post.html#${esc(p.slug)}">
-      <time datetime="${esc(p.date)}">${fmtDate(p.date)}</time>
-      <div>
-        <h3>${esc(p.title)}</h3>
-        <p>${esc(p.excerpt)}</p>
-        ${p.tags?.length ? `<div class="tags">${p.tags.map(t => `<span class="chip">#${esc(t)}</span>`).join("")}</div>` : ""}
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>`;
-}
-
-async function fill(el, name, render, { limit, empty } = {}) {
-  if (!el) return [];
-  try {
-    let list = await loadJSON(name);
-    if (limit) list = list.slice(0, limit);
-    el.innerHTML = list.length ? list.map(render).join("") : `<p class="empty">${empty}</p>`;
-    observeReveal(el);
-    return list;
-  } catch (e) {
-    el.innerHTML = `<p class="empty">Не вдалося завантажити дані. Онови сторінку.</p>`;
-    return [];
-  }
-}
+// ----- фільтри в блозі й портфоліо -----
+document.querySelectorAll("[data-filter-group]").forEach(group => {
+  const kind = group.dataset.filterGroup;
+  const list = document.querySelector(`[data-filter-list="${kind}"]`);
+  const count = document.querySelector("[data-count]");
+  if (!list) return;
+  const items = [...list.children].filter(el => el.matches("a"));
+  const plural = n => n % 10 === 1 && n % 100 !== 11 ? "проєкт" : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? "проєкти" : "проєктів";
+  const apply = value => {
+    let n = 0;
+    group.querySelectorAll("[data-filter]").forEach(b => b.setAttribute("aria-pressed", b.dataset.filter === value));
+    items.forEach(el => {
+      const values = kind === "tags" ? (el.dataset.tags || "").split("|") : [el.dataset.cat];
+      const show = !value || values.includes(value);
+      el.hidden = !show;
+      if (show) { n++; el.classList.add("in"); }
+    });
+    if (count && kind === "cat") count.textContent = `${n} ${plural(n)}`;
+  };
+  group.addEventListener("click", e => {
+    const b = e.target.closest("[data-filter]");
+    if (b) apply(b.dataset.filter);
+  });
+  let fromHash = "";
+  try { fromHash = decodeURIComponent(location.hash.slice(1)); } catch {}
+  if (fromHash && group.querySelector(`[data-filter="${CSS.escape(fromHash)}"]`)) apply(fromHash);
+});
 
 // ----- герой: слово, що перекладається -----
 const swap = document.querySelector("[data-swap]");

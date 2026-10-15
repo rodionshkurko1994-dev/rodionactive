@@ -365,3 +365,8 @@ section { padding-block: clamp(56px, 9vw, 120px); }
 @media (min-width: 640px) {
   .hero-title { white-space: nowrap; font-size: min(5rem, calc((min(100vw, var(--wrap)) - 2 * var(--gutter)) / 14.2)); }
 }
+
+/* згенеровані сторінки статей і проєктів */
+figure.article-cover { margin: 0; }
+.article-head .info a.chip { text-decoration: none; transition: background .25s var(--ease); }
+.article-head .info a.chip:hover { background: var(--line); }

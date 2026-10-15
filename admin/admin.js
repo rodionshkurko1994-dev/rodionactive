@@ -74,14 +74,39 @@ async function readFile(kind) {
   return JSON.parse(fromB64(r.content));
 }
 
-async function writeFile(kind, message) {
-  const body = { message, content: toB64(JSON.stringify(state.data[kind], null, 2) + "\n"), branch: state.cfg.branch };
-  if (state.sha[kind]) body.sha = state.sha[kind];
+// Зберігає дані й одразу перебудовує сторінки сайту (статті, проєкти, sitemap, RSS)
+// і відправляє все в репозиторій одним комітом.
+async function publish(kind, message) {
+  const branch = encodeURIComponent(state.cfg.branch);
+  const ref = await gh(`/git/ref/heads/${branch}`);
+  const headSha = ref.object.sha;
+  const head = await gh(`/git/commits/${headSha}`);
+  const other = kind === "posts" ? "projects" : "posts";
+  const [otherData, indexFile, treeList] = await Promise.all([
+    readFile(other),
+    gh(`/contents/index.html?ref=${branch}`),
+    gh(`/git/trees/${head.tree.sha}?recursive=1`),
+  ]);
+  state.data[other] = otherData;
+  const result = SiteBuild.build({
+    posts: state.data.posts,
+    projects: state.data.projects,
+    indexHtml: fromB64(indexFile.content),
+    markdown: md => marked.parse(md || ""),
+  });
+  const existing = treeList.tree.map(t => t.path).filter(p => /^(blog|portfolio)\/[^/]+\/index\.html$/.test(p));
+  const stale = existing.filter(p => !result.files[p]);
+  const tree = [
+    { path: FILES[kind], mode: "100644", type: "blob", content: JSON.stringify(state.data[kind], null, 2) + "\n" },
+    ...Object.entries(result.files).map(([path, content]) => ({ path, mode: "100644", type: "blob", content })),
+    ...stale.map(path => ({ path, mode: "100644", type: "blob", sha: null })),
+  ];
+  const newTree = await gh(`/git/trees`, { method: "POST", body: JSON.stringify({ base_tree: head.tree.sha, tree }) });
+  const commit = await gh(`/git/commits`, { method: "POST", body: JSON.stringify({ message, tree: newTree.sha, parents: [headSha] }) });
   try {
-    const r = await gh(`/contents/${FILES[kind]}`, { method: "PUT", body: JSON.stringify(body) });
-    state.sha[kind] = r.content.sha;
+    await gh(`/git/refs/heads/${branch}`, { method: "PATCH", body: JSON.stringify({ sha: commit.sha }) });
   } catch (e) {
-    if (e.status === 409 || e.status === 422) { await reloadKind(kind); }
+    if (e.status === 422) { e.message = "Репозиторій щойно змінився. Натисніть «Спробувати ще раз»."; }
     throw e;
   }
 }
@@ -361,18 +386,19 @@ async function save() {
   const clash = list.findIndex((x, i) => x.slug === d.slug && i !== state.current);
   if (clash !== -1) return toast("Запис з такою адресою вже існує. Змініть slug.", true);
 
+  if (state.current !== -1 && !d.draft) d.updated = today();
   const btn = $("#saveBtn"); btn.disabled = true; btn.textContent = "Зберігаю…";
   const backup = structuredClone(list);
   if (state.current === -1) list.push(structuredClone(d)); else list[state.current] = structuredClone(d);
   try {
     const what = state.tab === "posts" ? "Блог" : "Портфоліо";
-    await writeFile(state.tab, `${what}: ${state.current === -1 ? "додано" : "оновлено"} «${d.title}»`);
+    await publish(state.tab, `${what}: ${state.current === -1 ? "додано" : "оновлено"} «${d.title}»`);
     if (state.current === -1) state.current = list.length - 1;
     state.dirty = false;
-    toast(d.draft ? "Чернетку збережено" : "Опубліковано. Сайт оновиться за 1–2 хвилини.");
+    toast(d.draft ? "Чернетку збережено" : `Опубліковано. За 1–2 хвилини сторінка буде на ${state.tab === "posts" ? "/blog/" : "/portfolio/"}${d.slug}/`);
     openItem(state.current);
   } catch (e) {
-    if (e.status !== 409 && e.status !== 422) state.data[state.tab] = backup;
+    state.data[state.tab] = backup;
     toast(e.message, true);
     btn.disabled = false; btn.innerHTML = `Спробувати ще раз <span class="arr">→</span>`;
     renderList();
@@ -383,7 +409,7 @@ async function remove() {
   const list = state.data[state.tab];
   const [gone] = list.splice(state.current, 1);
   try {
-    await writeFile(state.tab, `${state.tab === "posts" ? "Блог" : "Портфоліо"}: видалено «${gone.title}»`);
+    await publish(state.tab, `${state.tab === "posts" ? "Блог" : "Портфоліо"}: видалено «${gone.title}»`);
     toast("Видалено");
     state.current = null; state.draft = null; state.dirty = false;
     renderAll();

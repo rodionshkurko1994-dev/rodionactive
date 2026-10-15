@@ -2,57 +2,13 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Стаття — Rodionactive</title>
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/style.css?v=202610150829">
+<title>Переадресація — Rodionactive</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://rodionactive.com/blog/">
+<script>var s = location.hash.slice(1); location.replace(s ? "/blog/" + s + "/" : "/blog/");</script>
+<noscript><meta http-equiv="refresh" content="0; url=/blog/"></noscript>
 </head>
-<body data-page="blog">
-<header data-site-header></header>
-
-<main class="wrap">
-  <article data-article>
-    <div class="article-head">
-      <a class="back" href="blog.html"><span>←</span> Усі статті</a>
-      <div class="skeleton" style="height:3.2em;max-width:620px"></div>
-    </div>
-  </article>
-</main>
-
-<footer data-site-footer></footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
-<script src="assets/js/main.js?v=202610150829"></script>
-<script>
-  const box = document.querySelector("[data-article]");
-  async function show() {
-    const slug = decodeURIComponent(location.hash.slice(1));
-    const posts = await loadJSON("posts").catch(() => []);
-    const p = posts.find(x => x.slug === slug);
-    if (!p) {
-      box.innerHTML = `<div class="article-head"><a class="back" href="blog.html"><span>←</span> Усі статті</a><h1>Статтю не знайдено</h1><p class="muted">Можливо, її перейменували або прибрали. Подивіться інші статті в блозі.</p></div>`;
-      return;
-    }
-    document.title = `${p.title} — ${SITE.name}`;
-    const i = posts.indexOf(p), next = posts[i + 1];
-    box.innerHTML = `
-      <div class="article-head">
-        <a class="back rise" href="blog.html"><span>←</span> Усі статті</a>
-        <div class="info rise" style="--d:1"><time datetime="${esc(p.date)}">${fmtDate(p.date)}</time>${(p.tags || []).map(t => `<span class="chip">#${esc(t)}</span>`).join("")}</div>
-        <h1 class="rise" style="--d:2">${esc(p.title)}</h1>
-        ${p.excerpt ? `<p class="lead rise" style="--d:3;max-width:52ch">${esc(p.excerpt)}</p>` : ""}
-      </div>
-      ${p.cover ? `<div class="article-cover rise" style="--d:4"><img src="${esc(img(p.cover))}" alt=""></div>` : ""}
-      <div class="prose">${renderMarkdown(p.body)}</div>
-      ${next ? `<a class="post-row reveal in" href="post.html#${esc(next.slug)}" style="border-top:1px solid var(--ink)"><span class="eyebrow">Далі</span><div><h3>${esc(next.title)}</h3></div><span class="arrow">→</span></a>` : ""}`;
-    scrollTo(0, 0);
-  }
-  addEventListener("hashchange", show);
-  show();
-</script>
+<body>
+<p>Сторінка переїхала: <a href="/blog/">rodionactive.com/blog/</a></p>
 </body>
 </html>
