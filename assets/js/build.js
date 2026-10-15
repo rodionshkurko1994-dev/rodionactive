@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610151500";
+  const ASSET_V = "202610151600";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -55,8 +55,12 @@
     <nav class="nav" id="nav" aria-label="Головне меню">
       ${NAV.map(([href, label, key]) => `<a href="${href}"${key === page ? ' aria-current="page"' : ""}>${label}</a>`).join("\n      ")}
       <a class="nav-cta link" href="/#contact">Обговорити проєкт →</a>
+      <a class="nav-cta link" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv ↗</a>
     </nav>
-    <a class="btn small header-cta" href="/#contact">Обговорити проєкт <span class="arr">→</span></a>
+    <div class="header-actions">
+      <a class="btn small ghost header-cta" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv <span class="arr">↗</span></a>
+      <a class="btn small header-cta" href="/#contact">Обговорити проєкт <span class="arr">→</span></a>
+    </div>
     <button class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i><i></i><i></i></button>
   </div>
   <div class="progress" aria-hidden="true"></div>
