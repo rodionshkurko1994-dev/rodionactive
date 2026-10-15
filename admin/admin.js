@@ -60,7 +60,13 @@ async function gh(path, opts = {}) {
   if (!res.ok) {
     let msg = `GitHub відповів ${res.status}`;
     if (res.status === 401) msg = "Токен недійсний або прострочений. Створіть новий у налаштуваннях.";
-    if (res.status === 403) msg = "Токен не має права запису. Дайте йому Contents: Read and write.";
+    if (res.status === 403) {
+      let detail = "";
+      try { detail = (await res.clone().json()).message || ""; } catch {}
+      msg = /rate limit/i.test(detail)
+        ? "GitHub тимчасово обмежив кількість запитів. Спробуйте за кілька хвилин."
+        : "Токен не має права запису. У налаштуваннях токена на GitHub змініть Contents на «Read and write»." + (detail ? ` (GitHub: ${detail})` : "");
+    }
     if (res.status === 404) msg = "Репозиторій або файл не знайдено. Перевірте власника, назву й гілку.";
     if (res.status === 409) msg = "Файл змінився в репозиторії. Дані перезавантажено, повторіть збереження.";
     const e = new Error(msg); e.status = res.status; throw e;
