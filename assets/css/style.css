@@ -360,3 +360,8 @@ section { padding-block: clamp(56px, 9vw, 120px); }
   .hero-bottom .hero-actions { justify-content: flex-start; }
 }
 @media (max-width: 520px) { .hero-title { font-size: clamp(2rem, 10.5vw, 2.6rem); } }
+
+/* заголовок першого екрана завжди в один рядок (від 640px): розмір рахується від ширини контейнера */
+@media (min-width: 640px) {
+  .hero-title { white-space: nowrap; font-size: min(5rem, calc((min(100vw, var(--wrap)) - 2 * var(--gutter)) / 14.2)); }
+}
