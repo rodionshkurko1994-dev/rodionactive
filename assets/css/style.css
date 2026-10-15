@@ -392,3 +392,7 @@ figure.article-cover { margin: 0; }
 .header-actions { display: flex; gap: 10px; align-items: center; }
 @media (max-width: 720px) { .header-actions { display: none; } }
 @media (min-width: 721px) and (max-width: 940px) { .header-actions .ghost { display: none; } }
+
+/* послуги — не посилання, лише анімація при наведенні */
+.service { grid-template-columns: 140px 1fr 1.1fr; cursor: default; }
+@media (max-width: 860px) { .service { grid-template-columns: 1fr; } }

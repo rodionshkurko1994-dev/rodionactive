@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610151600";
+  const ASSET_V = "202610151700";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -341,7 +341,7 @@ ${html}
     const head = headHTML({ title: `Блог ${SITE.name}: AI, технології, маркетинг і англійська`, description: "Статті Rodionactive про штучний інтелект, технології, SEO й маркетинг, а також поради з вивчення англійської мови.", path: "/blog/", jsonld });
     const body = `  <section class="article-head" style="padding-bottom:0">
     <p class="eyebrow rise">Блог</p>
-    <h1 class="rise" style="--d:1;font-size:var(--step-4)">Нотатки</h1>
+    <h1 class="rise" style="--d:1;font-size:var(--step-4)">Статті</h1>
     <p class="lead rise" style="--d:2">Про штучний інтелект, технології, маркетинг і вивчення англійської.</p>
   </section>
 
