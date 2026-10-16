@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610151700";
+  const ASSET_V = "202610161120";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -91,6 +91,7 @@
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <meta name="robots" content="${robots}">
+<meta name="google-site-verification" content="32UPPDQ_Ts-Mc-xpi0cvKzvlzNxCqrRBnDDTLUDRvx0">
 <link rel="canonical" href="${url}">
 <meta property="og:site_name" content="${SITE.name}">
 <meta property="og:locale" content="${SITE.locale}">
