@@ -52,4 +52,4 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 
 ## Що замінити
 
-У `assets/js/main.js`, блок `SITE`: пошта (зараз порожня й прихована), Telegram, Instagram.
+Контакти (Telegram, Instagram, Freelancehunt) задаються в блоці `SITE` у двох файлах: `assets/js/build.js` і `assets/js/main.js`, а також у блоці контактів в `index.html`.

@@ -4,9 +4,9 @@
 const SITE = {
   name: "Rodionactive",
   email: "",                                 // додай пошту, якщо хочеш показувати її на сайті
-  telegram: "https://t.me/rodman_ua",
-  instagram: "https://www.instagram.com/rodman.freeman",
-  github: "https://github.com/rodionshkurko1994-dev",
+  telegram: "https://t.me/rodionshkurko",
+  instagram: "https://www.instagram.com/rodionactive.io",
+  freelancehunt: "https://freelancehunt.com/freelancer/rodionskipper.html",
 };
 
 document.documentElement.classList.add("js");
@@ -26,12 +26,12 @@ if (header && !header.children.length) {
       <a class="logo" href="/" aria-label="${SITE.name} — на головну">${logoMarkup()}</a>
       <nav class="nav" id="nav">
         ${NAV.map(([href, label, key]) => `<a href="${href}"${key === page ? ' aria-current="page"' : ""}>${label}</a>`).join("")}
-        <a class="nav-cta link" href="/#contact">Обговорити проєкт →</a>
+        <a class="nav-cta link" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт →</a>
         <a class="nav-cta link" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv ↗</a>
       </nav>
       <div class="header-actions">
         <a class="btn small ghost header-cta" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv <span class="arr">↗</span></a>
-        <a class="btn small header-cta" href="/#contact">Обговорити проєкт <span class="arr">→</span></a>
+        <a class="btn small header-cta" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт <span class="arr">→</span></a>
       </div>
       <button class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i><i></i><i></i></button>
     </div>
@@ -57,7 +57,7 @@ if (footer && !footer.children.length) {
         <a class="link" href="/blog/">Блог</a>
         <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">Telegram</a>
         <a class="link" href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a>
-        <a class="link" href="${SITE.github}" target="_blank" rel="noopener">GitHub</a>
+        <a class="link" href="${SITE.freelancehunt}" target="_blank" rel="noopener">Freelancehunt</a>
       </nav>
       <small>© <span data-year></span> ${SITE.name} · Київ</small>
     </div>`;
@@ -136,7 +136,6 @@ document.querySelectorAll("[data-email]").forEach(a => {
 });
 document.querySelectorAll("[data-telegram]").forEach(a => { a.href = SITE.telegram; const b = a.querySelector("b"); if (b) b.textContent = "@" + SITE.telegram.split("/").pop(); });
 document.querySelectorAll("[data-instagram]").forEach(a => { a.href = SITE.instagram; const b = a.querySelector("b"); if (b) b.textContent = "@" + SITE.instagram.replace(/\/$/, "").split("/").pop(); });
-document.querySelectorAll("[data-github]").forEach(a => { a.href = SITE.github; a.querySelector("b").textContent = SITE.github.replace("https://", ""); });
 
 // ----- лічильники в цифрах -----
 (function () {

@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610161120";
+  const ASSET_V = "202610162110";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -17,9 +17,9 @@
     shortDescription: "Сайти під ключ, графічний дизайн, супровід Instagram і переклади UA · EN · RU.",
     image: "/assets/img/og-image.png",
     logo: "/assets/img/logo-512.png",
-    telegram: "https://t.me/rodman_ua",
-    instagram: "https://www.instagram.com/rodman.freeman",
-    github: "https://github.com/rodionshkurko1994-dev",
+    telegram: "https://t.me/rodionshkurko",
+    instagram: "https://www.instagram.com/rodionactive.io",
+    freelancehunt: "https://freelancehunt.com/freelancer/rodionskipper.html",
     city: "Київ",
   };
   const FONTS = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap";
@@ -54,12 +54,12 @@
     <a class="logo" href="/" aria-label="${SITE.name} — на головну">${logo()}</a>
     <nav class="nav" id="nav" aria-label="Головне меню">
       ${NAV.map(([href, label, key]) => `<a href="${href}"${key === page ? ' aria-current="page"' : ""}>${label}</a>`).join("\n      ")}
-      <a class="nav-cta link" href="/#contact">Обговорити проєкт →</a>
+      <a class="nav-cta link" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт →</a>
       <a class="nav-cta link" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv ↗</a>
     </nav>
     <div class="header-actions">
       <a class="btn small ghost header-cta" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv <span class="arr">↗</span></a>
-      <a class="btn small header-cta" href="/#contact">Обговорити проєкт <span class="arr">→</span></a>
+      <a class="btn small header-cta" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт <span class="arr">→</span></a>
     </div>
     <button class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i><i></i><i></i></button>
   </div>
@@ -76,7 +76,7 @@
       <a class="link" href="/blog/">Блог</a>
       <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">Telegram</a>
       <a class="link" href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a>
-      <a class="link" href="${SITE.github}" target="_blank" rel="noopener">GitHub</a>
+      <a class="link" href="${SITE.freelancehunt}" target="_blank" rel="noopener">Freelancehunt</a>
     </nav>
     <small>© <span data-year>${new Date().getFullYear()}</span> ${SITE.name} · ${SITE.city}</small>
   </div>
@@ -152,7 +152,7 @@ ${footerHTML()}
       address: { "@type": "PostalAddress", addressLocality: SITE.city, addressCountry: "UA" },
       areaServed: ["UA", "Worldwide"],
       knowsLanguage: ["uk", "en", "ru"],
-      sameAs: [SITE.telegram, SITE.instagram, SITE.github],
+      sameAs: [SITE.telegram, SITE.instagram, SITE.freelancehunt],
     };
   }
   const crumbs = items => ({
