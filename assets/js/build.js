@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610162110";
+  const ASSET_V = "202610162115";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -17,7 +17,7 @@
     shortDescription: "Сайти під ключ, графічний дизайн, супровід Instagram і переклади UA · EN · RU.",
     image: "/assets/img/og-image.png",
     logo: "/assets/img/logo-512.png",
-    telegram: "https://t.me/rodionshkurko",
+    telegram: "https://t.me/rodionactive",
     instagram: "https://www.instagram.com/rodionactive.io",
     freelancehunt: "https://freelancehunt.com/freelancer/rodionskipper.html",
     city: "Київ",

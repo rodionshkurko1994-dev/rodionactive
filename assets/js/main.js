@@ -4,7 +4,7 @@
 const SITE = {
   name: "Rodionactive",
   email: "",                                 // додай пошту, якщо хочеш показувати її на сайті
-  telegram: "https://t.me/rodionshkurko",
+  telegram: "https://t.me/rodionactive",
   instagram: "https://www.instagram.com/rodionactive.io",
   freelancehunt: "https://freelancehunt.com/freelancer/rodionskipper.html",
 };
