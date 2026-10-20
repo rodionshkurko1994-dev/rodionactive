@@ -176,3 +176,13 @@ document.querySelectorAll("[data-instagram]").forEach(a => { a.href = SITE.insta
   document.fonts && document.fonts.ready.then(fit);
   document.querySelectorAll(".prose img, .aside-card img").forEach(img => img.complete || img.addEventListener("load", later));
 })();
+
+// ----- HUD: київський час у «реакторі» на першому екрані -----
+(function () {
+  const el = document.querySelector("[data-hud-clock]");
+  if (!el) return;
+  const fmt = new Intl.DateTimeFormat("uk-UA", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Kyiv" });
+  const tick = () => { el.textContent = fmt.format(new Date()); };
+  tick();
+  setInterval(tick, 15000);
+})();
