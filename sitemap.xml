@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://rodionactive.com/</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -17,6 +17,13 @@
     <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/blog/odyn-khaker-shi-ahenty-i-5000-iak-zlamaly-ponad-100-kompanii-zokrema-j/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/uploads/20261020100425-b5a6feca0dd6962c03e5b201f65355ad.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/iphone-duo-za-1-999-rozkupyly-za-khvylyny-chomu-skladanyi-iphone-dosta/</loc>
