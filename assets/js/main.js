@@ -186,3 +186,12 @@ document.querySelectorAll("[data-instagram]").forEach(a => { a.href = SITE.insta
   tick();
   setInterval(tick, 15000);
 })();
+
+// ----- висота шапки для першого екрана на всю висоту вікна -----
+(function () {
+  const h = document.querySelector(".site-header");
+  if (!h) return;
+  const set = () => document.documentElement.style.setProperty("--header-h", h.offsetHeight + "px");
+  set();
+  addEventListener("resize", set);
+})();

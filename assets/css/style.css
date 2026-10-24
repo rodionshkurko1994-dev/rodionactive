@@ -499,3 +499,13 @@ figure.article-cover { margin: 0; }
   .hud-scan::after { display: none; }
   .stats > div::after { transform: none; }
 }
+
+/* ---------- перший екран на всю висоту вікна (мінус шапка) ---------- */
+.hero {
+  display: flex; flex-direction: column;
+  min-height: calc(100vh - var(--header-h, 72px));
+  min-height: calc(100svh - var(--header-h, 72px));
+  padding-block: clamp(24px, 4vh, 56px);
+}
+.hero > .eyebrow { margin-top: auto; }      /* заголовок і опис — по центру вільного місця */
+.hero > .stats { margin-top: auto; }        /* цифри притиснуті до низу екрана */
