@@ -22,7 +22,7 @@
     const r = await fetch(url, { headers: { Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json" } });
     if (r.status === 401) throw new Error("Ключ API не підходить. Перевірте його в налаштуваннях статистики.");
     if (r.status === 403) throw new Error("У ключа API немає права «Read statistics». Створіть ключ із цим дозволом.");
-    if (r.status === 404) throw new Error(`Сайт «${cfg.code}» на GoatCounter не знайдено. Перевірте код сайту.`);
+    if (r.status === 404) return null; // у щойно створеного сайту ще немає даних
     if (r.status === 429) throw new Error("GoatCounter просить зачекати кілька секунд. Оновіть статистику трохи пізніше.");
     if (!r.ok) throw new Error(`GoatCounter відповів ${r.status}.`);
     return r.json();
@@ -107,11 +107,12 @@
     message(`<div class="skeleton" style="height:120px"></div>`);
     try {
       const r = range();
+      const soft = p => p.catch(e => { if (/Ключ API|Read statistics/.test(e.message)) throw e; return null; });
       const total = await api("/stats/total", r); await pause(300);
       const hits = await api("/stats/hits", { ...r, limit: 100 }); await pause(300);
-      const refs = await api("/stats/toprefs", { ...r, limit: 8 }); await pause(300);
-      const locs = await api("/stats/locations", { ...r, limit: 8 });
-      render(total, hits, refs, locs);
+      const refs = await soft(api("/stats/toprefs", { ...r, limit: 8 })); await pause(300);
+      const locs = await soft(api("/stats/locations", { ...r, limit: 8 }));
+      render(total || { total: 0, stats: [] }, hits || { hits: [] }, refs || { stats: [] }, locs || { stats: [] }, !total && !hits);
     } catch (e) {
       message(`<p><b>Не вдалося завантажити статистику.</b></p><p class="muted">${esc(e.message)}</p>`);
     } finally { loading = false; }
@@ -161,7 +162,7 @@
       ${rows.length ? `<ul class="st-list">${rows.map(([name, count, max]) => `<li><span class="st-name" title="${esc(name)}">${esc(name)}</span><span class="st-num">${num(count)}</span><i style="--w:${max ? Math.round(count / max * 100) : 0}%"></i></li>`).join("")}</ul>` : `<p class="muted">${empty}</p>`}
     </div>`;
 
-  function render(total, hits, refs, locs) {
+  function render(total, hits, refs, locs, empty) {
     const all = hits.hits || [];
     const norm = p => (p || "").replace(/\/index\.html$/, "/").replace(/([^/])$/, "$1/");
     const byPath = {}; all.forEach(h => { const k = norm(h.path); byPath[k] = (byPath[k] || 0) + (h.count || 0); });
@@ -177,7 +178,7 @@
     const locRows = (locs.stats || []).map(x => [x.name || x.id || "Невідомо", x.count]);
     const mx = rows => Math.max(1, ...rows.map(r => r[1]));
 
-    $s(".st-body").innerHTML = `
+    $s(".st-body").innerHTML = `${empty ? `<div class="panel st-msg"><p><b>Статистика підключена.</b> Відвідувань поки не зафіксовано: дані з'являться після перших заходів на сайт. Ваш власний браузер (той, де відкрита адмінка) не рахується, тож для перевірки відкрийте rodionactive.com з телефона.</p></div>` : ""}
       <div class="st-tiles">
         <div class="panel st-tile"><span>Відвідувачі за ${days} днів</span><b>${num(total.total)}</b></div>
         <div class="panel st-tile"><span>Сьогодні</span><b>${num(todayCount)}</b></div>
