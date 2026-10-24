@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="../assets/css/style.css?v=202610201430">
+<link rel="stylesheet" href="../assets/css/style.css?v=202610242300">
 <style>
   body { background: var(--mist); }
   .a-top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: #fff; border-bottom: 1px solid var(--line); }
@@ -87,6 +87,46 @@
   .toast.show { transform: translate(-50%, 0); opacity: 1; }
   .toast.err { background: #c0392b; }
   .empty-editor { padding: 60px 24px; text-align: center; color: var(--muted); display: grid; gap: 14px; justify-items: center; }
+
+  /* ---------- статистика ---------- */
+  .stats-view { display: grid; gap: 20px; padding-block: 24px 60px; }
+  .st-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+  .st-head h2 { font-size: var(--step-2); margin-top: 6px; }
+  .st-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .st-tools .tab[aria-pressed="true"] { background: var(--navy); color: #fff; }
+  .st-msg { padding: 24px; display: grid; gap: 8px; }
+  .st-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .st-tile { padding: 18px 20px; display: grid; gap: 6px; }
+  .st-tile span { font-size: .85rem; color: var(--muted); }
+  .st-tile b { font-family: var(--f-display); font-weight: 600; font-size: var(--step-2); color: var(--navy); font-variant-numeric: tabular-nums; }
+  .st-card { padding: clamp(16px, 2.5vw, 24px); display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; align-content: start; }
+  .st-card h3 { font-size: var(--step-0); font-family: var(--f-display); font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .st-card h3 small { font-family: var(--f-mono); font-size: .75rem; font-weight: 400; }
+  .st-chart { position: relative; overflow-x: auto; min-width: 0; }
+  .st-card > * { min-width: 0; }
+  .st-table td:first-child { overflow-wrap: anywhere; }
+  .st-chart svg { width: 100%; min-width: 520px; height: auto; display: block; }
+  .st-chart .st-grid { stroke: var(--line); stroke-width: 1; }
+  .st-chart .st-axis { font: 400 10px var(--f-mono); fill: var(--muted); }
+  .st-chart .st-bar path { fill: var(--navy); transition: fill .2s; }
+  .st-chart .st-bar:hover path { fill: var(--orange); }
+  .st-tip { position: absolute; top: 0; transform: translateX(-50%); background: var(--ink); color: #fff; font: 500 .8rem var(--f-mono); padding: 5px 9px; border-radius: 6px; pointer-events: none; white-space: nowrap; }
+  .st-table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+  .st-table th { text-align: left; font: 500 .75rem var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 0 0 10px; border-bottom: 1px solid var(--ink); }
+  .st-table td { padding: 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; position: relative; }
+  .st-table td:first-child { padding-right: 16px; padding-bottom: 14px; }
+  .st-table td a { color: var(--ink); text-decoration: none; }
+  .st-table td a:hover { color: var(--navy); text-decoration: underline; }
+  .st-table td i, .st-list li i { position: absolute; left: 0; bottom: 5px; height: 3px; width: var(--w); background: var(--orange); border-radius: 2px; opacity: .85; }
+  .st-table .r { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; width: 1%; }
+  .st-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .st-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; }
+  .st-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0 12px; border-bottom: 1px solid var(--line); position: relative; font-size: .92rem; }
+  .st-list .st-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .st-list .st-num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+  .st-note { font-size: .85rem; }
+  .st-note a { color: var(--navy); }
+  @media (max-width: 900px) { .st-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .st-grid3 { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -96,6 +136,7 @@
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" aria-selected="true" data-tab="posts">Блог</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="projects">Портфоліо</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="stats">Статистика</button>
     </div>
     <span class="spacer"></span>
     <span class="status" id="status">Не підключено</span>
@@ -131,6 +172,8 @@
     </div>
   </section>
 
+  <section id="stats" class="stats-view" hidden></section>
+
   <div class="a-main" id="workspace">
     <aside class="panel">
       <div class="list-head"><b id="listTitle">Пости</b><button class="btn small" id="newItem" type="button">+ Новий</button></div>
@@ -145,7 +188,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
-<script src="../assets/js/build.js?v=202610201430"></script>
-<script src="admin.js?v=202610201430"></script>
+<script src="../assets/js/build.js?v=202610242300"></script>
+<script src="stats.js?v=202610242300"></script>
+<script src="admin.js?v=202610242300"></script>
 </body>
 </html>

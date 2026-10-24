@@ -446,11 +446,18 @@ $("#logout").addEventListener("click", async () => {
 });
 
 // ---------- вкладки й список ----------
+window.__adminPosts = () => state.data.posts || [];
 document.querySelectorAll("[data-tab]").forEach(t => t.addEventListener("click", () => {
-  if (t.dataset.tab === state.tab) return;
+  const isStats = t.dataset.tab === "stats";
+  const statsOpen = !$("#stats").hidden;
+  if (!isStats && t.dataset.tab === state.tab && !statsOpen) return;
   if (state.dirty && !leaveOk()) return;
-  state.tab = t.dataset.tab;
   document.querySelectorAll("[data-tab]").forEach(x => x.setAttribute("aria-selected", x === t));
+  $("#stats").hidden = !isStats;
+  $("#workspace").hidden = isStats;
+  $("#bannerBox").hidden = isStats;
+  if (isStats) { window.AdminStats && AdminStats.show(); return; }
+  state.tab = t.dataset.tab;
   state.current = null; state.draft = null; state.dirty = false;
   renderAll();
 }));

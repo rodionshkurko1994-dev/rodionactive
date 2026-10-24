@@ -53,3 +53,9 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 ## Що замінити
 
 Контакти (Telegram, Instagram, Freelancehunt) задаються в блоці `SITE` у двох файлах: `assets/js/build.js` і `assets/js/main.js`, а також у блоці контактів в `index.html`.
+
+## Статистика
+
+Відвідування рахує [GoatCounter](https://www.goatcounter.com) (лічильник підключений у `<head>` усіх сторінок через `assets/js/build.js`, код сайту `rodionactive`).
+Адмінка → вкладка «Статистика» читає дані через API GoatCounter: потрібен ключ із дозволом **Read statistics** (User → API у кабінеті GoatCounter).
+Браузер, у якому відкривали адмінку, у статистиці не враховується.

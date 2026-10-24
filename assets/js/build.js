@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610201430";
+  const ASSET_V = "202610242300";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -20,6 +20,7 @@
     telegram: "https://t.me/rodionactive",
     instagram: "https://www.instagram.com/rodionactive.io",
     freelancehunt: "https://freelancehunt.com/freelancer/rodionskipper.html",
+    goatcounter: "https://rodionactive.goatcounter.com/count",
     city: "Київ",
   };
   const FONTS = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap";
@@ -113,6 +114,7 @@ ${extra}<link rel="alternate" type="application/rss+xml" title="Блог ${SITE.
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FONTS}">
 <link rel="stylesheet" href="/assets/css/style.css?v=${ASSET_V}">
+<script data-goatcounter="${SITE.goatcounter}" async src="https://gc.zgo.at/count.js"></script>
 ${jsonld.map(ld).join("\n")}`;
   }
 
