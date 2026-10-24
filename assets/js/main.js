@@ -191,7 +191,11 @@ document.querySelectorAll("[data-instagram]").forEach(a => { a.href = SITE.insta
 (function () {
   const h = document.querySelector(".site-header");
   if (!h) return;
-  const set = () => document.documentElement.style.setProperty("--header-h", h.offsetHeight + "px");
+  const m = document.querySelector(".marquee");
+  const set = () => {
+    document.documentElement.style.setProperty("--header-h", h.offsetHeight + "px");
+    if (m) document.documentElement.style.setProperty("--marquee-h", m.offsetHeight + "px");
+  };
   set();
   addEventListener("resize", set);
 })();

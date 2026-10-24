@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610242310";
+  const ASSET_V = "202610242350";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
