@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202610242350";
+  const ASSET_V = "202610261650";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -242,11 +242,11 @@ ${footerHTML()}
 ${(p.tags || []).map(t => `<meta property="article:tag" content="${esc(t)}">`).join("\n")}${(p.tags || []).length ? "\n" : ""}`;
     const head = headHTML({ title: `${p.title} | ${SITE.name}`, description, path, type: "article", image: p.cover, jsonld, extra });
     const body = `  <article>
-    <header class="article-head">
+    <header class="article-head post-head">
       <a class="back rise" href="/blog/"><span>←</span> Усі статті</a>
       <div class="info rise" style="--d:1"><time datetime="${esc(p.date)}">${fmtDate(p.date)}</time>${(p.tags || []).map(t => `<a class="chip" href="/blog/#${encodeURIComponent(t)}">#${esc(t)}</a>`).join("")}</div>
       <h1 class="rise" style="--d:2">${esc(p.title)}</h1>
-      ${p.excerpt && !leadRepeats ? `<p class="lead rise" style="--d:3;max-width:52ch">${esc(p.excerpt)}</p>` : ""}
+      ${p.excerpt && !leadRepeats ? `<p class="lead rise" style="--d:3">${esc(p.excerpt)}</p>` : ""}
     </header>
     ${p.cover ? `<figure class="article-cover rise" style="--d:4"><img src="${esc(rel(p.cover))}" alt="${esc(p.title)}" fetchpriority="high" decoding="async"></figure>` : ""}
     <div class="post-layout">

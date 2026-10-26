@@ -529,3 +529,7 @@ figure.article-cover { margin: 0; }
   .hero .stats > div { padding-top: 10px; padding-bottom: 12px; gap: 4px; }
   .hero .stats > div:nth-child(n+3) { padding-top: 10px; }
 }
+/* Сторінка статті: шапка вище, назва й опис на всю ширину */
+.post-head { padding-block: clamp(16px, 2.5vw, 32px) 28px; gap: 18px; }
+.post-head h1 { max-width: none; }
+.post-head .lead { max-width: none; }
