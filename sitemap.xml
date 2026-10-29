@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://rodionactive.com/</loc>
-    <lastmod>2026-10-28</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/</loc>
-    <lastmod>2026-10-28</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -19,11 +19,11 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rodionactive.com/blog/nova-poshta-zbyvaie-shakhedy-iak-pratsiuie-pryvatna-ppo-v-ukraini/</loc>
-    <lastmod>2026-10-28</lastmod>
+    <loc>https://rodionactive.com/blog/do-6-rokiv-za-chuzhu-kartku-rada-ukhvalyla-zakon-pro-dropiv-shcho-treb/</loc>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image><image:loc>https://rodionactive.com/assets/uploads/20261028103441-whxklh6vmsof52kived0nzecryhh56huhujcjsln.webp</image:loc></image:image>
+    <image:image><image:loc>https://rodionactive.com/assets/uploads/20261029113941-gnz5os-c40x21x50px50p-wt-80db0773ef9c1ca.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/televizor-samsung-stezhyt-za-toboiu-shcho-khaker-znaishov-u-proshyvtsi/</loc>
