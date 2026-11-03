@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://rodionactive.com/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://rodionactive.com/portfolio/</loc>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -213,6 +213,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image><image:loc>https://blog-api.getblog.app/pv/68820cf678a7b0f517d7162a</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/portfolio/bee-kyiv/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/bee-kyiv.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/portfolio/svitlo-kyiva/</loc>
