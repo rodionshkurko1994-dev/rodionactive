@@ -59,3 +59,8 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 Відвідування рахує [GoatCounter](https://www.goatcounter.com) (лічильник підключений у `<head>` усіх сторінок через `assets/js/build.js`, код сайту `rodionactive`).
 Адмінка → вкладка «Статистика» читає дані через API GoatCounter: потрібен ключ із дозволом **Read statistics** (User → API у кабінеті GoatCounter).
 Браузер, у якому відкривали адмінку, у статистиці не враховується.
+
+## Автопублікація статей
+
+`node tools/publish-article.mjs article.json` додає статтю в блог: генерує фірмову обкладинку (`tools/cover.mjs`, шрифти в `tools/fonts`), записує її в `data/posts.json` (поле `sourceId` захищає від дублів, `description` іде в meta description) і перебудовує сайт. Далі лишається закомітити й запушити.
+Цим користується запланована задача «Автопублікація статей на rodionactive.com» (3 статті на добу з дошки).

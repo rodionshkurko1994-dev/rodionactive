@@ -199,7 +199,7 @@ ${footerHTML()}
   function renderPost(p, posts, md) {
     const html = md(p.body || "");
     const text = stripMd(p.body);
-    const description = clip(p.excerpt || text);
+    const description = clip(p.description || p.excerpt || text);
     const modified = p.updated || p.date;
     const idx = posts.indexOf(p);
     const next = posts[idx + 1];
