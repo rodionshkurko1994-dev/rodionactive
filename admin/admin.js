@@ -280,7 +280,7 @@ function readForm() {
   d.title = v("#f-title").trim();
   d.slug = slugify(v("#f-slug")) || slugify(d.title);
   d.date = v("#f-date");
-  d.tags = v("#f-tags").split(",").map(s => s.trim()).filter(Boolean);
+  d.tags = [...new Set(v("#f-tags").split(",").map(s => s.trim().replace(/^#/, "")).filter(Boolean).map(s => s === s.toUpperCase() ? s : s.toLowerCase()))];
   d.cover = v("#f-cover").trim();
   d.body = v("#f-body");
   d.draft = $("#f-draft").checked;
