@@ -533,3 +533,18 @@ figure.article-cover { margin: 0; }
 .post-head { padding-block: clamp(16px, 2.5vw, 32px) 28px; gap: 18px; }
 .post-head h1 { max-width: none; }
 .post-head .lead { max-width: none; }
+/* Головний екран: лише «Rodionactive», літери з'являються по черзі, по колу */
+.hero-title.hero-word { white-space: nowrap; font-size: min(9rem, calc((min(100vw, var(--wrap)) - 2 * var(--gutter)) / 8.1)); line-height: 1; letter-spacing: -0.04em; color: var(--navy); }
+.hero-word .hw { display: inline-block; }
+.hero-word .hw > span { display: inline-block; opacity: 0; animation: hwCycle 6s var(--ease) infinite; animation-delay: calc(var(--i) * 110ms); }
+.hero-word .hw-dot { color: var(--orange); }
+@keyframes hwCycle {
+  0% { opacity: 0; transform: translateY(.18em); filter: blur(6px); }
+  7% { opacity: 1; transform: none; filter: none; }
+  78% { opacity: 1; transform: none; filter: none; }
+  86% { opacity: 0; transform: translateY(-.12em); filter: blur(4px); }
+  100% { opacity: 0; transform: translateY(-.12em); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-word .hw > span { animation: none; opacity: 1; } }
+.hero-title.hero-word { max-width: 100%; overflow: visible; }
+.hero > * { min-width: 0; }
