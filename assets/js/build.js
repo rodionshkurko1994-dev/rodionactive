@@ -8,13 +8,13 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  const ASSET_V = "202611082140";
+  const ASSET_V = "202611082150";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
     locale: "uk_UA",
-    description: "Сайти під ключ, графічний дизайн, супровід Instagram і переклади українською, англійською та російською. 50+ запущених сайтів, 8+ років досвіду.",
-    shortDescription: "Сайти під ключ, графічний дизайн, супровід Instagram і переклади UA · EN · RU.",
+    description: "Сайти під ключ, графічний дизайн, автоматизація процесів на базі Claude і переклади українською, англійською та російською. 50+ запущених сайтів, 8+ років досвіду.",
+    shortDescription: "Сайти під ключ, графічний дизайн, автоматизація з Claude і переклади UA · EN · RU.",
     image: "/assets/img/og-image.png",
     logo: "/assets/img/logo-512.png",
     telegram: "https://t.me/rodionactive",
@@ -419,13 +419,13 @@ ${html}
           makesOffer: [
             ["Розробка сайтів", "Лендінги, багатосторінкові сайти, онлайн-магазини та портфоліо на Weblium або Claude+GitHub під ключ: дизайн, верстка, інтеграції, SEO, домен."],
             ["Графічний дизайн", "Логотипи, фірмовий стиль, креативи для соцмереж, поліграфія та упаковка."],
-            ["Супровід Instagram", "Візуальна концепція, контент-план, шаблони постів і сторіз, регулярні публікації."],
+            ["Автоматизація процесів", "Автоматизації на базі Claude: автопостинг і контент, звіти й моніторинг, обробка документів і даних, інтеграції з Gmail, Google Drive і Telegram."],
             ["Переклад", "Переклад текстів, документів, сайтів і презентацій: українська, англійська, російська."],
           ].map(([name, description]) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name, description, provider: orgRef } })),
         },
       ],
     }];
-    const head = headHTML({ title: `${SITE.name} — сайти під ключ, дизайн, Instagram і переклади`, description: SITE.description, path: "/", jsonld });
+    const head = headHTML({ title: `${SITE.name} — сайти під ключ, дизайн, автоматизація і переклади`, description: SITE.description, path: "/", jsonld });
     html = replaceBlock(html, "head", head);
     html = replaceBlock(html, "header", headerHTML("home"));
     html = replaceBlock(html, "footer", footerHTML());
