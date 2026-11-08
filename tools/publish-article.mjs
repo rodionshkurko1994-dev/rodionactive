@@ -1,12 +1,14 @@
 // Додає статтю в блог: фірмова обкладинка, запис у data/posts.json і повна перебудова сайту.
 // Запуск: node tools/publish-article.mjs article.json
-// article.json: {id, title, lead, metaDescription, tags[], text (Markdown), sources[{name,url}]}
+// article.json: {id, title, lead, metaDescription, tags[], text (Markdown), sources[{name,url}], coverObject?}
+// coverObject — необовʼязково, предмет для обкладинки (список: node tools/cover.mjs --list); інакше обирається за темою.
 // Коди виходу: 0 — опубліковано, 3 — стаття з таким id уже є, 1 — помилка/невалідні дані.
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { renderCover } from "./cover.mjs";
+import { pickObject, OBJECT_NAMES } from "./cover-objects.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const fail = msg => { console.error("ПОМИЛКА: " + msg); process.exit(1); };
@@ -43,7 +45,9 @@ const body = text + (sources.length
 
 mkdirSync(join(root, "assets/uploads"), { recursive: true });
 const cover = `assets/uploads/${date.replace(/-/g, "")}-${slug.slice(0, 50)}.jpg`;
-await renderCover(title, tags[0], join(root, cover));
+const object = OBJECT_NAMES.includes(a.coverObject) ? a.coverObject : pickObject({ title, lead, text, tags });
+console.log("Предмет на обкладинці: " + object);
+await renderCover(title, tags[0], join(root, cover), object);
 
 const post = {
   slug, title, date,
