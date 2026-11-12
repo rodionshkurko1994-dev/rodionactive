@@ -27,10 +27,12 @@ if (header && !header.children.length) {
       <nav class="nav" id="nav">
         ${NAV.map(([href, label, key]) => `<a href="${href}"${key === page ? ' aria-current="page"' : ""}>${label}</a>`).join("")}
         <a class="nav-cta link" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт →</a>
-        <a class="nav-cta link" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv ↗</a>
+        <a class="nav-cta link" href="https://cyber-kyiv.online" target="_blank" rel="noopener">Cyber Kyiv ↗</a>
+      <a class="nav-cta link" href="https://projectx.vision" target="_blank" rel="noopener">Project X ↗</a>
       </nav>
       <div class="header-actions">
-        <a class="btn small ghost header-cta" href="https://svitlo-kyiv.online" target="_blank" rel="noopener">Svitlo Kyiv <span class="arr">↗</span></a>
+        <a class="btn small ghost header-cta" href="https://cyber-kyiv.online" target="_blank" rel="noopener">Cyber Kyiv <span class="arr">↗</span></a>
+      <a class="btn small ghost header-cta" href="https://projectx.vision" target="_blank" rel="noopener">Project X <span class="arr">↗</span></a>
         <a class="btn small header-cta" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт <span class="arr">→</span></a>
       </div>
       <button class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i><i></i><i></i></button>

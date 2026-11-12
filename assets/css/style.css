@@ -391,7 +391,8 @@ figure.article-cover { margin: 0; }
 /* кнопки в шапці */
 .header-actions { display: flex; gap: 10px; align-items: center; }
 @media (max-width: 720px) { .header-actions { display: none; } }
-@media (min-width: 721px) and (max-width: 940px) { .header-actions .ghost { display: none; } }
+@media (min-width: 721px) and (max-width: 1060px) { .header-actions .ghost { display: none; } }
+.header-actions .btn { white-space: nowrap; }
 
 /* послуги — не посилання, лише анімація при наведенні */
 .service { grid-template-columns: 140px 1fr 1.1fr; cursor: default; }

@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://rodionactive.com/portfolio/</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -318,6 +318,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image><image:loc>https://blog-api.getblog.app/pv/68820cf678a7b0f517d7162a</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/portfolio/project-x/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/project-x.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/portfolio/bee-kyiv/</loc>
