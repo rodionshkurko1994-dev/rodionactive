@@ -201,3 +201,13 @@ document.querySelectorAll("[data-instagram]").forEach(a => { a.href = SITE.insta
   set();
   addEventListener("resize", set);
 })();
+
+// ----- власний лічильник відвідувань (Supabase, без сторонніх сервісів) -----
+(function(){try{
+  var S="rodionactive.com";
+  if(navigator.webdriver||/bot|crawl|spider|slurp|headless|lighthouse|preview/i.test(navigator.userAgent))return;
+  var ls=window.localStorage;if(ls.getItem("skipgc")==="t"||ls.getItem("sv_skip")==="t")return;
+  var v=ls.getItem("sv_vid");if(!v||!/^[a-z0-9]{8,40}$/.test(v)){v=(Math.random().toString(36).slice(2)+Date.now().toString(36)).replace(/[^a-z0-9]/g,"").slice(0,24);ls.setItem("sv_vid",v);}
+  var K="sb_publishable_buC6-JQeE4-VQO_S1Ml0Sw_xIrxjKjT";
+  fetch("https://pvxjbnxuwtuvvpmvylhv.supabase.co/rest/v1/rpc/track_visit",{method:"POST",keepalive:true,headers:{"apikey":K,"Authorization":"Bearer "+K,"Content-Type":"application/json"},body:JSON.stringify({p_site:S,p_vid:v})}).catch(function(){});
+}catch(e){}})();
