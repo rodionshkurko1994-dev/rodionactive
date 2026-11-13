@@ -685,3 +685,10 @@ figure.article-cover { margin: 0; }
   .svc-faq details p { padding-right: 0; }
 }
 .svc-cta .btn::before { background: #fff; }
+
+/* Таблиці в статтях */
+.prose table { width: 100%; border-collapse: collapse; margin: 1.6em 0; font-size: .95rem; display: block; overflow-x: auto; }
+.prose th, .prose td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.5; min-width: 140px; }
+.prose thead th { background: var(--navy); color: #fff; font-family: var(--f-display); font-weight: 600; font-size: .92rem; }
+.prose thead th:last-child { background: var(--orange); color: #000; }
+.prose tbody td:first-child { font-weight: 600; color: var(--navy); background: var(--mist); }
