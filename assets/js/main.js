@@ -15,7 +15,7 @@ document.documentElement.classList.add("js");
 // На згенерованих сторінках шапка й підвал уже є в HTML (так їх бачить Google).
 // Якщо сторінка без них (404, переадресації), будуємо їх тут.
 const page = document.body.dataset.page || "";
-const NAV = [["/#services", "Послуги", "services"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
+const NAV = [["/services/", "Послуги", "services"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
 const logoMarkup = () => [...SITE.name].map(c => `<span>${c}</span>`).join("") + '<span class="dot" aria-hidden="true"></span>';
 
 const header = document.querySelector("[data-site-header]");

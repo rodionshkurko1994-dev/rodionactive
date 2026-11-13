@@ -3,12 +3,12 @@
    Кожна стаття й проєкт отримують окрему HTML-сторінку з повним текстом,
    мета-тегами, Open Graph, schema.org; також генеруються sitemap.xml і RSS. */
 (function (root, factory) {
-  if (typeof module === "object" && module.exports) module.exports = factory();
-  else root.SiteBuild = factory();
-})(typeof self !== "undefined" ? self : this, function () {
+  if (typeof module === "object" && module.exports) module.exports = factory(require("./services.js"));
+  else root.SiteBuild = factory(root.SiteServices);
+})(typeof self !== "undefined" ? self : this, function (SiteServices) {
   "use strict";
 
-  const ASSET_V = "202611121400";
+  const ASSET_V = "202611131030";
   const SITE = {
     name: "Rodionactive",
     url: "https://rodionactive.com",
@@ -46,7 +46,7 @@
   const ld = obj => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, "\\u003c")}</script>`;
 
   // ---------- спільні шматки сторінки ----------
-  const NAV = [["/#services", "Послуги", "services"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
+  const NAV = [["/services/", "Послуги", "services"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
   const logo = () => [...SITE.name].map(c => `<span>${c}</span>`).join("") + '<span class="dot" aria-hidden="true"></span>';
 
   function headerHTML(page) {
@@ -75,6 +75,7 @@
   <div class="wrap row">
     <a class="logo" href="/">${logo()}</a>
     <nav aria-label="Посилання в підвалі">
+      <a class="link" href="/services/">Послуги</a>
       <a class="link" href="/portfolio/">Портфоліо</a>
       <a class="link" href="/blog/">Блог</a>
       <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">Telegram</a>
@@ -418,7 +419,7 @@ ${html}
         { "@type": "WebSite", "@id": SITE.url + "/#website", name: SITE.name, url: SITE.url + "/", inLanguage: "uk", publisher: orgRef },
         {
           ...orgLD(),
-          makesOffer: [
+          makesOffer: SERVICES.length ? SERVICES.map(x => ({ "@type": "Offer", url: SITE.url + serviceUrl(x), itemOffered: { "@type": "Service", name: x.name, description: x.description, url: SITE.url + serviceUrl(x), provider: orgRef } })) : [
             ["Розробка сайтів", "Лендінги, багатосторінкові сайти, онлайн-магазини та портфоліо на Weblium або Claude+GitHub під ключ: дизайн, верстка, інтеграції, SEO, домен."],
             ["Графічний дизайн", "Логотипи, фірмовий стиль, креативи для соцмереж, поліграфія та упаковка."],
             ["Автоматизація процесів", "Автоматизації на базі Claude: автопостинг і контент, звіти й моніторинг, обробка документів і даних, інтеграції з Gmail, Google Drive і Telegram."],
@@ -437,6 +438,183 @@ ${html}
     return html;
   }
 
+  // ---------- сторінки послуг ----------
+  const { SERVICES, ILLU } = SiteServices || { SERVICES: [], ILLU: {} };
+  const SERVICES_UPDATED = "2026-11-13";
+  const serviceUrl = x => `/services/${x.slug}/`;
+  const serviceImg = x => `assets/img/services/${x.slug}.png`;
+
+  function serviceCTA(title, text) {
+    return `<section class="svc-cta reveal" aria-label="Замовити">
+      <div>
+        <p class="eyebrow">Обговоримо?</p>
+        <h2>${title}</h2>
+        <p>${text}</p>
+      </div>
+      <div class="svc-cta-actions">
+        <a class="btn" href="${SITE.telegram}" target="_blank" rel="noopener">Написати в Telegram <span class="arr">→</span></a>
+        <a class="link" href="${SITE.instagram}" target="_blank" rel="noopener">або в Instagram</a>
+      </div>
+    </section>`;
+  }
+
+  function renderService(x, posts, projects) {
+    const path = serviceUrl(x);
+    const works = projects.filter(x.portfolio || (() => false)).slice(0, 3);
+    const related = posts.filter(p => !p.sourceId && (p.tags || []).some(t => (x.postTags || []).includes(t))).slice(0, 4);
+    const others = SERVICES.filter(s => s !== x);
+    const jsonld = [{
+      "@context": "https://schema.org",
+      "@graph": [
+        orgLD(),
+        {
+          "@type": "Service",
+          "@id": SITE.url + path + "#service",
+          name: x.h1,
+          serviceType: x.name,
+          description: x.description,
+          url: SITE.url + path,
+          image: abs(serviceImg(x)),
+          provider: orgRef,
+          areaServed: [{ "@type": "Country", name: "Україна" }, "Worldwide"],
+          availableLanguage: ["uk", "en", "ru"],
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: x.name,
+            itemListElement: x.included.map(([name, description]) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name, description } })),
+          },
+        },
+        {
+          "@type": "FAQPage",
+          "@id": SITE.url + path + "#faq",
+          mainEntity: x.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+        },
+        crumbs([["Головна", "/"], ["Послуги", "/services/"], [x.name, path]]),
+      ],
+    }];
+    const head = headHTML({ title: `${x.title} | ${SITE.name}`, description: x.description, path, image: serviceImg(x), jsonld });
+    const body = `  <nav class="crumbs rise" aria-label="Навігація"><a href="/">Головна</a><span>/</span><a href="/services/">Послуги</a><span>/</span><span aria-current="page">${esc(x.name)}</span></nav>
+  <header class="svc-hero">
+    <div class="svc-hero-text">
+      <p class="eyebrow rise" style="--d:1">${esc(x.code)}</p>
+      <h1 class="rise" style="--d:2">${esc(x.h1)}</h1>
+      <p class="lead rise" style="--d:3">${esc(x.lead)}</p>
+      ${x.pairs ? `<div class="pairs rise" style="--d:4">${x.pairs.map(p => `<span class="pair">${esc(p).replace("⇄", "<i>⇄</i>")}</span>`).join("")}</div>`
+        : `<ul class="svc-chips rise" style="--d:4">${x.chips.map(c => `<li class="chip">${esc(c)}</li>`).join("")}</ul>`}
+      <div class="svc-actions rise" style="--d:5">
+        <a class="btn" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити задачу <span class="arr">→</span></a>
+        <a class="btn ghost" href="#faq">Часті питання</a>
+      </div>
+    </div>
+    <figure class="svc-illu rise" style="--d:3">${ILLU[x.illu] || ""}</figure>
+  </header>
+
+  <section class="svc-section" aria-labelledby="inc-title">
+    <div class="section-head"><div><p class="eyebrow">Що входить</p><h2 id="inc-title">Що входить у послугу</h2></div></div>
+    <div class="svc-grid">
+      ${x.included.map(([t, d], i) => `<article class="svc-card reveal"><span class="svc-num">${String(i + 1).padStart(2, "0")}</span><h3>${esc(t)}</h3><p>${esc(d)}</p></article>`).join("\n      ")}
+    </div>
+  </section>
+
+  ${x.kinds ? `<section class="svc-section" aria-labelledby="kinds-title">
+    <div class="section-head"><div><p class="eyebrow">Детальніше</p><h2 id="kinds-title">${esc(x.kinds.title)}</h2></div></div>
+    <div class="svc-kinds">
+      ${x.kinds.items.map(([t, d]) => `<div class="svc-kind reveal"><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`).join("\n      ")}
+    </div>
+  </section>` : ""}
+
+  ${x.compare ? `<section class="svc-section" aria-labelledby="cmp-title">
+    <div class="section-head"><div><p class="eyebrow">Порівняння</p><h2 id="cmp-title">${esc(x.compare.title)}</h2></div></div>
+    <p class="svc-intro">${esc(x.compare.intro)}</p>
+    <div class="svc-table-wrap reveal"><table class="svc-table">
+      <thead><tr>${x.compare.cols.map((c, i) => i ? `<th scope="col">${esc(c)}</th>` : `<td></td>`).join("")}</tr></thead>
+      <tbody>
+        ${x.compare.rows.map(r => `<tr><th scope="row">${esc(r[0])}</th>${r.slice(1).map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("\n        ")}
+      </tbody>
+    </table></div>
+  </section>` : ""}
+
+  <section class="svc-section" aria-labelledby="steps-title">
+    <div class="section-head"><div><p class="eyebrow">Процес</p><h2 id="steps-title">Як проходить робота</h2></div></div>
+    <ol class="svc-steps">
+      ${x.steps.map(([t, d]) => `<li class="reveal"><h3>${esc(t)}</h3><p>${esc(d)}</p></li>`).join("\n      ")}
+    </ol>
+  </section>
+
+  ${works.length ? `<section class="svc-section" aria-labelledby="works-title">
+    <div class="section-head"><div><p class="eyebrow">Портфоліо</p><h2 id="works-title">Приклади робіт</h2></div><a class="link" href="/portfolio/">Усі проєкти →</a></div>
+    <div class="grid-projects">
+      ${works.map(projectCard).join("\n      ")}
+    </div>
+  </section>` : ""}
+
+  <section class="svc-section" id="faq" aria-labelledby="faq-title">
+    <div class="section-head"><div><p class="eyebrow">FAQ</p><h2 id="faq-title">Часті питання</h2></div></div>
+    <div class="svc-faq">
+      ${x.faq.map(([q, a], i) => `<details class="reveal"${i === 0 ? " open" : ""}><summary><h3>${esc(q)}</h3><span class="plus" aria-hidden="true"></span></summary><p>${esc(a)}</p></details>`).join("\n      ")}
+    </div>
+  </section>
+
+  ${related.length ? `<section class="svc-section" aria-labelledby="posts-title">
+    <div class="section-head"><div><p class="eyebrow">Блог</p><h2 id="posts-title">Корисно почитати</h2></div><a class="link" href="/blog/">Усі статті →</a></div>
+    <div class="posts">
+      ${related.map(postRow).join("\n      ")}
+    </div>
+  </section>` : ""}
+
+  ${serviceCTA(`Розкажіть про <em>задачу</em>`, "Опишіть кількома реченнями, що потрібно, — я відповім протягом дня з ідеями, вартістю і термінами.")}
+
+  <nav class="svc-others" aria-label="Інші послуги">
+    <p class="eyebrow">Інші послуги</p>
+    <div>${others.map(s => `<a class="svc-other" href="${serviceUrl(s)}"><span>${esc(s.code)}</span><b>${esc(s.name)}</b><i aria-hidden="true">→</i></a>`).join("")}</div>
+  </nav>`;
+    return page({ head, page: "services", body });
+  }
+
+  function renderServices(posts) {
+    const path = "/services/";
+    const description = "Послуги Rodionactive: розробка сайтів під ключ, графічний дизайн і фірмовий стиль, автоматизація процесів з ШІ Claude, переклади UA · EN · RU.";
+    const jsonld = [{
+      "@context": "https://schema.org",
+      "@graph": [
+        orgLD(),
+        {
+          "@type": "CollectionPage",
+          "@id": SITE.url + path + "#page",
+          name: "Послуги",
+          description,
+          url: SITE.url + path,
+          inLanguage: "uk",
+          isPartOf: { "@id": SITE.url + "/#website" },
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: SERVICES.map((x, i) => ({ "@type": "ListItem", position: i + 1, url: SITE.url + serviceUrl(x), name: x.h1 })),
+          },
+        },
+        crumbs([["Головна", "/"], ["Послуги", path]]),
+      ],
+    }];
+    const head = headHTML({ title: `Послуги: сайти, дизайн, автоматизація з Claude, переклади | ${SITE.name}`, description, path, jsonld });
+    const body = `  <header class="article-head">
+    <p class="eyebrow rise">Послуги</p>
+    <h1 class="rise" style="--d:1">Що я можу зробити <span style="color:var(--orange)">для вас</span></h1>
+    <p class="lead rise" style="--d:2;max-width:60ch">Сайти під ключ, дизайн, автоматизація процесів з Claude і переклади трьома мовами. Оберіть послугу, щоб дізнатися, що входить, як проходить робота і відповіді на часті питання.</p>
+  </header>
+  <div class="svc-list">
+    ${SERVICES.map((x, i) => `<a class="svc-tile reveal" href="${serviceUrl(x)}" style="--i:${i}">
+      <span class="svc-tile-illu" aria-hidden="true">${(ILLU[x.illu] || "").replace(/ role="img" aria-label="[^"]*"/, "")}</span>
+      <span class="svc-tile-body">
+        <span class="code">${esc(x.code)}</span>
+        <h2>${esc(x.h1)}</h2>
+        <p>${esc(x.description)}</p>
+        <span class="link">Детальніше <span class="arr">→</span></span>
+      </span>
+    </a>`).join("\n    ")}
+  </div>
+  ${serviceCTA(`Не знаєте, з чого <em>почати</em>?`, "Напишіть, яку задачу хочете вирішити, — підкажу, яка послуга підійде і скільки це коштуватиме.")}`;
+    return page({ head, page: "services", body });
+  }
+
   // ---------- sitemap і RSS ----------
   function sitemap(posts, projects) {
     const latest = (list, k = "date") => list.map(x => x.updated || x[k] || "").sort().pop() || "";
@@ -444,6 +622,8 @@ ${html}
       ["/", latest([...posts, ...projects]), "weekly", "1.0"],
       ["/blog/", latest(posts), "weekly", "0.9"],
       ["/portfolio/", latest(projects), "monthly", "0.8"],
+      ["/services/", SERVICES_UPDATED, "monthly", "0.9"],
+      ...SERVICES.map(x => [serviceUrl(x), SERVICES_UPDATED, "monthly", "0.9", serviceImg(x)]),
       ...posts.map(p => [postUrl(p), p.updated || p.date, "monthly", "0.7", p.cover]),
       ...projects.map(p => [projectUrl(p), p.updated || p.date, "yearly", "0.6", p.cover]),
     ];
@@ -491,6 +671,8 @@ ${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.
     J.forEach(p => { files[`portfolio/${p.slug}/index.html`] = renderProject(p, J, markdown); });
     files["blog/index.html"] = renderBlog(P);
     files["portfolio/index.html"] = renderPortfolio(J);
+    files["services/index.html"] = renderServices(P);
+    SERVICES.forEach(x => { files[`${serviceUrl(x).slice(1)}index.html`] = renderService(x, P, J); });
     files["blog/feed.xml"] = feed(P, markdown);
     files["sitemap.xml"] = sitemap(P, J);
     if (indexHtml) files["index.html"] = renderIndex(indexHtml, P, J);

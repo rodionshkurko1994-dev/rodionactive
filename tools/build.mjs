@@ -17,7 +17,7 @@ const projects = JSON.parse(read("data/projects.json"));
 const result = SiteBuild.build({ posts, projects, indexHtml: read("index.html"), markdown: md => marked.parse(md) });
 
 // прибираємо сторінки записів, яких більше немає
-for (const dir of ["blog", "portfolio"]) {
+for (const dir of ["blog", "portfolio", "services"]) {
   if (!existsSync(join(root, dir))) continue;
   for (const name of readdirSync(join(root, dir), { withFileTypes: true })) {
     if (name.isDirectory() && !result.files[`${dir}/${name.name}/index.html`]) rmSync(join(root, dir, name.name), { recursive: true });

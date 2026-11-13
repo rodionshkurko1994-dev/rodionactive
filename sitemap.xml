@@ -19,6 +19,40 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://rodionactive.com/services/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/rozrobka-saitiv/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/services/rozrobka-saitiv.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/hrafichnyi-dyzain/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/services/hrafichnyi-dyzain.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/avtomatyzatsiia-z-claude/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/services/avtomatyzatsiia-z-claude.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/pereklady/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/services/pereklady.png</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://rodionactive.com/blog/starshield-halmuie-na-161-km-hod-chomu-tse-bie-po-nashykh-perekhopliuv/</loc>
     <lastmod>2026-11-12</lastmod>
     <changefreq>monthly</changefreq>

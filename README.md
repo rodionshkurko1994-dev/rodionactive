@@ -64,3 +64,7 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 
 `node tools/publish-article.mjs article.json` додає статтю в блог: генерує фірмову обкладинку (`tools/cover.mjs`, шрифти в `tools/fonts`), записує її в `data/posts.json` (поле `sourceId` захищає від дублів, `description` іде в meta description) і перебудовує сайт. Далі лишається закомітити й запушити.
 Цим користується запланована задача «Автопублікація статей на rodionactive.com» (3 статті на добу з дошки).
+
+## Сторінки послуг
+
+`/services/` і `/services/<slug>/` генеруються з `assets/js/services.js` (тексти, переваги, етапи, порівняння, FAQ, ілюстрації). Розмітка schema.org: Service, FAQPage, BreadcrumbList. Картинки для соцмереж: `node tools/og-services.mjs` → `assets/img/services/`.
