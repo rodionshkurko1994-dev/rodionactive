@@ -117,6 +117,17 @@ async function publish(kind, message) {
   }
 }
 
+// IndexNow: повідомляє Bing та інші пошуковики про змінені сторінки.
+// Чекаємо ~90 с, поки GitHub Pages викладе нову версію, тому вкладку адмінки варто не закривати одразу.
+function notifyIndexNow(paths) {
+  const key = SiteBuild.SITE.indexnow;
+  if (!key) return;
+  const urls = [...new Set(["/", ...paths])].map(p => SiteBuild.SITE.url + p);
+  setTimeout(() => {
+    urls.forEach(u => fetch(`https://api.indexnow.org/indexnow?url=${encodeURIComponent(u)}&key=${key}`, { mode: "no-cors" }).catch(() => {}));
+  }, 90000);
+}
+
 async function uploadImage(file) {
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
   const base = slugify(file.name.replace(/\.[^.]+$/, "")).slice(0, 40) || "image";
@@ -401,6 +412,7 @@ async function save() {
     await publish(state.tab, `${what}: ${state.current === -1 ? "додано" : "оновлено"} «${d.title}»`);
     if (state.current === -1) state.current = list.length - 1;
     state.dirty = false;
+    if (!d.draft) notifyIndexNow(state.tab === "posts" ? [`/blog/${d.slug}/`, "/blog/"] : [`/portfolio/${d.slug}/`, "/portfolio/"]);
     toast(d.draft ? "Чернетку збережено" : `Опубліковано. За 1–2 хвилини сторінка буде на ${state.tab === "posts" ? "/blog/" : "/portfolio/"}${d.slug}/`);
     openItem(state.current);
   } catch (e) {
@@ -417,6 +429,7 @@ async function remove() {
   try {
     await publish(state.tab, `${state.tab === "posts" ? "Блог" : "Портфоліо"}: видалено «${gone.title}»`);
     toast("Видалено");
+    if (!gone.draft) notifyIndexNow(state.tab === "posts" ? [`/blog/${gone.slug}/`, "/blog/"] : [`/portfolio/${gone.slug}/`, "/portfolio/"]);
     state.current = null; state.draft = null; state.dirty = false;
     renderAll();
   } catch (e) {

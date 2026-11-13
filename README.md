@@ -68,3 +68,7 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 ## Сторінки послуг
 
 `/services/` і `/services/<slug>/` генеруються з `assets/js/services.js` (тексти, переваги, етапи, порівняння, FAQ, ілюстрації). Розмітка schema.org: Service, FAQPage, BreadcrumbList. Картинки для соцмереж: `node tools/og-services.mjs` → `assets/img/services/`.
+
+## IndexNow
+
+Ключ IndexNow — у `SITE.indexnow` (`assets/js/build.js`) і у файлі `/<ключ>.txt` у корені. Адмінка після публікації (через ~90 с) повідомляє Bing та інших про змінені сторінки; автопублікація статей робить те саме. Вручну: `https://api.indexnow.org/indexnow?url=<адреса>&key=<ключ>`.

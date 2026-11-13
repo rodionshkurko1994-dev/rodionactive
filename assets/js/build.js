@@ -8,8 +8,9 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices) {
   "use strict";
 
-  const ASSET_V = "202611131030";
+  const ASSET_V = "202611131050";
   const SITE = {
+    indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
     url: "https://rodionactive.com",
     locale: "uk_UA",
