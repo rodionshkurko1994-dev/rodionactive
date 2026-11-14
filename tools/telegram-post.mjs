@@ -46,7 +46,8 @@ async function waitLive(url) {
 let failed = 0;
 for (const p of fresh) {
   const url = `${SITE}/blog/${p.slug}/`;
-  const text = `<a href="${CHANNEL_URL}">Rodionactive</a>`; // назву й опис показує саме прев'ю
+  const lead = (p.excerpt || p.description || "").trim(); // короткий зміст; назву показує прев'ю
+  const text = [lead ? esc(lead) : null, `<a href="${CHANNEL_URL}">Rodionactive</a>`].filter(Boolean).join("\n\n");
   if (DRY_RUN) { console.log(text + "\n---"); continue; }
 
   if (!(await waitLive(url))) { console.error("Сторінка ще не опублікована: " + url); failed++; continue; }

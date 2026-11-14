@@ -75,4 +75,4 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 
 ## Автопостинг у Telegram
 
-Після кожної зміни `data/posts.json` GitHub Actions (`.github/workflows/telegram.yml` → `tools/telegram-post.mjs`) публікує нові статті в канал @rodionactive_online: чекає, поки сторінка з'явиться на сайті, і надсилає прев'ю статті з підписом Rodionactive. Токен бота — секрет репозиторію `TELEGRAM_BOT_TOKEN`. Ручний запуск для однієї статті: Actions → «Нові статті в Telegram» → Run workflow → slug.
+Після кожної зміни `data/posts.json` GitHub Actions (`.github/workflows/telegram.yml` → `tools/telegram-post.mjs`) публікує нові статті в канал @rodionactive_online: чекає, поки сторінка з'явиться на сайті, і надсилає прев'ю статті, короткий зміст і підпис Rodionactive. Токен бота — секрет репозиторію `TELEGRAM_BOT_TOKEN`. Ручний запуск для однієї статті: Actions → «Нові статті в Telegram» → Run workflow → slug.
