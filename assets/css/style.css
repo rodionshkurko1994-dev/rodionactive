@@ -692,3 +692,10 @@ figure.article-cover { margin: 0; }
 .prose thead th { background: var(--navy); color: #fff; font-family: var(--f-display); font-weight: 600; font-size: .92rem; }
 .prose thead th:last-child { background: var(--orange); color: #000; }
 .prose tbody td:first-child { font-weight: 600; color: var(--navy); background: var(--mist); }
+
+/* Довгі слова в заголовках не мають розширювати сторінку на телефоні */
+.article-head, .svc-hero-text { grid-template-columns: minmax(0, 1fr); }
+h1, h2, h3, .lead { overflow-wrap: break-word; }
+@media (max-width: 520px) {
+  .article-head h1, .svc-hero h1 { font-size: clamp(1.35rem, 6.5vw, 2rem); }
+}
