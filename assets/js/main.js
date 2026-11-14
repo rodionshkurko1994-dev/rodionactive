@@ -211,3 +211,13 @@ document.querySelectorAll("[data-instagram]").forEach(a => { a.href = SITE.insta
   var K="sb_publishable_buC6-JQeE4-VQO_S1Ml0Sw_xIrxjKjT";
   fetch("https://pvxjbnxuwtuvvpmvylhv.supabase.co/rest/v1/rpc/track_visit",{method:"POST",keepalive:true,headers:{"apikey":K,"Authorization":"Bearer "+K,"Content-Type":"application/json"},body:JSON.stringify({p_site:S,p_vid:v})}).catch(function(){});
 }catch(e){}})();
+
+/* «Скопіювати посилання» в кінці статті */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-copy-link]");
+  if (!b) return;
+  const done = () => { const t = b.textContent; b.textContent = "Скопійовано ✓"; b.classList.add("ok"); setTimeout(() => { b.textContent = t; b.classList.remove("ok"); }, 1800); };
+  const url = b.dataset.copyLink;
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done).catch(() => {});
+  else { const i = document.createElement("input"); i.value = url; document.body.appendChild(i); i.select(); try { document.execCommand("copy"); done(); } catch {} i.remove(); }
+});

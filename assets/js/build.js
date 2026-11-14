@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices) {
   "use strict";
 
-  const ASSET_V = "202611142155";
+  const ASSET_V = "202611142210";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -19,6 +19,7 @@
     image: "/assets/img/og-image.png",
     logo: "/assets/img/logo-512.png",
     telegram: "https://t.me/rodionactive",
+    channel: "https://t.me/rodionactive_online",
     instagram: "https://www.instagram.com/rodionactive.io",
     freelancehunt: "https://freelancehunt.com/freelancer/rodionskipper.html",
     goatcounter: "https://rodionactive.goatcounter.com/count",
@@ -256,6 +257,7 @@ ${(p.tags || []).map(t => `<meta property="article:tag" content="${esc(t)}">`).j
     <div class="post-layout">
       <div class="prose">
 ${html}
+        ${postEnd(p)}
       </div>
       ${aside.length ? `<aside class="post-aside" aria-labelledby="aside-title" data-fit-aside>
         <h2 id="aside-title" class="eyebrow">Інші статті</h2>
@@ -437,6 +439,31 @@ ${html}
     html = replaceBlock(html, "home-posts", "      " + (posts.slice(0, 3).map(postRow).join("\n      ") || `<p class="empty">Перші статті вже в роботі.</p>`));
     html = html.replace(/(style\.css|main\.js)\?v=\d+/g, `$1?v=${ASSET_V}`);
     return html;
+  }
+
+  // Кінець статті: «Поділитися» і підписка на Telegram-канал
+  function postEnd(p) {
+    const url = SITE.url + postUrl(p);
+    const u = encodeURIComponent(url), t = encodeURIComponent(p.title);
+    const links = [
+      ["Telegram", `https://t.me/share/url?url=${u}&text=${t}`],
+      ["Threads", `https://www.threads.net/intent/post?text=${t}%20${u}`],
+      ["Facebook", `https://www.facebook.com/sharer/sharer.php?u=${u}`],
+    ];
+    return `<div class="post-end">
+          <div class="share" aria-label="Поділитися статтею">
+            <span class="share-label">Поділитися</span>
+            ${links.map(([n, h]) => `<a class="share-btn" href="${h}" target="_blank" rel="noopener nofollow">${n}</a>`).join("\n            ")}
+            <button class="share-btn" type="button" data-copy-link="${esc(url)}">Скопіювати посилання</button>
+          </div>
+          <aside class="subscribe" aria-label="Telegram-канал">
+            <div>
+              <p class="subscribe-title">Нові статті — у Telegram</p>
+              <p class="subscribe-text">Технології, ШІ та бізнес простими словами. Кожна нова стаття одразу з'являється в каналі.</p>
+            </div>
+            <a class="btn" href="${SITE.channel}" target="_blank" rel="noopener">Підписатися <span class="arr">→</span></a>
+          </aside>
+        </div>`;
   }
 
   // ---------- сторінки послуг ----------
