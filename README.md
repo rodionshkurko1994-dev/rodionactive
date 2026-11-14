@@ -72,3 +72,7 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 ## IndexNow
 
 Ключ IndexNow — у `SITE.indexnow` (`assets/js/build.js`) і у файлі `/<ключ>.txt` у корені. Адмінка після публікації (через ~90 с) повідомляє Bing та інших про змінені сторінки; автопублікація статей робить те саме. Вручну: `https://api.indexnow.org/indexnow?url=<адреса>&key=<ключ>`.
+
+## Автопостинг у Telegram
+
+Після кожної зміни `data/posts.json` GitHub Actions (`.github/workflows/telegram.yml` → `tools/telegram-post.mjs`) публікує нові статті в канал @rodionactive_online: чекає, поки сторінка з'явиться на сайті, і надсилає повідомлення з великим прев'ю. Токен бота — секрет репозиторію `TELEGRAM_BOT_TOKEN`. Ручний запуск для однієї статті: Actions → «Нові статті в Telegram» → Run workflow → slug.

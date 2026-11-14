@@ -1,0 +1,37 @@
+name: Нові статті в Telegram
+
+on:
+  push:
+    branches: [main]
+    paths: [data/posts.json]
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Slug статті, яку треба опублікувати в каналі (частина адреси після /blog/)"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telegram
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Публікація в канал
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT: "@rodionactive_online"
+          BEFORE: ${{ github.event.before }}
+          SLUG: ${{ inputs.slug }}
+        run: node tools/telegram-post.mjs
