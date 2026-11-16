@@ -3,12 +3,12 @@
    Кожна стаття й проєкт отримують окрему HTML-сторінку з повним текстом,
    мета-тегами, Open Graph, schema.org; також генеруються sitemap.xml і RSS. */
 (function (root, factory) {
-  if (typeof module === "object" && module.exports) module.exports = factory(require("./services.js"));
-  else root.SiteBuild = factory(root.SiteServices);
-})(typeof self !== "undefined" ? self : this, function (SiteServices) {
+  if (typeof module === "object" && module.exports) module.exports = factory(require("./services.js"), require("./tools.js"));
+  else root.SiteBuild = factory(root.SiteServices, root.SiteTools);
+})(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611142210";
+  const ASSET_V = "202611161640";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -48,7 +48,7 @@
   const ld = obj => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, "\\u003c")}</script>`;
 
   // ---------- спільні шматки сторінки ----------
-  const NAV = [["/services/", "Послуги", "services"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
+  const NAV = [["/services/", "Послуги", "services"], ["/instrumenty/", "Інструменти", "tools"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
   const logo = () => [...SITE.name].map(c => `<span>${c}</span>`).join("") + '<span class="dot" aria-hidden="true"></span>';
 
   function headerHTML(page) {
@@ -78,6 +78,7 @@
     <a class="logo" href="/">${logo()}</a>
     <nav aria-label="Посилання в підвалі">
       <a class="link" href="/services/">Послуги</a>
+      <a class="link" href="/instrumenty/">Інструменти</a>
       <a class="link" href="/portfolio/">Портфоліо</a>
       <a class="link" href="/blog/">Блог</a>
       <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">Telegram</a>
@@ -123,7 +124,7 @@ ${extra}<link rel="alternate" type="application/rss+xml" title="Блог ${SITE.
 ${jsonld.map(ld).join("\n")}`;
   }
 
-  function page({ head, page, body }) {
+  function page({ head, page, body, scripts = [] }) {
     return `<!doctype html>
 <html lang="uk">
 <head>
@@ -139,7 +140,7 @@ ${body}
 ${footerHTML()}
 
 <script src="/assets/js/main.js?v=${ASSET_V}"></script>
-</body>
+${scripts.map(src => `<script src="${src}"></script>`).join("\n")}${scripts.length ? "\n" : ""}</body>
 </html>
 `;
   }
@@ -643,6 +644,138 @@ ${html}
     return page({ head, page: "services", body });
   }
 
+  // ---------- розділ «Інструменти» ----------
+  const { TOOLS, ILLU: TOOL_ILLU } = SiteTools || { TOOLS: [], ILLU: {} };
+  const TOOLS_UPDATED = "2026-11-16";
+  const toolUrl = t => `/instrumenty/${t.slug}/`;
+  const toolImg = t => `assets/img/tools/${t.slug}.png`;
+
+  function renderTool(t) {
+    const path = toolUrl(t);
+    const svc = SERVICES.find(s => s.slug === t.service);
+    const others = TOOLS.filter(x => x !== t);
+    const jsonld = [{
+      "@context": "https://schema.org",
+      "@graph": [
+        orgLD(),
+        {
+          "@type": "WebApplication",
+          "@id": SITE.url + path + "#app",
+          name: t.h1,
+          alternateName: t.name,
+          description: t.description,
+          url: SITE.url + path,
+          image: abs(toolImg(t)),
+          applicationCategory: t.appCategory,
+          operatingSystem: "Any",
+          browserRequirements: "Requires JavaScript",
+          inLanguage: "uk",
+          isAccessibleForFree: true,
+          offers: { "@type": "Offer", price: "0", priceCurrency: "UAH" },
+          featureList: t.features,
+          creator: orgRef,
+          provider: orgRef,
+        },
+        {
+          "@type": "FAQPage",
+          "@id": SITE.url + path + "#faq",
+          mainEntity: t.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+        },
+        crumbs([["Головна", "/"], ["Інструменти", "/instrumenty/"], [t.name, path]]),
+      ],
+    }];
+    const head = headHTML({ title: `${t.title} | ${SITE.name}`, description: t.description, path, image: toolImg(t), jsonld });
+    const body = `  <nav class="crumbs rise" aria-label="Навігація"><a href="/">Головна</a><span>/</span><a href="/instrumenty/">Інструменти</a><span>/</span><span aria-current="page">${esc(t.name)}</span></nav>
+  <header class="tool-head">
+    <p class="eyebrow rise" style="--d:1">${esc(t.code)} · безкоштовно</p>
+    <h1 class="rise" style="--d:2">${esc(t.h1)}</h1>
+    <p class="lead rise" style="--d:3">${esc(t.lead)}</p>
+    <ul class="tool-feats rise" style="--d:4">${t.features.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+  </header>
+
+  <section class="tool-app rise" style="--d:5" aria-label="${esc(t.name)}" data-tool-app="${t.app}" data-tg="${SITE.telegram}">
+    <noscript><p>Щоб скористатися інструментом, увімкніть JavaScript у браузері.</p></noscript>
+  </section>
+
+  <section class="svc-section" aria-labelledby="how-title">
+    <div class="section-head"><div><p class="eyebrow">Як користуватися</p><h2 id="how-title">Як це працює</h2></div></div>
+    <ol class="svc-steps tool-steps">
+      ${t.steps.map(([a, b]) => `<li class="reveal"><h3>${esc(a)}</h3><p>${esc(b)}</p></li>`).join("\n      ")}
+    </ol>
+  </section>
+
+  <section class="svc-section tool-text" aria-label="Корисно знати">
+    ${t.sections.map(([h, p]) => `<div class="reveal"><h2>${esc(h)}</h2><p>${esc(p)}</p></div>`).join("\n    ")}
+  </section>
+
+  <section class="svc-section" id="faq" aria-labelledby="faq-title">
+    <div class="section-head"><div><p class="eyebrow">FAQ</p><h2 id="faq-title">Часті питання</h2></div></div>
+    <div class="svc-faq">
+      ${t.faq.map(([q, a], i) => `<details class="reveal"${i === 0 ? " open" : ""}><summary><h3>${esc(q)}</h3><span class="plus" aria-hidden="true"></span></summary><p>${esc(a)}</p></details>`).join("\n      ")}
+    </div>
+  </section>
+
+  ${svc ? `<section class="svc-cta reveal" aria-label="Послуга">
+      <div>
+        <p class="eyebrow">Послуга</p>
+        <h2>${esc(svc.h1)}</h2>
+        <p>${esc(t.serviceText)}</p>
+      </div>
+      <div class="svc-cta-actions">
+        <a class="btn" href="${serviceUrl(svc)}">Детальніше про послугу <span class="arr">→</span></a>
+        <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">або напишіть у Telegram</a>
+      </div>
+    </section>` : ""}
+
+  <nav class="svc-others" aria-label="Інші інструменти">
+    <p class="eyebrow">Інші інструменти</p>
+    <div>${others.map(s => `<a class="svc-other" href="${toolUrl(s)}"><span>${esc(s.code)}</span><b>${esc(s.name)}</b><i aria-hidden="true">→</i></a>`).join("")}<a class="svc-other" href="/services/"><span>ПОСЛУГИ</span><b>Сайти, дизайн, автоматизація</b><i aria-hidden="true">→</i></a></div>
+  </nav>`;
+    const scripts = (t.app === "qr" ? ["/assets/js/vendor/qr-code-styling.js"] : []).concat([`/assets/js/tools-app.js?v=${ASSET_V}`]);
+    return page({ head, page: "tools", body, scripts });
+  }
+
+  function renderTools() {
+    const path = "/instrumenty/";
+    const description = "Безкоштовні онлайн-інструменти: генератор QR-кодів з логотипом, калькулятор вартості сайту в гривнях і калькулятор, скільки часу й грошей забирає рутина.";
+    const jsonld = [{
+      "@context": "https://schema.org",
+      "@graph": [
+        orgLD(),
+        {
+          "@type": "CollectionPage",
+          "@id": SITE.url + path + "#page",
+          name: "Безкоштовні інструменти",
+          description,
+          url: SITE.url + path,
+          inLanguage: "uk",
+          isPartOf: { "@id": SITE.url + "/#website" },
+          mainEntity: { "@type": "ItemList", itemListElement: TOOLS.map((t, i) => ({ "@type": "ListItem", position: i + 1, url: SITE.url + toolUrl(t), name: t.h1 })) },
+        },
+        crumbs([["Головна", "/"], ["Інструменти", path]]),
+      ],
+    }];
+    const head = headHTML({ title: `Безкоштовні онлайн-інструменти: QR-коди, вартість сайту, автоматизація | ${SITE.name}`, description, path, jsonld });
+    const body = `  <header class="article-head">
+    <p class="eyebrow rise">Інструменти</p>
+    <h1 class="rise" style="--d:1">Безкоштовні <span style="color:var(--orange)">інструменти</span></h1>
+    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Створіть QR-код, дізнайтеся вартість сайту або порахуйте, скільки коштує ваша рутина.</p>
+  </header>
+  <div class="svc-list tool-list">
+    ${TOOLS.map((t, i) => `<a class="svc-tile reveal" href="${toolUrl(t)}" style="--i:${i}">
+      <span class="svc-tile-illu" aria-hidden="true">${(TOOL_ILLU[t.illu] || "").replace(/ role="img" aria-label="[^"]*"/, "")}</span>
+      <span class="svc-tile-body">
+        <span class="code">${esc(t.code)}</span>
+        <h2>${esc(t.h1)}</h2>
+        <p>${esc(t.short)}</p>
+        <span class="link">Відкрити <span class="arr">→</span></span>
+      </span>
+    </a>`).join("\n    ")}
+  </div>
+  ${serviceCTA(`Потрібно щось <em>своє</em>?`, "Калькулятор для вашого сайту, квіз чи автоматизація під ваші процеси — напишіть, і я підкажу, як це зробити.")}`;
+    return page({ head, page: "tools", body });
+  }
+
   // ---------- sitemap і RSS ----------
   function sitemap(posts, projects) {
     const latest = (list, k = "date") => list.map(x => x.updated || x[k] || "").sort().pop() || "";
@@ -651,6 +784,8 @@ ${html}
       ["/blog/", latest(posts), "weekly", "0.9"],
       ["/portfolio/", latest(projects), "monthly", "0.8"],
       ["/services/", SERVICES_UPDATED, "monthly", "0.9"],
+      ["/instrumenty/", TOOLS_UPDATED, "monthly", "0.8"],
+      ...TOOLS.map(t => [toolUrl(t), TOOLS_UPDATED, "monthly", "0.8", toolImg(t)]),
       ...SERVICES.map(x => [serviceUrl(x), SERVICES_UPDATED, "monthly", "0.9", serviceImg(x)]),
       ...posts.map(p => [postUrl(p), p.updated || p.date, "monthly", "0.7", p.cover]),
       ...projects.map(p => [projectUrl(p), p.updated || p.date, "yearly", "0.6", p.cover]),
@@ -700,6 +835,8 @@ ${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.
     files["blog/index.html"] = renderBlog(P);
     files["portfolio/index.html"] = renderPortfolio(J);
     files["services/index.html"] = renderServices(P);
+    files["instrumenty/index.html"] = renderTools();
+    TOOLS.forEach(t => { files[`${toolUrl(t).slice(1)}index.html`] = renderTool(t); });
     SERVICES.forEach(x => { files[`${serviceUrl(x).slice(1)}index.html`] = renderService(x, P, J); });
     files["blog/feed.xml"] = feed(P, markdown);
     files["sitemap.xml"] = sitemap(P, J);

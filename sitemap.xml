@@ -25,6 +25,33 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://rodionactive.com/instrumenty/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/instrumenty/generator-qr-kodu/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/tools/generator-qr-kodu.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/instrumenty/kalkuliator-vartosti-saitu/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/tools/kalkuliator-vartosti-saitu.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/instrumenty/kalkuliator-avtomatyzatsii/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/img/tools/kalkuliator-avtomatyzatsii.png</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://rodionactive.com/services/rozrobka-saitiv/</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>

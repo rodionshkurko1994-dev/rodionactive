@@ -76,3 +76,7 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 ## Автопостинг у Telegram
 
 Після кожної зміни `data/posts.json` GitHub Actions (`.github/workflows/telegram.yml` → `tools/telegram-post.mjs`) публікує нові статті в канал @rodionactive_online: чекає, поки сторінка з'явиться на сайті, і надсилає прев'ю статті, короткий зміст і підпис Rodionactive. Токен бота — секрет репозиторію `TELEGRAM_BOT_TOKEN`. Ручний запуск для однієї статті: Actions → «Нові статті в Telegram» → Run workflow → slug.
+
+## Інструменти
+
+`/instrumenty/` — безкоштовні інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини. Тексти й SEO — `assets/js/tools.js`, логіка — `assets/js/tools-app.js` (ціни: ринок фрілансу × 0,8, константа `DISCOUNT`), бібліотека QR — `assets/js/vendor/qr-code-styling.js` (MIT). Розрахунок відкривається в Telegram з уже заповненим повідомленням (`t.me/rodionactive?text=…`). Картинки для соцмереж: `node tools/og-tools.mjs`. Папка `tools/` — це скрипти, не сторінки сайту.
