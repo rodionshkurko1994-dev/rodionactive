@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://rodionactive.com/</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -78,6 +78,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image><image:loc>https://rodionactive.com/assets/img/services/pereklady.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/blog/google-shi-vpershe-zlamuie-saity-bez-liudyny-vikno-na-onovlennia-hodyn/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/uploads/20261117-google-shi-vpershe-zlamuie-saity-bez-liudyny-vikno.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/starlink-zlamavsia-2500-remontiv-pokazaly-khto-naspravdi-vynen/</loc>
