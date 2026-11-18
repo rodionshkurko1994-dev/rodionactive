@@ -80,6 +80,13 @@
     <image:image><image:loc>https://rodionactive.com/assets/img/services/pereklady.png</image:loc></image:image>
   </url>
   <url>
+    <loc>https://rodionactive.com/blog/krymskyi-mist-atakuvaly-bez-starlink-drony-vpershe-vely-rakety/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/uploads/20261118-krymskyi-mist-atakuvaly-bez-starlink-drony-vpershe.jpg</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://rodionactive.com/blog/90-km-hod-pid-dronamy-ukrainskyi-robot-evakuator-maul-postavyv-rekord/</loc>
     <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
