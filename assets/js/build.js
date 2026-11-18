@@ -349,7 +349,31 @@ ${html}
       ],
     }];
     const head = headHTML({ title: `Блог ${SITE.name}: AI, технології, маркетинг і англійська`, description: "Статті Rodionactive про штучний інтелект, технології, SEO й маркетинг, а також поради з вивчення англійської мови.", path: "/blog/", jsonld });
-    const body = `  <section class="article-head" style="padding-bottom:0">
+    const fresh = posts.slice(0, 3);
+    const ticker = posts.slice(0, 8).map(p => `<a href="${postUrl(p)}">${esc(p.title)}</a>`).join("");
+    const plane = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3.5 2.8 10.7c-.9.4-.9 1.6 0 1.9l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.4 4.6 3.4c.6.4 1.4.1 1.6-.6l3.1-15.1c.2-.9-.7-1.6-1.6-1.4Z" fill="currentColor"/><path d="m7.6 14 10.6-7.4-8.4 9.1-.4 3.2" fill="none" stroke="var(--navy)" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+    const banner = `<aside class="blog-banner rise" aria-label="Telegram-канал Rodionactive | Tech">
+      <div class="bb-grid" aria-hidden="true"></div>
+      <div class="bb-orb" aria-hidden="true"></div>
+      <span class="bb-corner tl" aria-hidden="true"></span><span class="bb-corner tr" aria-hidden="true"></span>
+      <div class="bb-main">
+        <p class="eyebrow"><span class="bb-live">Live</span> Telegram · Rodionactive | Tech</p>
+        <h2>Новини AI і технологій — <em>щодня</em> у Telegram</h2>
+        <p class="bb-lead">Нові статті з блогу приходять у канал одразу після публікації. Коротко, з прев'ю, без спаму.</p>
+        <div class="bb-actions">
+          <a class="btn" href="${SITE.channel}" target="_blank" rel="noopener">Підписатися <span class="arr">→</span></a>
+          <span class="bb-count"><b>${posts.length}</b> ${posts.length % 10 === 1 && posts.length % 100 !== 11 ? "стаття" : [2, 3, 4].includes(posts.length % 10) && ![12, 13, 14].includes(posts.length % 100) ? "статті" : "статей"} уже в блозі</span>
+        </div>
+      </div>
+      ${fresh.length ? `<div class="bb-chat" aria-hidden="true">
+        <div class="bb-chat-head"><span class="bb-ava">${plane}</span><div><b>Rodionactive | Tech</b><small>канал · онлайн</small></div></div>
+        ${fresh.map((p, i) => `<div class="bb-msg" style="--i:${i}"><span>${esc(p.title)}</span><small>${fmtDate(p.date)} · Rodionactive</small></div>`).join("\n        ")}
+        <div class="bb-typing"><i></i><i></i><i></i></div>
+      </div>` : ""}
+      ${ticker ? `<div class="bb-ticker"><div class="bb-track">${ticker}${ticker.replace(/<a /g, '<a tabindex="-1" aria-hidden="true" ')}</div></div>` : ""}
+    </aside>`;
+    const body = `  <section class="article-head blog-head" style="padding-bottom:0">
+    ${banner}
     <p class="eyebrow rise">Блог</p>
     <h1 class="rise" style="--d:1;font-size:var(--step-4)">Статті</h1>
     <p class="lead rise" style="--d:2">Про штучний інтелект, технології, маркетинг і вивчення англійської.</p>
