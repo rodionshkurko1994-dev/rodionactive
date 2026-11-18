@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611161640";
+  const ASSET_V = "202611181755";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -351,7 +351,7 @@ ${html}
     const head = headHTML({ title: `Блог ${SITE.name}: AI, технології, маркетинг і англійська`, description: "Статті Rodionactive про штучний інтелект, технології, SEO й маркетинг, а також поради з вивчення англійської мови.", path: "/blog/", jsonld });
     const fresh = posts.slice(0, 3);
     const ticker = posts.slice(0, 8).map(p => `<a href="${postUrl(p)}">${esc(p.title)}</a>`).join("");
-    const plane = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3.5 2.8 10.7c-.9.4-.9 1.6 0 1.9l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.4 4.6 3.4c.6.4 1.4.1 1.6-.6l3.1-15.1c.2-.9-.7-1.6-1.6-1.4Z" fill="currentColor"/><path d="m7.6 14 10.6-7.4-8.4 9.1-.4 3.2" fill="none" stroke="var(--navy)" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+    const plane = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M21.5 3.5 2.8 10.7c-.9.4-.9 1.6 0 1.9l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.4 4.6 3.4c.6.4 1.4.1 1.6-.6l3.1-15.1c.2-.9-.7-1.6-1.6-1.4Z" fill="currentColor"/><path d="m7.6 14 10.6-7.4-8.4 9.1-.4 3.2" fill="none" stroke="var(--navy)" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
     const banner = `<aside class="blog-banner rise" aria-label="Telegram-канал Rodionactive | Tech">
       <div class="bb-grid" aria-hidden="true"></div>
       <div class="bb-orb" aria-hidden="true"></div>
