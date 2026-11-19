@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611181755";
+  const ASSET_V = "202611191950";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -160,7 +160,7 @@ ${scripts.map(src => `<script src="${src}"></script>`).join("\n")}${scripts.leng
       address: { "@type": "PostalAddress", addressLocality: SITE.city, addressCountry: "UA" },
       areaServed: ["UA", "Worldwide"],
       knowsLanguage: ["uk", "en", "ru"],
-      sameAs: [SITE.telegram, SITE.instagram, SITE.freelancehunt],
+      sameAs: [SITE.telegram, SITE.channel, SITE.instagram, SITE.freelancehunt],
     };
   }
   const crumbs = items => ({
@@ -492,8 +492,10 @@ ${html}
   }
 
   // ---------- сторінки послуг ----------
-  const { SERVICES, ILLU } = SiteServices || { SERVICES: [], ILLU: {} };
-  const SERVICES_UPDATED = "2026-11-13";
+  const { SERVICES, ILLU, NICHES = [] } = SiteServices || { SERVICES: [], ILLU: {} };
+  const SERVICES_UPDATED = "2026-11-19";
+  const NICHES_UPDATED = "2026-11-19";
+  const nicheUrl = n => `/services/rozrobka-saitiv/${n.slug}/`;
   const serviceUrl = x => `/services/${x.slug}/`;
   const serviceImg = x => `assets/img/services/${x.slug}.png`;
 
@@ -594,6 +596,13 @@ ${html}
     </ol>
   </section>
 
+  ${x.slug === "rozrobka-saitiv" && NICHES.length ? `<section class="svc-section" aria-labelledby="niches-title">
+    <div class="section-head"><div><p class="eyebrow">Галузі</p><h2 id="niches-title">Сайти для вашої галузі</h2></div></div>
+    <div class="svc-kinds">
+      ${NICHES.map(n => `<a class="svc-kind reveal" href="${nicheUrl(n)}"><h3>${esc(n.h1)} →</h3><p>${esc(n.chips.join(" · "))}</p></a>`).join("\n      ")}
+    </div>
+  </section>` : ""}
+
   ${works.length ? `<section class="svc-section" aria-labelledby="works-title">
     <div class="section-head"><div><p class="eyebrow">Портфоліо</p><h2 id="works-title">Приклади робіт</h2></div><a class="link" href="/portfolio/">Усі проєкти →</a></div>
     <div class="grid-projects">
@@ -620,6 +629,103 @@ ${html}
   <nav class="svc-others" aria-label="Інші послуги">
     <p class="eyebrow">Інші послуги</p>
     <div>${others.map(s => `<a class="svc-other" href="${serviceUrl(s)}"><span>${esc(s.code)}</span><b>${esc(s.name)}</b><i aria-hidden="true">→</i></a>`).join("")}</div>
+  </nav>`;
+    return page({ head, page: "services", body });
+  }
+
+  // Сторінка «сайт для ніші»: /services/rozrobka-saitiv/<slug>/
+  function renderNiche(n, projects) {
+    const web = SERVICES.find(s => s.slug === "rozrobka-saitiv");
+    const path = nicheUrl(n);
+    const works = projects.filter(n.portfolio || (() => false)).slice(0, 3);
+    const others = NICHES.filter(o => o !== n);
+    const faq = [...n.faq, ...(web ? web.faq.filter(([q]) => /сам змінювати|домен|потрібно від мене/.test(q)) : [])];
+    const jsonld = [{
+      "@context": "https://schema.org",
+      "@graph": [
+        orgLD(),
+        {
+          "@type": "Service",
+          "@id": SITE.url + path + "#service",
+          name: n.h1,
+          serviceType: "Розробка сайтів",
+          description: n.description,
+          url: SITE.url + path,
+          image: abs(web ? serviceImg(web) : SITE.image),
+          provider: orgRef,
+          audience: { "@type": "BusinessAudience", name: n.name },
+          areaServed: [{ "@type": "Country", name: "Україна" }, "Worldwide"],
+          availableLanguage: ["uk", "en", "ru"],
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: n.h1,
+            itemListElement: n.blocks.map(([name, description]) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name, description } })),
+          },
+        },
+        {
+          "@type": "FAQPage",
+          "@id": SITE.url + path + "#faq",
+          mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+        },
+        crumbs([["Головна", "/"], ["Послуги", "/services/"], ["Розробка сайтів", "/services/rozrobka-saitiv/"], [n.name, path]]),
+      ],
+    }];
+    const head = headHTML({ title: `${n.title} | ${SITE.name}`, description: n.description, path, image: web ? serviceImg(web) : SITE.image, jsonld });
+    const body = `  <nav class="crumbs rise" aria-label="Навігація"><a href="/">Головна</a><span>/</span><a href="/services/">Послуги</a><span>/</span><a href="/services/rozrobka-saitiv/">Розробка сайтів</a><span>/</span><span aria-current="page">${esc(n.name)}</span></nav>
+  <header class="svc-hero">
+    <div class="svc-hero-text">
+      <p class="eyebrow rise" style="--d:1">&lt;/&gt; WEB</p>
+      <h1 class="rise" style="--d:2">${esc(n.h1)}</h1>
+      <p class="lead rise" style="--d:3">${esc(n.lead)}</p>
+      <ul class="svc-chips rise" style="--d:4">${n.chips.map(c => `<li class="chip">${esc(c)}</li>`).join("")}</ul>
+      <div class="svc-actions rise" style="--d:5">
+        <a class="btn" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити сайт <span class="arr">→</span></a>
+        <a class="btn ghost" href="/instrumenty/kalkuliator-vartosti-saitu/">Порахувати вартість</a>
+      </div>
+    </div>
+    <figure class="svc-illu rise" style="--d:3">${ILLU.web || ""}</figure>
+  </header>
+
+  <section class="svc-section" aria-labelledby="inc-title">
+    <div class="section-head"><div><p class="eyebrow">Структура</p><h2 id="inc-title">Що буде на сайті</h2></div></div>
+    <div class="svc-grid">
+      ${n.blocks.map(([t, d], i) => `<article class="svc-card reveal"><span class="svc-num">${String(i + 1).padStart(2, "0")}</span><h3>${esc(t)}</h3><p>${esc(d)}</p></article>`).join("\n      ")}
+    </div>
+  </section>
+
+  <section class="svc-section" aria-labelledby="why-title">
+    <div class="section-head"><div><p class="eyebrow">Навіщо</p><h2 id="why-title">Що дає власний сайт</h2></div></div>
+    <div class="svc-kinds">
+      ${n.why.map(([t, d]) => `<div class="svc-kind reveal"><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`).join("\n      ")}
+    </div>
+  </section>
+
+  ${web ? `<section class="svc-section" aria-labelledby="steps-title">
+    <div class="section-head"><div><p class="eyebrow">Процес</p><h2 id="steps-title">Як проходить робота</h2></div></div>
+    <ol class="svc-steps">
+      ${web.steps.map(([t, d]) => `<li class="reveal"><h3>${esc(t)}</h3><p>${esc(d)}</p></li>`).join("\n      ")}
+    </ol>
+  </section>` : ""}
+
+  ${works.length ? `<section class="svc-section" aria-labelledby="works-title">
+    <div class="section-head"><div><p class="eyebrow">Портфоліо</p><h2 id="works-title">Приклади робіт</h2></div><a class="link" href="/portfolio/">Усі проєкти →</a></div>
+    <div class="grid-projects">
+      ${works.map(projectCard).join("\n      ")}
+    </div>
+  </section>` : ""}
+
+  <section class="svc-section" id="faq" aria-labelledby="faq-title">
+    <div class="section-head"><div><p class="eyebrow">FAQ</p><h2 id="faq-title">Часті питання</h2></div></div>
+    <div class="svc-faq">
+      ${faq.map(([q, a], i) => `<details class="reveal"${i === 0 ? " open" : ""}><summary><h3>${esc(q)}</h3><span class="plus" aria-hidden="true"></span></summary><p>${esc(a)}</p></details>`).join("\n      ")}
+    </div>
+  </section>
+
+  ${serviceCTA(`Обговоримо <em>ваш</em> сайт?`, "Напишіть кількома реченнями про ваш бізнес — я відповім протягом дня з ідеями, вартістю і термінами.")}
+
+  <nav class="svc-others" aria-label="Сайти для інших галузей">
+    <p class="eyebrow">Інші галузі</p>
+    <div>${others.map(o => `<a class="svc-other" href="${nicheUrl(o)}"><span>WEB</span><b>${esc(o.name)}</b><i aria-hidden="true">→</i></a>`).join("")}<a class="svc-other" href="/services/rozrobka-saitiv/"><span>&lt;/&gt; WEB</span><b>Розробка сайтів під ключ</b><i aria-hidden="true">→</i></a></div>
   </nav>`;
     return page({ head, page: "services", body });
   }
@@ -811,6 +917,7 @@ ${html}
       ["/instrumenty/", TOOLS_UPDATED, "monthly", "0.8"],
       ...TOOLS.map(t => [toolUrl(t), TOOLS_UPDATED, "monthly", "0.8", toolImg(t)]),
       ...SERVICES.map(x => [serviceUrl(x), SERVICES_UPDATED, "monthly", "0.9", serviceImg(x)]),
+      ...NICHES.map(n => [nicheUrl(n), NICHES_UPDATED, "monthly", "0.8"]),
       ...posts.map(p => [postUrl(p), p.updated || p.date, "monthly", "0.7", p.cover]),
       ...projects.map(p => [projectUrl(p), p.updated || p.date, "yearly", "0.6", p.cover]),
     ];
@@ -848,6 +955,46 @@ ${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.
 `;
   }
 
+  // llms.txt — короткий опис сайту для ШІ-асистентів (ChatGPT, Claude, Perplexity, Gemini)
+  function llmsTxt(posts, projects) {
+    const line = (title, url, desc) => `- [${title}](${SITE.url}${url})${desc ? `: ${desc}` : ""}`;
+    const own = posts.filter(p => !p.sourceId).slice(0, 15);
+    return `# ${SITE.name}
+
+> ${SITE.name} — фрілансер з Києва (Україна): сайти під ключ, графічний дизайн, автоматизація бізнес-процесів на базі ШІ Claude і переклади українською, англійською та російською. 50+ запущених сайтів, 8+ років досвіду. Працює з клієнтами з України та з-за кордону, віддалено.
+
+Мови спілкування: українська, англійська, російська. Замовлення і питання — в Telegram: ${SITE.telegram}. Ціни й терміни називаються після короткого брифу; орієнтовну вартість сайту можна порахувати в калькуляторі на сайті.
+
+## Послуги
+
+${SERVICES.map(x => line(x.h1, serviceUrl(x), x.description)).join("\n")}
+
+## Сайти для конкретних галузей
+
+${NICHES.map(n => line(n.h1, nicheUrl(n), n.description)).join("\n")}
+
+## Безкоштовні інструменти
+
+${TOOLS.map(t => line(t.name, toolUrl(t), t.description)).join("\n")}
+
+## Портфоліо
+
+${projects.map(p => line(p.title, projectUrl(p), [p.url, clip(p.excerpt || p.description || stripMd(String(p.body || "").replace(/^#+.*$/gm, "")), 160)].filter(Boolean).join(" — "))).join("\n")}
+
+## Блог
+
+${own.map(p => line(p.title, postUrl(p), clip(p.excerpt || p.description || "", 160))).join("\n")}
+- [Усі статті (RSS)](${SITE.url}/blog/feed.xml)
+
+## Контакти
+
+- Telegram (замовлення): ${SITE.telegram}
+- Telegram-канал Rodionactive | Tech: ${SITE.channel}
+- Instagram: ${SITE.instagram}
+- Freelancehunt (відгуки): ${SITE.freelancehunt}
+`;
+  }
+
   // ---------- усе разом ----------
   // input: { posts, projects, indexHtml?, markdown(md) -> html }
   // output: { files: {path: content}, postPaths: [...], projectPaths: [...] }
@@ -862,6 +1009,8 @@ ${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.
     files["instrumenty/index.html"] = renderTools();
     TOOLS.forEach(t => { files[`${toolUrl(t).slice(1)}index.html`] = renderTool(t); });
     SERVICES.forEach(x => { files[`${serviceUrl(x).slice(1)}index.html`] = renderService(x, P, J); });
+    NICHES.forEach(n => { files[`${nicheUrl(n).slice(1)}index.html`] = renderNiche(n, J); });
+    files["llms.txt"] = llmsTxt(P, J);
     files["blog/feed.xml"] = feed(P, markdown);
     files["sitemap.xml"] = sitemap(P, J);
     if (indexHtml) files["index.html"] = renderIndex(indexHtml, P, J);

@@ -20,7 +20,7 @@
   </url>
   <url>
     <loc>https://rodionactive.com/services/</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -53,31 +53,67 @@
   </url>
   <url>
     <loc>https://rodionactive.com/services/rozrobka-saitiv/</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image><image:loc>https://rodionactive.com/assets/img/services/rozrobka-saitiv.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/services/hrafichnyi-dyzain/</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image><image:loc>https://rodionactive.com/assets/img/services/hrafichnyi-dyzain.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/services/avtomatyzatsiia-z-claude/</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image><image:loc>https://rodionactive.com/assets/img/services/avtomatyzatsiia-z-claude.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/services/pereklady/</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image><image:loc>https://rodionactive.com/assets/img/services/pereklady.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/rozrobka-saitiv/dlia-kaviarni-ta-restoranu/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/rozrobka-saitiv/dlia-salonu-krasy/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/rozrobka-saitiv/dlia-stomatolohii/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/rozrobka-saitiv/dlia-mahazynu-odiahu/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/rozrobka-saitiv/dlia-remontnoi-kompanii/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/services/rozrobka-saitiv/dlia-dytiachoho-sadka-ta-kursiv/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/vin-breshe-mask-posvaryvsia-iz-zelenskym-a-platyt-za-tse-front/</loc>

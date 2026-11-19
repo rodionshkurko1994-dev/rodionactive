@@ -1,0 +1,63 @@
+# Rodionactive
+
+> Rodionactive — фрілансер з Києва (Україна): сайти під ключ, графічний дизайн, автоматизація бізнес-процесів на базі ШІ Claude і переклади українською, англійською та російською. 50+ запущених сайтів, 8+ років досвіду. Працює з клієнтами з України та з-за кордону, віддалено.
+
+Мови спілкування: українська, англійська, російська. Замовлення і питання — в Telegram: https://t.me/rodionactive. Ціни й терміни називаються після короткого брифу; орієнтовну вартість сайту можна порахувати в калькуляторі на сайті.
+
+## Послуги
+
+- [Розробка сайтів під ключ](https://rodionactive.com/services/rozrobka-saitiv/): Створюю сайти під ключ на Weblium або Claude + GitHub: лендинги, багатосторінкові сайти, інтернет-магазини. Дизайн, адаптив, SEO, домен.
+- [Графічний дизайн і фірмовий стиль](https://rodionactive.com/services/hrafichnyi-dyzain/): Розробка логотипу і фірмового стилю, креативи для соцмереж і реклами, банери, поліграфія та упаковка. Візуальний стиль, який впізнають.
+- [Автоматизація процесів з Claude](https://rodionactive.com/services/avtomatyzatsiia-z-claude/): Налаштовую автоматизації на базі ШІ Claude: автопостинг, звіти, моніторинг, обробка документів, інтеграції з Gmail, Google Drive і Telegram.
+- [Переклад: українська, англійська, російська](https://rodionactive.com/services/pereklady/): Переклад текстів, документів, сайтів і презентацій між українською, англійською та російською. Також ШІ-переклад з ручним редагуванням.
+
+## Сайти для конкретних галузей
+
+- [Сайт для кав'ярні чи ресторану](https://rodionactive.com/services/rozrobka-saitiv/dlia-kaviarni-ta-restoranu/): Розробка сайту для кав'ярні, кафе чи ресторану: меню з фото, бронювання столиків, доставка, карта і години роботи. Адаптив під телефони, SEO, домен.
+- [Сайт для салону краси](https://rodionactive.com/services/rozrobka-saitiv/dlia-salonu-krasy/): Розробка сайту для салону краси, барбершопу чи нейл-студії: послуги й ціни, онлайн-запис, портфоліо робіт, майстри, відгуки. Адаптив, SEO, домен.
+- [Сайт для стоматології чи приватної клініки](https://rodionactive.com/services/rozrobka-saitiv/dlia-stomatolohii/): Розробка сайту для стоматології чи медичного центру: послуги й ціни, лікарі, запис на прийом, ліцензії, відгуки. Адаптив під телефони, SEO, домен.
+- [Сайт для магазину одягу](https://rodionactive.com/services/rozrobka-saitiv/dlia-mahazynu-odiahu/): Розробка сайту чи інтернет-магазину одягу: каталог з фільтрами, розмірні сітки, кошик, онлайн-оплата, доставка Новою поштою. Адаптив, SEO, домен.
+- [Сайт для ремонтної чи будівельної компанії](https://rodionactive.com/services/rozrobka-saitiv/dlia-remontnoi-kompanii/): Розробка сайту для ремонту квартир, будівельної компанії чи майстра: послуги й ціни, портфоліо об'єктів, калькулятор, заявка на замір. Адаптив, SEO, домен.
+- [Сайт для дитячого садка, школи чи курсів](https://rodionactive.com/services/rozrobka-saitiv/dlia-dytiachoho-sadka-ta-kursiv/): Розробка сайту для приватного садка, школи, гуртка чи онлайн-курсів: програми, педагоги, розклад, ціни, запис на знайомство, відгуки батьків. Адаптив, SEO.
+
+## Безкоштовні інструменти
+
+- [Генератор QR-кодів](https://rodionactive.com/instrumenty/generator-qr-kodu/): Створіть QR-код для посилання, Wi-Fi, контакту, телефону чи тексту. Свої кольори й логотип, завантаження у PNG і SVG. Безкоштовно, без реєстрації та без терміну дії.
+- [Калькулятор вартості сайту](https://rodionactive.com/instrumenty/kalkuliator-vartosti-saitu/): Розрахуйте орієнтовну вартість сайту за 1 хвилину: лендинг, сайт-візитка, корпоративний сайт чи інтернет-магазин. Ціна в гривнях і порівняння з ринком фрілансу.
+- [Калькулятор рутини](https://rodionactive.com/instrumenty/kalkuliator-avtomatyzatsii/): Порахуйте, скільки годин і гривень на рік забирають повторювані задачі, скільки можна заощадити автоматизацією з ШІ Claude, вартість налаштування і термін окупності.
+
+## Портфоліо
+
+- [Project X](https://rodionactive.com/portfolio/project-x/): https://projectx.vision — Небо над Україною, яке живе власним життям: цілі летять цілодобово, час від часу стаються масовані атаки. Кожен гравець бачить ті самі цілі в тих самих…
+- [Садок «Бджілка»](https://rodionactive.com/portfolio/bee-kyiv/): https://bee.kyiv.ua — Сімейному приватному садку «Бджілка» на Позняках потрібен був сайт, який швидко пояснює батькам, чим садок відрізняється, і веде їх до запису. Односторінковий…
+- [Світло Києва](https://rodionactive.com/portfolio/svitlo-kyiva/): https://svitlo-kyiv.online — Швидко зрозуміти, де в Києві зараз є світло, не перечитуючи таблиці графіків відключень. Інтерактивна 3D мапа міста, на якій райони підсвічуються за…
+- [CarGo](https://rodionactive.com/portfolio/cargo/): Розробка під ключ багатомовного сайту для компанії, що займається розробкою та виробництвом пристроїв для GPS моніторингу, які забезпечують бездротову…
+- [Flip Advance](https://rodionactive.com/portfolio/flip-advance/): Сайт для агентства, яке займається дизайном інтер'єрів в США.
+- [GrossMeister](https://rodionactive.com/portfolio/grossmeister/): Сайт для агентства з розробки AI агентів для маркетингу.
+- [Solid Insurance](https://rodionactive.com/portfolio/solid-insurance/): Сайт для страхової компанії, яка займається великогабаритними вантажами.
+
+## Блог
+
+- [Weblium чи Claude + GitHub: на чому запускати сайт у 2026 році](https://rodionactive.com/blog/weblium-chy-claude-github-na-chomu-zapuskaty-sait-u-2026-rotsi/): Порівнюю два способи, якими я запускаю сайти: конструктор Weblium і власний код із Claude на GitHub. Ціни, можливості, переваги, недоліки і прості правила…
+- [Крипту в Україні легалізують: що зміниться для твого гаманця з 2027 року](https://rodionactive.com/blog/kryptu-v-ukraini-lehalizuiut-shcho-zminytsia-dlia-tvoho-hamantsia-z-20/): Комітет Ради підтримав закон про віртуальні активи №10225-д: податок з прибутку, пільга до мінзарплати, 5% до кінця 2028 року.
+- [До 6 років за чужу картку: Рада ухвалила закон про дропів. Що треба знати](https://rodionactive.com/blog/do-6-rokiv-za-chuzhu-kartku-rada-ukhvalyla-zakon-pro-dropiv-shcho-treb/): Рада ухвалила закон №16013 про дропів: штрафи до 170 тис. грн і до 6 років ув'язнення. Пояснюю, кого покарають і як не стати дропом.
+- [Телевізор Samsung стежить за тобою? Що хакер знайшов у прошивці Tizen](https://rodionactive.com/blog/televizor-samsung-stezhyt-za-toboiu-shcho-khaker-znaishov-u-proshyvtsi/): Хакер log4j заявив, що телевізори Samsung аналізують звук і екран для реклами. Що відомо, що не доведено і як захистити свій смарт-ТВ.
+- [Реклама в ChatGPT прийшла в Україну: що побачиш ти і що це дає бізнесу](https://rodionactive.com/blog/reklama-v-chatgpt-pryishla-v-ukrainu-shcho-pobachysh-ty-i-shcho-tse-da/): Реклама в ChatGPT тепер в Україні: лише для Free і Go, 89 країн, 100 000+ рекламодавців. Що це означає для користувачів і бізнесу.
+- [Один хакер, ШІ-агенти і $5000: як зламали понад 100 компаній, зокрема John Deere](https://rodionactive.com/blog/odyn-khaker-shi-ahenty-i-5000-iak-zlamaly-ponad-100-kompanii-zokrema-j/): Reuters і NorForge: один хакер з ШІ-агентами зламав понад 100 компаній, зокрема John Deere і SharkNinja. Як це сталося і що робити бізнесу.
+- [Apple «Pro and tell»: 28 жовтня чекаємо перший сенсорний MacBook Pro](https://rodionactive.com/blog/apple-pro-and-tell-28-zhovtnia-chekaiemo-pershyi-sensornyi-macbook-pro/): Apple проведе подію «Pro and tell» 28 жовтня. Що відомо про сенсорний MacBook Pro з OLED, iPad mini і Mac на M6 — і що поки лише чутки.
+- [iPhone Duo за $1 999 розкупили за хвилини: чому складаний iPhone доставлять лише у 2027](https://rodionactive.com/blog/iphone-duo-za-1-999-rozkupyly-za-khvylyny-chomu-skladanyi-iphone-dosta/): iPhone Duo: перший складаний iPhone від $1 999, передзамовлення розкупили, доставка — у 2027. Характеристики, причини ажіотажу і ризики.
+- [Starshield, Маск і Білий дім: хто «пригальмував» українські дрони](https://rodionactive.com/blog/starshield-mask-i-bilyi-dim-khto-pryhalmuvav-ukrainski-drony/): Обмеження швидкості Starshield для українських дронів: що сталося, що кажуть Маск, Трамп і Reuters, і чому це урок для бізнесу.
+- [ШІ помиляється впевнено: що показала перевірка 7 625 відповідей чатботів](https://rodionactive.com/blog/shi-pomyliaietsia-vpevneno-shcho-pokazala-perevirka-7-625-vidpovidei-c/): Full Fact перевірив 7 625 відповідей ChatGPT, Claude, Gemini, DeepSeek і Grok. Де ШІ помиляється і як перевіряти його відповіді.
+- [90 000 ШІ-треків на день: YouTube і Deezer починають їх маркувати й фільтрувати](https://rodionactive.com/blog/90-000-shi-trekiv-na-den-youtube-i-deezer-pochynaiut-ikh-markuvaty-i-f/): YouTube Music маркує пісні, створені ШІ, а Deezer дасть змогу приховати їх у пошуку. Цифри, правила і що це означає для авторів контенту.
+- [Чому класичне SEO більше не працює: як люди шуукають інформацію у 2026 році](https://rodionactive.com/blog/chomu-klasichne-seo-bilshe-ne-pracyuye-yak-lyudi-shuukayut-informaciyu-u-2026-roci/): Епоха, коли весь інтернет крутився навколо Google, закінчується. Сьогодні увага аудиторії розподілена між десятками платформ, а штучний інтелект поступово…
+- [Gen Z і штучний інтелект: чому покоління, яке виросло з технологіями, починає їх ненавидіти](https://rodionactive.com/blog/gen-z-i-shtuchnij-intelekt-chomu-pokolinnya-yake-viroslo-z-tehnologiyami-pochinaye-yih-nenaviditi/): Ще зовсім недавно здавалося, що саме покоління Z стане головним фанатом штучного інтелекту. Це люди, які виросли зі смартфонами, соцмережами і постійним…
+- [Конфлікт Маска і Альтмана: що насправді стоїть за найбільшою війною в AI](https://rodionactive.com/blog/konflikt-maska-i-altmana-sho-naspravdi-stoyit-za-najbilshoyu-vijnoyu-v-ai/): Історія протистояння між Ілоном Маском і Семом Альтманом — це вже давно не просто особистий конфлікт. Сьогодні це фактично боротьба за те, яким буде майбутнє…
+- [Нова загроза національній безпеці: чому біотехнології стають “зброєю майбутнього”](https://rodionactive.com/blog/nova-zagroza-nacionalnij-bezpeci-chomu-biotehnologiyi-stayut-zbroyeyu-majbutnogo/): Ще кілька років тому біотехнології сприймалися переважно як щось із медицини: вакцини, лікування раку, генетичні дослідження. Але сьогодні вони стрімко…
+- [Усі статті (RSS)](https://rodionactive.com/blog/feed.xml)
+
+## Контакти
+
+- Telegram (замовлення): https://t.me/rodionactive
+- Telegram-канал Rodionactive | Tech: https://t.me/rodionactive_online
+- Instagram: https://www.instagram.com/rodionactive.io
+- Freelancehunt (відгуки): https://freelancehunt.com/freelancer/rodionskipper.html

@@ -932,3 +932,8 @@ h1, h2, h3, .lead { overflow-wrap: break-word; }
   .bb-chat { display: none; }
   .bb-main h2 { font-size: var(--step-1); }
 }
+
+/* Картки «Сайти для вашої галузі» — посилання */
+a.svc-kind{text-decoration:none;color:inherit;transition:background .2s}
+a.svc-kind h3{transition:color .2s}
+a.svc-kind:hover h3,a.svc-kind:focus-visible h3{color:#ff6e27}
