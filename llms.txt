@@ -28,13 +28,13 @@
 
 ## Портфоліо
 
-- [Project X](https://rodionactive.com/portfolio/project-x/): https://projectx.vision — Небо над Україною, яке живе власним життям: цілі летять цілодобово, час від часу стаються масовані атаки. Кожен гравець бачить ті самі цілі в тих самих…
-- [Садок «Бджілка»](https://rodionactive.com/portfolio/bee-kyiv/): https://bee.kyiv.ua — Сімейному приватному садку «Бджілка» на Позняках потрібен був сайт, який швидко пояснює батькам, чим садок відрізняється, і веде їх до запису. Односторінковий…
-- [Світло Києва](https://rodionactive.com/portfolio/svitlo-kyiva/): https://svitlo-kyiv.online — Швидко зрозуміти, де в Києві зараз є світло, не перечитуючи таблиці графіків відключень. Інтерактивна 3D мапа міста, на якій райони підсвічуються за…
-- [CarGo](https://rodionactive.com/portfolio/cargo/): Розробка під ключ багатомовного сайту для компанії, що займається розробкою та виробництвом пристроїв для GPS моніторингу, які забезпечують бездротову…
+- [Project X](https://rodionactive.com/portfolio/project-x/): https://projectx.vision — Браузерна гра: збиття повітряних цілей над Україною в єдиному спільному світі для всіх гравців.
+- [Садок «Бджілка»](https://rodionactive.com/portfolio/bee-kyiv/): https://bee.kyiv.ua — Лендинг під ключ для приватного дитячого садка в Києві на Позняках.
+- [Cyber Kyiv](https://rodionactive.com/portfolio/svitlo-kyiva/): https://cyber-kyiv.online — Публічна 3D-карта Києва: де зараз є світло за графіками YASNO, громадський транспорт за розкладом і погода в реальному часі.
+- [CarGo](https://rodionactive.com/portfolio/cargo/): Багатомовний сайт під ключ для виробника пристроїв GPS-моніторингу.
 - [Flip Advance](https://rodionactive.com/portfolio/flip-advance/): Сайт для агентства, яке займається дизайном інтер'єрів в США.
-- [GrossMeister](https://rodionactive.com/portfolio/grossmeister/): Сайт для агентства з розробки AI агентів для маркетингу.
-- [Solid Insurance](https://rodionactive.com/portfolio/solid-insurance/): Сайт для страхової компанії, яка займається великогабаритними вантажами.
+- [GrossMeister](https://rodionactive.com/portfolio/grossmeister/): Сайт для агентства з розробки AI-агентів для маркетингу.
+- [Solid Insurance](https://rodionactive.com/portfolio/solid-insurance/): Сайт для страхової компанії, яка страхує великогабаритні вантажі.
 
 ## Блог
 

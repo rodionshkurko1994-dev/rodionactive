@@ -979,7 +979,7 @@ ${TOOLS.map(t => line(t.name, toolUrl(t), t.description)).join("\n")}
 
 ## Портфоліо
 
-${projects.map(p => line(p.title, projectUrl(p), [p.url, clip(p.excerpt || p.description || stripMd(String(p.body || "").replace(/^#+.*$/gm, "")), 160)].filter(Boolean).join(" — "))).join("\n")}
+${projects.map(p => line(p.title, projectUrl(p), [p.url, clip(p.summary || p.excerpt || p.description || stripMd(String(p.body || "").replace(/^#+.*$/gm, "")), 160)].filter(Boolean).join(" — "))).join("\n")}
 
 ## Блог
 
