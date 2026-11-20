@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611191950";
+  const ASSET_V = "202611201700";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -59,11 +59,9 @@
       ${NAV.map(([href, label, key]) => `<a href="${href}"${key === page ? ' aria-current="page"' : ""}>${label}</a>`).join("\n      ")}
       <a class="nav-cta link" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт →</a>
       <a class="nav-cta link" href="https://cyber-kyiv.online" target="_blank" rel="noopener">Cyber Kyiv ↗</a>
-      <a class="nav-cta link" href="https://projectx.vision" target="_blank" rel="noopener">Project X ↗</a>
     </nav>
     <div class="header-actions">
       <a class="btn small ghost header-cta" href="https://cyber-kyiv.online" target="_blank" rel="noopener">Cyber Kyiv <span class="arr">↗</span></a>
-      <a class="btn small ghost header-cta" href="https://projectx.vision" target="_blank" rel="noopener">Project X <span class="arr">↗</span></a>
       <a class="btn small header-cta" href="${SITE.telegram}" target="_blank" rel="noopener">Обговорити проєкт <span class="arr">→</span></a>
     </div>
     <button class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i><i></i><i></i></button>
@@ -776,7 +774,7 @@ ${html}
 
   // ---------- розділ «Інструменти» ----------
   const { TOOLS, ILLU: TOOL_ILLU } = SiteTools || { TOOLS: [], ILLU: {} };
-  const TOOLS_UPDATED = "2026-11-16";
+  const TOOLS_UPDATED = "2026-11-20";
   const toolUrl = t => `/instrumenty/${t.slug}/`;
   const toolImg = t => `assets/img/tools/${t.slug}.png`;
 
@@ -867,7 +865,7 @@ ${html}
 
   function renderTools() {
     const path = "/instrumenty/";
-    const description = "Безкоштовні онлайн-інструменти: генератор QR-кодів з логотипом, калькулятор вартості сайту в гривнях і калькулятор, скільки часу й грошей забирає рутина.";
+    const description = "Безкоштовні онлайн-інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини, статус сервісів (чи працює ChatGPT, Telegram, monobank) та індекс ринку фрілансу.";
     const jsonld = [{
       "@context": "https://schema.org",
       "@graph": [
@@ -885,11 +883,11 @@ ${html}
         crumbs([["Головна", "/"], ["Інструменти", path]]),
       ],
     }];
-    const head = headHTML({ title: `Безкоштовні онлайн-інструменти: QR-коди, вартість сайту, автоматизація | ${SITE.name}`, description, path, jsonld });
+    const head = headHTML({ title: `Безкоштовні онлайн-інструменти: QR-коди, вартість сайту, статус сервісів, ринок фрілансу | ${SITE.name}`, description, path, jsonld });
     const body = `  <header class="article-head">
     <p class="eyebrow rise">Інструменти</p>
     <h1 class="rise" style="--d:1">Безкоштовні <span style="color:var(--orange)">інструменти</span></h1>
-    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Створіть QR-код, дізнайтеся вартість сайту або порахуйте, скільки коштує ваша рутина.</p>
+    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Створіть QR-код, дізнайтеся вартість сайту, порахуйте, скільки коштує ваша рутина, перевірте, чи працюють популярні сервіси, або подивіться, що зараз замовляють на ринку фрілансу.</p>
   </header>
   <div class="svc-list tool-list">
     ${TOOLS.map((t, i) => `<a class="svc-tile reveal" href="${toolUrl(t)}" style="--i:${i}">

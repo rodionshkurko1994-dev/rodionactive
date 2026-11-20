@@ -1,0 +1,65 @@
+name: Дані для інструментів (статус сервісів, індекс фрілансу)
+
+# Результати лежать в окремій гілці `data` (один коміт, перезаписується щоразу),
+# тож main не засмічується комітами, а сайт не перебудовується кожні 15 хвилин.
+# Сторінки читають файли з https://raw.githubusercontent.com/<репозиторій>/data/...
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # статус сервісів
+    - cron: "23 4 * * *"     # індекс ринку фрілансу (≈06:23–07:23 за Києвом)
+  workflow_dispatch:
+    inputs:
+      freelance:
+        description: "Оновити й індекс ринку фрілансу"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-branch
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Поточні дані з гілки data
+        run: |
+          mkdir -p out
+          if git ls-remote --exit-code --heads origin data >/dev/null; then
+            git fetch --depth 1 origin data
+            git --work-tree=out checkout FETCH_HEAD -- .
+            git reset -q
+          fi
+          ls -la out
+
+      - name: Статус сервісів
+        run: node tools/fetch-status.mjs out/status.json
+
+      - name: Індекс ринку фрілансу
+        if: github.event.schedule == '23 4 * * *' || inputs.freelance == true
+        env:
+          FREELANCEHUNT_TOKEN: ${{ secrets.FREELANCEHUNT_TOKEN }}
+        run: node tools/fetch-freelance.mjs out
+
+      - name: Публікація в гілку data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out
+          rm -rf .git
+          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Дані інструментів: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data

@@ -80,3 +80,13 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 ## Інструменти
 
 `/instrumenty/` — безкоштовні інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини. Тексти й SEO — `assets/js/tools.js`, логіка — `assets/js/tools-app.js` (ціни: ринок фрілансу × 0,8, константа `DISCOUNT`), бібліотека QR — `assets/js/vendor/qr-code-styling.js` (MIT). Розрахунок відкривається в Telegram з уже заповненим повідомленням (`t.me/rodionactive?text=…`). Картинки для соцмереж: `node tools/og-tools.mjs`. Папка `tools/` — це скрипти, не сторінки сайту.
+
+## Статус сервісів та індекс ринку фрілансу
+
+Два інструменти з живими даними: `/instrumenty/status-servisiv/` і `/instrumenty/indeks-rynku-frilansu/`.
+Дані збирає GitHub Actions (`.github/workflows/data.yml`) і кладе в окрему гілку `data` (один коміт, перезаписується щоразу), тож `main` не засмічується, а сайт не перебудовується. Сторінки читають файли з `https://raw.githubusercontent.com/rodionshkurko1994-dev/rodionactive/data/…`.
+
+- **Статус сервісів** — `tools/fetch-status.mjs`, кожні 15 хвилин. Список сервісів — масив `SERVICES` у скрипті: для тих, що мають офіційну сторінку статусу (Statuspage, `/api/v2/summary.json`), читається вона; для решти перевіряється, чи відповідає сам сайт.
+- **Індекс ринку фрілансу** — `tools/fetch-freelance.mjs`, раз на добу. Потрібен секрет репозиторію `FREELANCEHUNT_TOKEN` (ключ API з https://freelancehunt.com/my/api2). Зберігаються лише дата, навички, бюджет і кількість ставок проєктів за 120 днів, без описів і замовників.
+- Ручний запуск: Actions → «Дані для інструментів» → Run workflow.
+

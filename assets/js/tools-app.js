@@ -1,4 +1,5 @@
-/* Rodionactive — інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини.
+/* Rodionactive — інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини,
+   статус сервісів і індекс ринку фрілансу (дані — з гілки data, див. .github/workflows/data.yml).
    Усе працює в браузері; дані нікуди не надсилаються, доки відвідувач сам не натисне «Обговорити в Telegram». */
 (function () {
   "use strict";
@@ -363,6 +364,158 @@
     drawFields(); update();
   }
 
-  const APPS = { qr: qrTool, site: siteCalc, routine: routineCalc };
+  /* ===================== Дані з гілки data (GitHub Actions) ===================== */
+  const DATA = "https://raw.githubusercontent.com/rodionshkurko1994-dev/rodionactive/data/";
+  const getData = file => fetch(`${DATA}${file}?t=${Math.floor(Date.now() / 120000)}`, { cache: "no-store" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  const num = n => Math.round(n).toLocaleString("uk-UA").replace(/,/g, " ");
+  const pad = n => String(n).padStart(2, "0");
+  function when(iso) {
+    const d = new Date(iso), now = new Date();
+    const t = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    if (d.toDateString() === now.toDateString()) return `сьогодні о ${t}`;
+    const y = new Date(now); y.setDate(now.getDate() - 1);
+    if (d.toDateString() === y.toDateString()) return `вчора о ${t}`;
+    return `${d.getDate()} ${["січ", "лют", "бер", "квіт", "трав", "черв", "лип", "серп", "вер", "жовт", "лист", "груд"][d.getMonth()]}. о ${t}`;
+  }
+  function ago(iso) {
+    const m = Math.max(1, Math.round((Date.now() - Date.parse(iso)) / 60000));
+    if (m < 60) return `${m} хв`;
+    const h = Math.round(m / 60);
+    if (h < 48) return `${h} год`;
+    return `${Math.round(h / 24)} дн.`;
+  }
+  const plural = (n, one, few, many) => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 12 || b > 14) ? few : many; };
+
+  /* ===================== Статус сервісів ===================== */
+  function statusTool(root) {
+    const STATE = {
+      ok: ["Працює", "✓"],
+      degraded: ["Частковий збій", "!"],
+      down: ["Не працює", "✕"],
+      maintenance: ["Технічні роботи", "⚙"],
+      unknown: ["Невідомо", "?"],
+    };
+    const GROUPS = [["all", "Усі"], ["ai", "ШІ"], ["social", "Месенджери й соцмережі"], ["ua", "Українські сервіси"], ["work", "Робочі інструменти"]];
+    let data = null, group = "all", query = "";
+    root.innerHTML = `<div class="st" aria-live="polite">
+      <div class="st-top"><div class="st-summary"><b>Завантажуємо статус…</b><span></span></div>
+        <label class="st-search"><span class="sr-only">Пошук сервісу</span><input type="search" placeholder="Пошук: ChatGPT, Telegram…" autocomplete="off"></label></div>
+      <div class="filters st-filters" role="group" aria-label="Категорії">${GROUPS.map(([id, l]) => `<button type="button" class="filter" data-g="${id}" aria-pressed="${id === "all"}">${l}</button>`).join("")}</div>
+      <ul class="st-list"></ul>
+      <div class="st-log"></div>
+    </div>`;
+    const list = $(".st-list", root), sum = $(".st-summary", root), logEl = $(".st-log", root);
+
+    function draw() {
+      if (!data) return;
+      const items = data.services.filter(s => (group === "all" || s.group === group) && (!query || s.name.toLowerCase().includes(query)));
+      list.innerHTML = items.map(s => {
+        const [label, icon] = STATE[s.state] || STATE.unknown;
+        const inc = (s.incidents || []).map(i => `<a class="st-inc" href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.name)}</a>`).join("");
+        const comps = s.components ? `<small class="st-comp">Зачеплено: ${esc(s.components.join(", "))}</small>` : "";
+        const since = s.state === "ok" ? `без збоїв ${ago(s.since)}` : `з ${when(s.since)}`;
+        return `<li class="st-row is-${s.state}">
+          <span class="st-dot" aria-hidden="true">${icon}</span>
+          <span class="st-name"><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>
+            <small>${s.kind === "statuspage" ? "офіційна сторінка статусу" : "перевірка доступності"}${s.latency ? ` · ${(s.latency / 1000).toFixed(1)} с` : ""}</small>${inc}${comps}</span>
+          <span class="st-state"><b>${label}</b><small>${since}</small></span>
+        </li>`;
+      }).join("") || `<li class="st-empty">Нічого не знайдено. Спробуйте іншу назву.</li>`;
+    }
+    function drawSummary() {
+      const bad = data.services.filter(s => s.state === "down" || s.state === "degraded");
+      const total = data.services.length;
+      sum.className = `st-summary${bad.length ? " is-bad" : ""}`;
+      sum.innerHTML = `<b>${bad.length ? `${plural(bad.length, "Проблема", "Проблеми", "Проблеми")} у ${bad.length} з ${total}: ${esc(bad.map(s => s.name).join(", "))}` : `Усі ${total} сервісів працюють`}</b><span>Перевірено ${when(data.checked)} · оновлення кожні 15 хвилин</span>`;
+      const events = (data.log || []).filter(e => e.to !== "ok" && e.to !== "unknown").slice(0, 12);
+      logEl.innerHTML = `<h2>Збої за останні 14 днів</h2>${events.length ? `<ol>${events.map(e => {
+        const end = (data.log || []).find(x => x.id === e.id && x.at > e.at && x.to === "ok");
+        const lasted = end ? ` · тривало ${ago(new Date(Date.now() - (Date.parse(end.at) - Date.parse(e.at))).toISOString())}` : " · триває";
+        return `<li><time datetime="${e.at}">${when(e.at)}</time><b>${esc(e.name)}</b><span>${(STATE[e.to] || STATE.unknown)[0]}${lasted}</span></li>`;
+      }).join("")}</ol>` : `<p class="st-muted">Збоїв не зафіксовано.</p>`}`;
+    }
+    function load() {
+      getData("status.json").then(j => { data = j; drawSummary(); draw(); })
+        .catch(() => { if (!data) sum.innerHTML = `<b>Дані тимчасово недоступні</b><span>Спробуйте оновити сторінку за кілька хвилин.</span>`; });
+    }
+    root.addEventListener("click", e => {
+      const b = e.target.closest("[data-g]"); if (!b) return;
+      group = b.dataset.g;
+      $$("[data-g]", root).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      draw();
+    });
+    $(".st-search input", root).addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); draw(); });
+    load();
+    setInterval(() => { if (!document.hidden) load(); }, 5 * 60000);
+  }
+
+  /* ===================== Індекс ринку фрілансу ===================== */
+  function freelanceTool(root) {
+    root.innerHTML = `<div class="fx" aria-live="polite"><p class="st-muted">Завантажуємо індекс…</p></div>`;
+    const box = $(".fx", root);
+    const uah = n => n ? `${num(n)} грн` : "—";
+    const trend = t => t === null || t === undefined ? "" : `<span class="fx-trend ${t >= 0 ? "up" : "down"}">${t >= 0 ? "↑" : "↓"} ${Math.abs(t)}%</span>`;
+    // горизонтальні смуги: одна величина — один колір, значення завжди підписане текстом
+    const bars = (rows, val, fmt, extra = () => "") => {
+      const max = Math.max(...rows.map(val), 1);
+      return `<div class="fx-bars">${rows.map(r => `<div class="fx-bar" title="${esc(r.name || r.label)}: ${esc(fmt(r))}">
+        <span class="fx-bar-name">${esc(r.name || r.label)}</span>
+        <span class="fx-bar-track"><i style="width:${Math.max(2, val(r) / max * 100)}%"></i></span>
+        <span class="fx-bar-val">${fmt(r)}${extra(r)}</span></div>`).join("")}</div>`;
+    };
+    const table = (rows, cols) => `<div class="fx-table-wrap"><table class="fx-table"><thead><tr>${cols.map(c => `<th scope="col"${c.num ? ' class="n"' : ""}>${c.h}</th>`).join("")}</tr></thead>
+      <tbody>${rows.map(r => `<tr>${cols.map((c, i) => i ? `<td class="${c.num ? "n" : ""}">${c.v(r)}</td>` : `<th scope="row">${c.v(r)}</th>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+
+    getData("freelance-index.json").then(d => {
+      if (!d.total || !d.total.count) throw new Error("empty");
+      const t = d.total;
+      const weeksMax = Math.max(...d.weeks.map(w => w.count), 1);
+      const fmtWeek = w => { const x = new Date(w + "T12:00:00"); return `${x.getDate()}.${pad(x.getMonth() + 1)}`; };
+      box.innerHTML = `
+        <p class="fx-meta">Оновлено ${when(d.updated)} · останні ${d.period} днів · джерело: ${esc(d.source)}</p>
+        <div class="qz-stats fx-stats">
+          <div class="hl"><span>Нових проєктів за ${d.period} днів</span><b>${num(t.count)}</b><em>≈ ${num(t.perDay)} на день ${trend(t.trend)}</em></div>
+          <div><span>Медіанний бюджет</span><b>${uah(t.medianBudget)}</b><em>бюджет вказано в ${String(t.withBudget).replace(".", ",")}% проєктів</em></div>
+          <div><span>Ставок на один проєкт</span><b>${String(t.avgBids).replace(".", ",")}</b><em>у середньому</em></div>
+        </div>
+
+        <section class="fx-sec"><h2>Попит за напрямками</h2>
+          <p class="st-muted">Частка проєктів напрямку, медіанний бюджет і конкуренція. Проєкт із кількома навичками враховується в кожному своєму напрямку.</p>
+          ${table(d.groups, [
+            { h: "Напрямок", v: g => esc(g.name) },
+            { h: "Частка", v: g => `<span class="fx-cell-bar"><i style="width:${Math.min(100, g.share / Math.max(...d.groups.map(x => x.share)) * 100)}%"></i></span>${String(g.share).replace(".", ",")}%` },
+            { h: "Проєктів", num: true, v: g => num(g.count) + (d.hasTrend ? " " + trend(g.trend) : "") },
+            { h: "Медіана бюджету", num: true, v: g => uah(g.medianBudget) },
+            { h: "Ставок", num: true, v: g => String(g.avgBids).replace(".", ",") },
+          ])}
+        </section>
+
+        ${d.weeks.length > 1 ? `<section class="fx-sec"><h2>Нових проєктів за тижнями</h2>
+          <div class="fx-cols" role="img" aria-label="Кількість нових проєктів за тижнями: ${d.weeks.map(w => `${fmtWeek(w.week)} — ${w.count}`).join(", ")}">
+            ${d.weeks.map((w, i) => `<div class="fx-col${i === d.weeks.length - 1 ? " last" : ""}" title="Тиждень з ${fmtWeek(w.week)}: ${num(w.count)} проєктів"><b>${num(w.count)}</b><i style="height:${Math.max(2, w.count / weeksMax * 85)}%"></i><span>${fmtWeek(w.week)}</span></div>`).join("")}
+          </div></section>` : ""}
+
+        <section class="fx-sec"><h2>Топ-15 навичок</h2>
+          ${bars(d.topSkills, s => s.count, s => `${num(s.count)}`, s => ` <small>· ${uah(s.medianBudget)} · ${String(s.avgBids).replace(".", ",")} ставок</small>`)}
+        </section>
+
+        <div class="fx-two">
+          <section class="fx-sec"><h2>Найменше конкуренції</h2><p class="st-muted">Найменше ставок на проєкт серед навичок, де достатньо замовлень.</p>
+            ${bars(d.lowCompetition, s => s.avgBids, s => `${String(s.avgBids).replace(".", ",")} ставок`)}</section>
+          <section class="fx-sec"><h2>Найвищі бюджети</h2><p class="st-muted">Медіанний бюджет за навичкою.</p>
+            ${bars(d.topPaid, s => s.medianBudget, s => uah(s.medianBudget))}</section>
+        </div>
+
+        <section class="fx-sec"><h2>Розподіл бюджетів</h2><p class="st-muted">Серед проєктів із вказаним бюджетом, у гривнях.</p>
+          ${bars(d.budgets, b => b.share, b => `${String(b.share).replace(".", ",")}%`)}
+        </section>
+
+        <p class="fx-meta">Дані збираються з ${d.since ? new Date(d.since + "T12:00:00").toLocaleDateString("uk-UA") : "—"}. Бюджети в USD та EUR переведено за курсом НБУ (${String(d.rates.USD).replace(".", ",")} і ${String(d.rates.EUR).replace(".", ",")} грн).${d.hasTrend ? "" : " Тренди з'являться, коли накопичиться два місяці даних."}</p>`;
+    }).catch(() => {
+      box.innerHTML = `<p><b>Індекс ще збирається.</b></p><p class="st-muted">Перші дані з'являться після найближчого щоденного оновлення. Загляньте трохи пізніше.</p>`;
+    });
+  }
+
+  const APPS = { qr: qrTool, site: siteCalc, routine: routineCalc, status: statusTool, freelance: freelanceTool };
   $$("[data-tool-app]").forEach(el => { const f = APPS[el.dataset.toolApp]; if (f) f(el); });
 })();
