@@ -69,6 +69,8 @@ async function checkProbe(s) {
       if (res.status < 500) return { state: ms > 8000 ? "degraded" : "ok", latency: ms };
       last = "HTTP " + res.status;
     } catch (e) {
+      // сервер відповів, але із завеликими заголовками (буває в Google) — отже, він працює
+      if (e.cause?.code === "UND_ERR_HEADERS_OVERFLOW") return { state: "ok" };
       last = e.name === "TimeoutError" ? "немає відповіді" : String(e.cause?.code || e.message || e);
     }
     await sleep(5000);

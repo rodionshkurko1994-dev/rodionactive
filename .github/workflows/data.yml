@@ -43,7 +43,7 @@ jobs:
           ls -la out
 
       - name: Статус сервісів
-        run: node tools/fetch-status.mjs out/status.json
+        run: node --max-http-header-size=81920 tools/fetch-status.mjs out/status.json
 
       - name: Індекс ринку фрілансу
         if: github.event.schedule == '23 4 * * *' || inputs.freelance == true
