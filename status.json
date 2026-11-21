@@ -1,0 +1,220 @@
+{
+ "checked": "2026-11-21T12:49:56.921Z",
+ "services": [
+  {
+   "id": "chatgpt",
+   "name": "ChatGPT і OpenAI",
+   "group": "ai",
+   "kind": "statuspage",
+   "url": "https://status.openai.com",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "claude",
+   "name": "Claude",
+   "group": "ai",
+   "kind": "statuspage",
+   "url": "https://status.claude.com",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "gemini",
+   "name": "Gemini",
+   "group": "ai",
+   "kind": "probe",
+   "url": "https://gemini.google.com/",
+   "state": "ok",
+   "since": "2026-11-20T14:45:57.206Z",
+   "latency": 161,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "telegram",
+   "name": "Telegram",
+   "group": "social",
+   "kind": "probe",
+   "url": "https://web.telegram.org/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 477,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "instagram",
+   "name": "Instagram",
+   "group": "social",
+   "kind": "probe",
+   "url": "https://www.instagram.com/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 306,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "whatsapp",
+   "name": "WhatsApp",
+   "group": "social",
+   "kind": "probe",
+   "url": "https://web.whatsapp.com/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 254,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "youtube",
+   "name": "YouTube",
+   "group": "social",
+   "kind": "probe",
+   "url": "https://www.youtube.com/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 266,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "discord",
+   "name": "Discord",
+   "group": "social",
+   "kind": "statuspage",
+   "url": "https://discordstatus.com",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "monobank",
+   "name": "monobank",
+   "group": "ua",
+   "kind": "probe",
+   "url": "https://www.monobank.ua/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 721,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "privatbank",
+   "name": "ПриватБанк",
+   "group": "ua",
+   "kind": "probe",
+   "url": "https://privatbank.ua/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 828,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "novaposhta",
+   "name": "Нова пошта",
+   "group": "ua",
+   "kind": "probe",
+   "url": "https://novaposhta.ua/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 1155,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "olx",
+   "name": "OLX",
+   "group": "ua",
+   "kind": "probe",
+   "url": "https://www.olx.ua/",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "latency": 852,
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "github",
+   "name": "GitHub",
+   "group": "work",
+   "kind": "statuspage",
+   "url": "https://www.githubstatus.com",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "cloudflare",
+   "name": "Cloudflare",
+   "group": "work",
+   "kind": "statuspage",
+   "url": "https://www.cloudflarestatus.com",
+   "state": "degraded",
+   "since": "2026-11-20T14:44:06.465Z",
+   "incidents": [
+    {
+     "name": "Changes to Cloudflare Workers are not producing Event Subscription events",
+     "impact": "minor",
+     "started": "2026-11-10T01:53:58.905Z",
+     "url": "https://www.cloudflarestatus.com/incidents/0ocqieaifg7h"
+    }
+   ],
+   "components": [
+    "Ahmedabad, India - (AMD)",
+    "Albuquerque, United States - (ABQ)",
+    "Arica, Chile - (ARI)",
+    "Almaty, Kazakhstan - (ALA)"
+   ],
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "zoom",
+   "name": "Zoom",
+   "group": "work",
+   "kind": "statuspage",
+   "url": "https://status.zoom.us",
+   "state": "maintenance",
+   "since": "2026-11-20T14:44:06.465Z",
+   "components": [
+    "Zoom Phone"
+   ],
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "figma",
+   "name": "Figma",
+   "group": "work",
+   "kind": "statuspage",
+   "url": "https://status.figma.com",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "canva",
+   "name": "Canva",
+   "group": "work",
+   "kind": "statuspage",
+   "url": "https://www.canvastatus.com",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  },
+  {
+   "id": "dropbox",
+   "name": "Dropbox",
+   "group": "work",
+   "kind": "statuspage",
+   "url": "https://status.dropbox.com",
+   "state": "ok",
+   "since": "2026-11-20T14:44:06.465Z",
+   "lastKnown": "2026-11-21T12:49:56.921Z"
+  }
+ ],
+ "log": [
+  {
+   "id": "gemini",
+   "name": "Gemini",
+   "from": "down",
+   "to": "ok",
+   "at": "2026-11-20T14:45:57.206Z"
+  }
+ ]
+}
