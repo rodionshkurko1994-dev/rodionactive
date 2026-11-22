@@ -21,7 +21,7 @@
     telegram: "https://t.me/rodionactive",
     channel: "https://t.me/rodionactive_online",
     instagram: "https://www.instagram.com/rodionactive.io",
-    freelancehunt: "https://freelancehunt.com/freelancer/rodionskipper.html",
+    freelancehunt: "https://freelancehunt.com/freelancer/rodionactive_com.html",
     goatcounter: "https://rodionactive.goatcounter.com/count",
     city: "Київ",
   };
