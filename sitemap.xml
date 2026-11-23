@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://rodionactive.com/</loc>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/</loc>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -128,6 +128,13 @@
     <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/blog/banky-zarobyly-161-mlrd-i-polovynu-viddaly-derzhavi-khto-vyhrav/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/uploads/20261123-banky-zarobyly-161-mlrd-i-polovynu-viddaly-derzhav.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/android-zakruchuie-haiky-apk-vid-nevidomykh-teper-z-doboiu-ochikuvanni/</loc>
