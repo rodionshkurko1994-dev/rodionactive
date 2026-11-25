@@ -29,6 +29,10 @@
 - [Статус сервісів](https://rodionactive.com/instrumenty/status-servisiv/): Перевірте, чи працюють зараз ChatGPT, Claude, Telegram, Instagram, YouTube, monobank, ПриватБанк, Нова пошта, GitHub та інші сервіси. Оновлення кожні 15 хвилин і журнал збоїв.
 - [Індекс ринку фрілансу](https://rodionactive.com/instrumenty/indeks-rynku-frilansu/): Щоденна статистика українського ринку фрілансу за даними Freelancehunt: найпопулярніші напрямки й навички, медіанні бюджети в гривнях, кількість ставок і тренди попиту.
 
+## Дослідження
+
+- [Рейтинг швидкості сайтів України](https://rodionactive.com/reitynh-saitiv/): Щомісячний рейтинг швидкості мобільних версій 139 відомих українських сайтів (банки, магазини, доставка, медіа, держсервіси) за оцінками Google Lighthouse.
+
 ## Портфоліо
 
 - [Project X](https://rodionactive.com/portfolio/project-x/): https://projectx.vision — Браузерна гра: збиття повітряних цілей над Україною в єдиному спільному світі для всіх гравців.
