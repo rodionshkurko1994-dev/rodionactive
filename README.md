@@ -81,7 +81,7 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 
 ## Інструменти
 
-`/instrumenty/` — безкоштовні інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини. Тексти й SEO — `assets/js/tools.js`, логіка — `assets/js/tools-app.js` (ціни: ринок фрілансу × 0,8, константа `DISCOUNT`), бібліотека QR — `assets/js/vendor/qr-code-styling.js` (MIT). Розрахунок відкривається в Telegram з уже заповненим повідомленням (`t.me/rodionactive?text=…`). Картинки для соцмереж: `node tools/og-tools.mjs`. Папка `tools/` — це скрипти, не сторінки сайту.
+`/instrumenty/` — безкоштовні інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту, статус сервісів, індекс ринку фрілансу. Тексти й SEO — `assets/js/tools.js`, логіка — `assets/js/tools-app.js` (ціни: ринок фрілансу × 0,8, константа `DISCOUNT`), бібліотека QR — `assets/js/vendor/qr-code-styling.js` (MIT). Розрахунок відкривається в Telegram з уже заповненим повідомленням (`t.me/rodionactive?text=…`). Картинки для соцмереж: `node tools/og-tools.mjs`. Папка `tools/` — це скрипти, не сторінки сайту.
 
 ## Статус сервісів та індекс ринку фрілансу
 

@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611251500";
+  const ASSET_V = "202611251600";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -873,7 +873,7 @@ ${html}
 
   function renderTools() {
     const path = "/instrumenty/";
-    const description = "Безкоштовні онлайн-інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини, статус сервісів (чи працює ChatGPT, Telegram, monobank) та індекс ринку фрілансу.";
+    const description = "Безкоштовні онлайн-інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту, статус сервісів (чи працює ChatGPT, Telegram, monobank) та індекс ринку фрілансу.";
     const jsonld = [{
       "@context": "https://schema.org",
       "@graph": [
@@ -895,7 +895,7 @@ ${html}
     const body = `  <header class="article-head">
     <p class="eyebrow rise">Інструменти</p>
     <h1 class="rise" style="--d:1">Безкоштовні <span style="color:var(--orange)">інструменти</span></h1>
-    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Перевірте швидкість і SEO свого сайту, створіть QR-код, дізнайтеся вартість сайту, порахуйте, скільки коштує ваша рутина, перевірте, чи працюють популярні сервіси, або подивіться, що зараз замовляють на ринку фрілансу.</p>
+    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Перевірте швидкість і SEO свого сайту, створіть QR-код, дізнайтеся вартість сайту, перевірте, чи працюють популярні сервіси, або подивіться, що зараз замовляють на ринку фрілансу.</p>
   </header>
   <div class="svc-list tool-list">
     ${TOOLS.map((t, i) => `<a class="svc-tile reveal" href="${toolUrl(t)}" style="--i:${i}">
@@ -1104,6 +1104,30 @@ ${st.ok.map(s => `          <tr data-cat="${esc(s.cat)}" data-rank="${s.rank}" d
     return page({ head, page: "tools", body, scripts: [`/assets/js/rating.js?v=${ASSET_V}`] });
   }
 
+  // ---------- переадресації зі сторінок, яких більше немає ----------
+  // GitHub Pages не вміє серверних редиректів, тож на старій адресі лишається легка сторінка,
+  // яка одразу веде на нову (Google трактує миттєвий meta refresh як переадресацію).
+  const REDIRECTS = {
+    "/instrumenty/kalkuliator-avtomatyzatsii/": "/services/avtomatyzatsiia-z-claude/", // калькулятор рутини прибрано 25.11.2026
+  };
+  function redirectPage(from, to) {
+    return `<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Сторінку перенесено | ${SITE.name}</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="${SITE.url}${to}">
+<meta http-equiv="refresh" content="0; url=${to}">
+<script>location.replace(${JSON.stringify(to)} + location.hash);</script>
+</head>
+<body>
+<p>Сторінку перенесено: <a href="${to}">${SITE.url}${to}</a></p>
+</body>
+</html>
+`;
+  }
+
   // ---------- sitemap і RSS ----------
   function sitemap(posts, projects, rating) {
     const latest = (list, k = "date") => list.map(x => x.updated || x[k] || "").sort().pop() || "";
@@ -1209,6 +1233,7 @@ ${own.map(p => line(p.title, postUrl(p), clip(p.excerpt || p.description || "", 
     files["services/index.html"] = renderServices(P);
     files["instrumenty/index.html"] = renderTools();
     if (R) files["reitynh-saitiv/index.html"] = renderRating(R);
+    Object.entries(REDIRECTS).forEach(([from, to]) => { files[`${from.slice(1)}index.html`] = redirectPage(from, to); });
     TOOLS.forEach(t => { files[`${toolUrl(t).slice(1)}index.html`] = renderTool(t); });
     SERVICES.forEach(x => { files[`${serviceUrl(x).slice(1)}index.html`] = renderService(x, P, J); });
     NICHES.forEach(n => { files[`${nicheUrl(n).slice(1)}index.html`] = renderNiche(n, J); });

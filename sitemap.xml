@@ -52,13 +52,6 @@
     <image:image><image:loc>https://rodionactive.com/assets/img/tools/kalkuliator-vartosti-saitu.png</image:loc></image:image>
   </url>
   <url>
-    <loc>https://rodionactive.com/instrumenty/kalkuliator-avtomatyzatsii/</loc>
-    <lastmod>2026-11-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image><image:loc>https://rodionactive.com/assets/img/tools/kalkuliator-avtomatyzatsii.png</image:loc></image:image>
-  </url>
-  <url>
     <loc>https://rodionactive.com/instrumenty/status-servisiv/</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>

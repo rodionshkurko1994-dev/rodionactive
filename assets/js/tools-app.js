@@ -1,4 +1,4 @@
-/* Rodionactive — інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини,
+/* Rodionactive — інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту,
    статус сервісів і індекс ринку фрілансу (дані — з гілки data, див. .github/workflows/data.yml).
    Усе працює в браузері; дані нікуди не надсилаються, доки відвідувач сам не натисне «Обговорити в Telegram». */
 (function () {
@@ -199,73 +199,6 @@
       },
       render(r) {
         return resultCard({ title: "Орієнтовна вартість вашого сайту", range: r.range, market: r.market, rows: r.rows, note: esc(r.note), tg, message: r.message });
-      },
-    });
-  }
-
-  /* ===================== Калькулятор рутини ===================== */
-  function routineCalc(root) {
-    const tg = root.dataset.tg;
-    const h = v => `${v} ${v === 1 ? "година" : v < 5 ? "години" : "годин"} на тиждень`;
-    const Q = [
-      { id: "task", kind: "single", title: "Що забирає найбільше часу?", options: [
-        { id: "content", label: "Контент і публікації", hint: "Пости, статті, розсилки, Telegram-канал" },
-        { id: "reports", label: "Звіти й таблиці", hint: "Зведення, перенесення даних між таблицями" },
-        { id: "mail", label: "Листи й заявки", hint: "Розбір пошти, відповіді, сортування заявок" },
-        { id: "monitor", label: "Моніторинг", hint: "Новини, конкуренти, ціни, нові документи" },
-        { id: "docs", label: "Документи", hint: "Перевірка, заповнення, витягування даних" },
-        { id: "other", label: "Інше", hint: "Будь-яка повторювана робота" },
-      ] },
-      { id: "hours", kind: "range", title: "Скільки часу на тиждень це займає в однієї людини?", min: 1, max: 40, value: 5, format: h },
-      { id: "people", kind: "range", title: "Скільки людей цим займаються?", min: 1, max: 10, value: 1, format: v => `${v} ${v === 1 ? "людина" : v < 5 ? "людини" : "людей"}` },
-      { id: "rate", kind: "number", title: "Скільки коштує година роботи?", hint: "Ваша власна або вашого працівника. Якщо не знаєте — залиште як є.", min: 50, max: 5000, step: 10, value: 250, unit: "грн за годину" },
-      { id: "services", kind: "single", title: "Скільки сервісів задіяно?", hint: "Пошта, Google Таблиці, Telegram, сайт, CRM тощо.", options: [
-        { id: "1", label: "Один", base: 8000 },
-        { id: "2", label: "Два-три", base: 15000 },
-        { id: "4", label: "Чотири і більше", base: 25000 },
-      ] },
-      { id: "decisions", kind: "single", title: "Як часто в процесі потрібне рішення людини?", options: [
-        { id: "rare", label: "Майже ніколи", hint: "Чіткі правила: що взяти, куди записати", share: 0.85, k: 1 },
-        { id: "some", label: "Іноді", hint: "Час від часу треба перевірити чи вибрати", share: 0.65, k: 1.1 },
-        { id: "often", label: "Часто", hint: "Багато рішень залежить від контексту", share: 0.4, k: 1.2 },
-      ] },
-    ];
-    const by = id => Q.find(q => q.id === id);
-    const opt = (id, a) => by(id).options.find(o => o.id === a[id]);
-
-    quiz(root, {
-      questions: Q,
-      compute(a) {
-        const hoursYear = a.hours * a.people * 48;
-        const costYear = hoursYear * a.rate;
-        const d = opt("decisions", a);
-        const savedHours = Math.round(hoursYear * d.share);
-        const savedMoney = savedHours * a.rate;
-        const market = round500(opt("services", a).base * d.k);
-        const mine = market * DISCOUNT;
-        const lo = round500(mine * 0.92), hi = round500(mine * 1.08);
-        const range = `${money(lo).replace(" грн", "")} – ${money(hi)}`;
-        const months = savedMoney > 0 ? (lo + hi) / 2 / (savedMoney / 12) : Infinity;
-        const payback = months < 1 ? "менше місяця" : months > 36 ? "понад 3 роки" : `≈ ${Math.ceil(months)} ${Math.ceil(months) === 1 ? "місяць" : Math.ceil(months) < 5 ? "місяці" : "місяців"}`;
-        const rows = [
-          ["Задача", opt("task", a).label],
-          ["Обсяг", `${h(a.hours)} × ${a.people} ${a.people === 1 ? "людина" : a.people < 5 ? "людини" : "людей"}`],
-          ["Вартість години", money(a.rate)],
-          ["Сервіси", opt("services", a).label],
-          ["Рішення людини", d.label],
-          ["Рутина забирає на рік", `${hoursYear.toLocaleString("uk-UA")} год ≈ ${money(costYear)}`],
-          ["Можна заощадити на рік", `${savedHours.toLocaleString("uk-UA")} год ≈ ${money(savedMoney)}`],
-          ["Окупність налаштування", payback],
-        ];
-        const message = ["Привіт! Порахував рутину на rodionactive.com:", ...rows.map(([k, v]) => `• ${k}: ${v}`), `Орієнтовна вартість автоматизації: ${range}`, "Хочу обговорити автоматизацію."].join("\n");
-        return { range, market: money(market), rows, message, hoursYear, costYear, savedHours, savedMoney };
-      },
-      render(r) {
-        const big = `<div class="qz-stats">
-          <div><span>Рутина забирає на рік</span><b>${r.hoursYear.toLocaleString("uk-UA")} год</b><em>≈ ${money(r.costYear)}</em></div>
-          <div class="hl"><span>Автоматизація заощадить</span><b>${r.savedHours.toLocaleString("uk-UA")} год</b><em>≈ ${money(r.savedMoney)} на рік</em></div>
-        </div>`;
-        return big + resultCard({ title: "Вартість налаштування автоматизації", range: r.range, market: r.market, rows: r.rows.slice(0, 5).concat([r.rows[7]]), note: "Окремо оплачується підписка на сервіси, які використовує автоматизація, наприклад тариф Claude від 20 доларів на місяць. Точну ціну я називаю після обговорення процесу.", tg, message: r.message });
       },
     });
   }
@@ -893,6 +826,6 @@
   // для перевірки в Node
   if (typeof module === "object" && module.exports) module.exports = { auParse, auExtra };
 
-  const APPS = { qr: qrTool, site: siteCalc, routine: routineCalc, status: statusTool, freelance: freelanceTool, audit: auditTool };
+  const APPS = { qr: qrTool, site: siteCalc, status: statusTool, freelance: freelanceTool, audit: auditTool };
   $$("[data-tool-app]").forEach(el => { const f = APPS[el.dataset.toolApp]; if (f) f(el); });
 })();
