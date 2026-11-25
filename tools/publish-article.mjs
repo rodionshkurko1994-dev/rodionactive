@@ -45,7 +45,9 @@ const body = text + (sources.length
 
 mkdirSync(join(root, "assets/uploads"), { recursive: true });
 const cover = `assets/uploads/${date.replace(/-/g, "")}-${slug.slice(0, 50)}.jpg`;
-const object = OBJECT_NAMES.includes(a.coverObject) ? a.coverObject : pickObject({ title, lead, text, tags });
+// предмети 4 останніх обкладинок — щоб два схожі матеріали поспіль не отримали однаковий малюнок
+const recent = posts.slice(0, 4).map(p => p.coverObject).filter(Boolean);
+const object = OBJECT_NAMES.includes(a.coverObject) ? a.coverObject : pickObject({ title, lead, text, tags, recent });
 console.log("Предмет на обкладинці: " + object);
 await renderCover(title, tags[0], join(root, cover), object);
 
@@ -53,7 +55,7 @@ const post = {
   slug, title, date,
   excerpt: lead,
   ...(description ? { description: description.slice(0, 170) } : {}),
-  cover, tags, body,
+  cover, coverObject: object, tags, body,
   draft: false,
   sourceId: a.id,
 };

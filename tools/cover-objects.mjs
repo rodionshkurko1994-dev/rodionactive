@@ -21,6 +21,11 @@ const rotor = (x, y) => `
 <rect x="${x - 58}" y="${y - 10}" width="116" height="7" rx="3.5" fill="#fff" transform="rotate(-8 ${x} ${y - 6})"/>
 <circle cx="${x}" cy="${y - 6}" r="7" fill="url(#o)"/>`;
 
+const BRAIN_L = "M200 76 C172 54 122 62 112 100 C78 108 66 148 82 174 C60 200 66 244 98 256 C102 292 140 314 170 302 C184 318 200 314 200 314 Z";
+const BRAIN_R = "M200 76 C228 54 278 62 288 100 C322 108 334 148 318 174 C340 200 334 244 302 256 C298 292 260 314 230 302 C216 318 200 314 200 314 Z";
+const PAD = "M120 136 H280 C330 136 350 200 360 260 C368 312 326 332 298 302 L268 272 H132 L102 302 C74 332 32 312 40 260 C50 200 70 136 120 136 Z";
+const TAG = "M112 108 H252 L326 200 L252 292 H112 Q92 292 92 272 V128 Q92 108 112 108 Z";
+
 const O = {
   drone: `
 <path d="M200 205 L100 150 M200 205 L300 150 M200 210 L82 268 M200 210 L318 268" stroke="url(#n)" stroke-width="15" stroke-linecap="round"/>
@@ -270,6 +275,278 @@ ${rotor(82, 268)}${rotor(318, 268)}`,
 <circle cx="200" cy="200" r="140" fill="url(#shine)"/>
 <ellipse cx="200" cy="200" rx="186" ry="54" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="7" transform="rotate(-18 200 200)"/>
 <circle cx="370" cy="146" r="12" fill="#fff"/>`,
+
+  brain: `
+<g transform="translate(8 12)" fill="#141830" opacity=".45"><path d="${BRAIN_L}"/><path d="${BRAIN_R}"/></g>
+<path d="${BRAIN_L}" fill="url(#w)"/>
+<path d="${BRAIN_R}" fill="url(#o)"/>
+<g stroke="#a3a9d0" stroke-width="8" stroke-linecap="round" fill="none"><path d="M150 112 q24 12 16 40"/><path d="M100 186 q34 -8 50 18"/><path d="M128 262 q12 -30 44 -28"/><path d="M178 172 q-6 30 16 48"/></g>
+<g stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M200 130 h44 v-24"/><path d="M200 200 h76"/><path d="M200 262 h34 v-30 h44"/></g>
+<g fill="#fff"><circle cx="244" cy="102" r="10"/><circle cx="282" cy="200" r="10"/><circle cx="284" cy="232" r="10"/></g>
+<path d="M200 74 V316" stroke="#1a1e3a" stroke-opacity=".35" stroke-width="5"/>
+<path d="${BRAIN_L}" fill="url(#shine)"/>`,
+
+  network: (() => {
+    const L = [[100, [120, 200, 280]], [200, [80, 160, 240, 320]], [300, [140, 260]]];
+    const hot = new Set(["100,200", "200,160", "300,140", "200,240", "100,120"]);
+    let lines = "", nodes = "";
+    for (let i = 0; i < 2; i++) for (const a of L[i][1]) for (const b of L[i + 1][1]) {
+      const h = hot.has(`${L[i][0]},${a}`) && hot.has(`${L[i + 1][0]},${b}`);
+      lines += `<path d="M${L[i][0]} ${a} L${L[i + 1][0]} ${b}" stroke="${h ? "#ff6e27" : "#fff"}" stroke-opacity="${h ? 1 : .3}" stroke-width="${h ? 7 : 4}"/>`;
+    }
+    for (const [x, ys] of L) for (const y of ys) {
+      const h = hot.has(`${x},${y}`);
+      nodes += `<circle cx="${x + 5}" cy="${y + 7}" r="27" fill="#141830" opacity=".45"/><circle cx="${x}" cy="${y}" r="27" fill="url(#${h ? "o" : "w"})"/><circle cx="${x}" cy="${y}" r="10" fill="${h ? "#fff" : "url(#n)"}"/>`;
+    }
+    return `<g stroke-linecap="round">${lines}</g>${nodes}`;
+  })(),
+
+  server: `
+<rect x="112" y="78" width="200" height="262" rx="22" fill="#141830" opacity=".5"/>
+${[70, 154, 238].map((y, i) => `
+<rect x="100" y="${y}" width="200" height="74" rx="16" fill="url(#w2)"/>
+<rect x="116" y="${y + 16}" width="118" height="42" rx="9" fill="url(#n)"/>
+<g stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"><path d="M132 ${y + 30} h86 M132 ${y + 44} h56"/></g>
+<circle cx="258" cy="${y + 37}" r="10" fill="${i === 1 ? "url(#o)" : "url(#g)"}"/><circle cx="282" cy="${y + 37}" r="6" fill="#a3a9d0"/>`).join("")}
+<rect x="150" y="312" width="100" height="22" rx="8" fill="url(#ws)"/>`,
+
+  cloud: `
+<g fill="#141830" opacity=".45" transform="translate(8 12)"><circle cx="140" cy="226" r="56"/><circle cx="212" cy="186" r="80"/><circle cx="286" cy="234" r="50"/><rect x="140" y="226" width="146" height="58"/></g>
+<g fill="url(#w)"><circle cx="140" cy="226" r="56"/><circle cx="212" cy="186" r="80"/><circle cx="286" cy="234" r="50"/><rect x="140" y="226" width="146" height="58"/></g>
+<circle cx="212" cy="186" r="80" fill="url(#shine)"/>
+<circle cx="212" cy="236" r="38" fill="url(#o)"/>
+<path d="M212 256 V216 M194 232 l18 -18 l18 18" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<g fill="#ff6e27"><circle cx="150" cy="322" r="8"/><circle cx="212" cy="334" r="8" opacity=".7"/><circle cx="274" cy="322" r="8" opacity=".45"/></g>`,
+
+  key: `
+<g transform="rotate(-35 200 200)">
+<g transform="translate(8 12)" fill="#141830" opacity=".45"><circle cx="120" cy="200" r="66"/><rect x="170" y="184" width="186" height="32" rx="12"/><rect x="296" y="200" width="24" height="52" rx="6"/><rect x="330" y="200" width="20" height="36" rx="6"/></g>
+<rect x="170" y="184" width="186" height="32" rx="12" fill="url(#gold)"/>
+<rect x="296" y="200" width="24" height="52" rx="6" fill="url(#goldd)"/><rect x="330" y="200" width="20" height="36" rx="6" fill="url(#goldd)"/>
+<circle cx="120" cy="200" r="66" fill="url(#gold)"/>
+<circle cx="120" cy="200" r="48" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="5"/>
+<circle cx="106" cy="200" r="20" fill="url(#n)"/>
+<circle cx="120" cy="200" r="66" fill="url(#shine)"/>
+</g>`,
+
+  radar: `
+<circle cx="200" cy="200" r="152" fill="url(#w2)"/>
+<circle cx="200" cy="200" r="136" fill="url(#n)"/>
+<g stroke="#fff" stroke-opacity=".22" stroke-width="3" fill="none"><circle cx="200" cy="200" r="96"/><circle cx="200" cy="200" r="54"/><path d="M64 200 H336 M200 64 V336"/></g>
+<path d="M200 200 L200 64 A136 136 0 0 1 318 132 Z" fill="url(#o)" opacity=".55"/>
+<path d="M200 200 L318 132" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+<g fill="#ff6e27"><circle cx="262" cy="118" r="18" opacity=".3"/><circle cx="262" cy="118" r="9"/><circle cx="140" cy="270" r="8" opacity=".8"/><circle cx="118" cy="146" r="6" opacity=".6"/></g>
+<circle cx="200" cy="200" r="12" fill="#fff"/>
+<circle cx="200" cy="200" r="152" fill="url(#shine)"/>`,
+
+  ship: `
+<path d="M54 262 H346 L312 318 Q306 326 294 326 H104 Q94 326 88 318 Z" fill="#141830" opacity=".45" transform="translate(6 10)"/>
+<rect x="96" y="200" width="56" height="62" rx="5" fill="url(#o)"/><rect x="156" y="200" width="56" height="62" rx="5" fill="url(#w)"/><rect x="96" y="150" width="56" height="48" rx="5" fill="url(#w)"/><rect x="156" y="150" width="56" height="48" rx="5" fill="url(#od)"/>
+<g stroke="#1a1e3a" stroke-opacity=".25" stroke-width="3"><path d="M110 206 v50 M124 206 v50 M138 206 v50 M170 156 v40 M184 156 v40 M198 156 v40"/></g>
+<rect x="230" y="150" width="76" height="112" rx="8" fill="url(#w2)"/>
+<rect x="222" y="132" width="92" height="30" rx="8" fill="url(#n)"/>
+<g fill="#ff6e27"><rect x="234" y="140" width="16" height="12" rx="3"/><rect x="260" y="140" width="16" height="12" rx="3"/><rect x="286" y="140" width="16" height="12" rx="3"/></g>
+<path d="M268 132 V92" stroke="#b9bedf" stroke-width="7" stroke-linecap="round"/><circle cx="268" cy="88" r="9" fill="url(#o)"/>
+<path d="M54 262 H346 L312 318 Q306 326 294 326 H104 Q94 326 88 318 Z" fill="url(#n)"/>
+<path d="M66 278 H334" stroke="#ff6e27" stroke-width="8" stroke-linecap="round"/>
+<path d="M40 348 q20 -14 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" stroke="#fff" stroke-opacity=".55" stroke-width="7" fill="none" stroke-linecap="round"/>`,
+
+  gavel: `
+<rect x="80" y="300" width="190" height="44" rx="12" fill="url(#ws)"/>
+<rect x="80" y="290" width="190" height="26" rx="12" fill="url(#w)"/>
+<g transform="rotate(-38 200 190)">
+<rect x="186" y="150" width="28" height="200" rx="14" fill="#141830" opacity=".45" transform="translate(8 8)"/>
+<rect x="186" y="150" width="28" height="200" rx="14" fill="url(#w2)"/>
+<rect x="104" y="74" width="192" height="92" rx="20" fill="#141830" opacity=".45" transform="translate(8 10)"/>
+<rect x="104" y="74" width="192" height="92" rx="20" fill="url(#n)"/>
+<rect x="128" y="70" width="26" height="100" rx="8" fill="url(#o)"/><rect x="246" y="70" width="26" height="100" rx="8" fill="url(#o)"/>
+<rect x="104" y="74" width="192" height="92" rx="20" fill="url(#shine)"/>
+</g>`,
+
+  parcel: `
+<path d="M200 206 L332 140 V276 L200 342 L68 276 V140 Z" fill="#141830" opacity=".45" transform="translate(6 10)"/>
+<path d="M200 74 L332 140 L200 206 L68 140 Z" fill="#ffb98f"/>
+<path d="M68 140 L200 206 V342 L68 276 Z" fill="url(#o)"/>
+<path d="M200 206 L332 140 V276 L200 342 Z" fill="url(#od)"/>
+<path d="M120 114 L146 101 L278 167 L252 180 Z" fill="#fff" fill-opacity=".85"/>
+<path d="M252 180 L278 167 V297 L252 310 Z" fill="#fff" fill-opacity=".7"/>
+<path d="M92 214 L150 243 V275 L92 246 Z" fill="#fff" fill-opacity=".9"/>
+<g stroke="url(#n)" stroke-width="4"><path d="M102 230 l38 19 M102 242 l26 13"/></g>`,
+
+  bag: `
+<path d="M116 146 H296 L318 346 H96 Z" fill="#141830" opacity=".45" transform="translate(4 8)"/>
+<path d="M156 166 V124 a44 44 0 0 1 88 0 V166" stroke="url(#n)" stroke-width="15" stroke-linecap="round" fill="none"/>
+<path d="M110 140 H290 L312 340 H88 Z" fill="url(#o)"/>
+<path d="M290 140 L312 340 H270 Z" fill="#b5400f" opacity=".35"/>
+<circle cx="156" cy="170" r="9" fill="#1a1e3a"/><circle cx="244" cy="170" r="9" fill="#1a1e3a"/>
+<path d="M156 172 V140 M244 172 V140" stroke="#262b52" stroke-width="15" stroke-linecap="round"/>
+<circle cx="200" cy="256" r="50" fill="#fff" fill-opacity=".92"/>
+<path d="M178 282 L222 230" stroke="#e2581f" stroke-width="10" stroke-linecap="round"/>
+<circle cx="180" cy="236" r="11" fill="#e2581f"/><circle cx="220" cy="276" r="11" fill="#e2581f"/>
+<path d="M110 140 H290 L312 340 H88 Z" fill="url(#shine)"/>`,
+
+  bulb: `
+<g stroke="#ff6e27" stroke-width="9" stroke-linecap="round"><path d="M200 22 V42 M80 70 l14 14 M320 70 l-14 14 M40 168 h20 M340 168 h20 M86 266 l14 -14 M314 266 l-14 -14"/></g>
+<circle cx="200" cy="164" r="98" fill="url(#gold)"/>
+<path d="M146 236 Q160 262 160 286 H240 Q240 262 254 236 Z" fill="url(#gold)"/>
+<path d="M176 240 V206 q0 -16 12 -16 q12 0 12 16 q0 -16 12 -16 q12 0 12 16 V240" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<circle cx="200" cy="164" r="98" fill="url(#shine)"/>
+<rect x="160" y="284" width="80" height="18" rx="8" fill="url(#w2)"/>
+<rect x="160" y="306" width="80" height="18" rx="8" fill="url(#ws)"/>
+<path d="M174 328 H226 L216 348 H184 Z" fill="url(#n)"/>`,
+
+  calendar: `
+<rect x="80" y="92" width="240" height="236" rx="28" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<rect x="80" y="92" width="240" height="236" rx="28" fill="url(#w)"/>
+<path d="M80 120 Q80 92 108 92 H292 Q320 92 320 120 V164 H80 Z" fill="url(#o)"/>
+<rect x="128" y="66" width="22" height="56" rx="11" fill="url(#n)"/><rect x="250" y="66" width="22" height="56" rx="11" fill="url(#n)"/>
+<g fill="#c7cbe6">${[0, 1, 2].map(r => [0, 1, 2, 3].map(c => `<rect x="${106 + c * 50}" y="${184 + r * 44}" width="38" height="30" rx="8"/>`).join("")).join("")}</g>
+<rect x="206" y="228" width="38" height="30" rx="8" fill="url(#o)"/>
+<path d="M214 243 l8 8 l14 -16" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+
+  newspaper: `
+<g transform="rotate(-6 200 200)">
+<rect x="118" y="88" width="220" height="268" rx="16" fill="url(#ws)"/>
+<rect x="92" y="64" width="226" height="272" rx="16" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<rect x="92" y="64" width="226" height="272" rx="16" fill="url(#w)"/>
+<rect x="114" y="86" width="182" height="30" rx="7" fill="url(#n)"/>
+<rect x="114" y="134" width="88" height="78" rx="9" fill="url(#o)"/>
+<g stroke-linecap="round" stroke-width="8"><path d="M218 140 h78 M218 162 h78 M218 184 h56 M218 206 h70" stroke="#a3a9d0"/><path d="M114 236 h182 M114 258 h182 M114 280 h150 M114 302 h120" stroke="#a3a9d0"/></g>
+</g>`,
+
+  camera: `
+<rect x="70" y="128" width="260" height="184" rx="34" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<rect x="138" y="96" width="104" height="56" rx="16" fill="url(#ws)"/>
+<rect x="70" y="128" width="260" height="184" rx="34" fill="url(#w2)"/>
+<rect x="70" y="190" width="260" height="22" fill="#8a90bd" opacity=".35"/>
+<rect x="94" y="110" width="42" height="22" rx="8" fill="url(#o)"/>
+<rect x="266" y="146" width="40" height="20" rx="6" fill="#ffd27a"/>
+<circle cx="200" cy="220" r="76" fill="url(#n)"/>
+<circle cx="200" cy="220" r="56" fill="url(#scr)"/>
+<circle cx="200" cy="220" r="26" fill="#1a1e3a"/>
+<circle cx="182" cy="200" r="11" fill="#fff" opacity=".85"/>
+<circle cx="200" cy="220" r="76" fill="none" stroke="#ff6e27" stroke-width="5" stroke-dasharray="14 10"/>`,
+
+  gamepad: `
+<path d="${PAD}" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<path d="${PAD}" fill="url(#w)"/>
+<rect x="96" y="186" width="62" height="20" rx="6" fill="url(#n)"/><rect x="117" y="165" width="20" height="62" rx="6" fill="url(#n)"/>
+<circle cx="276" cy="168" r="14" fill="url(#o)"/><circle cx="304" cy="196" r="14" fill="url(#n)"/><circle cx="248" cy="196" r="14" fill="url(#n)"/><circle cx="276" cy="224" r="14" fill="url(#o)"/>
+<rect x="174" y="176" width="22" height="10" rx="5" fill="#a3a9d0"/><rect x="204" y="176" width="22" height="10" rx="5" fill="#a3a9d0"/>
+<circle cx="160" cy="250" r="20" fill="url(#ws)"/><circle cx="240" cy="250" r="20" fill="url(#ws)"/>
+<path d="${PAD}" fill="url(#shine)"/>`,
+
+  car: `<g transform="translate(-30 -40) scale(1.15)">
+<ellipse cx="206" cy="312" rx="160" ry="14" fill="#141830" opacity=".45"/>
+<path d="M56 252 Q60 214 100 208 L140 166 Q152 154 174 154 H250 Q272 154 286 168 L320 206 Q352 212 354 248 V264 Q354 276 342 276 H68 Q56 276 56 264 Z" fill="url(#o)"/>
+<path d="M150 204 L176 174 H210 V204 Z" fill="url(#scr)"/>
+<path d="M222 204 V174 H250 Q262 174 270 182 L292 204 Z" fill="url(#scr)"/>
+<rect x="332" y="222" width="18" height="12" rx="5" fill="#fff"/><rect x="58" y="226" width="16" height="12" rx="5" fill="#ffd27a"/>
+<path d="M212 220 l-14 22 h14 l-8 20 l22 -28 h-14 l8 -14 z" fill="#fff"/>
+<path d="M56 252 Q60 214 100 208 L140 166 Q152 154 174 154 H250 Q272 154 286 168 L320 206 Q352 212 354 248" fill="url(#shine)"/>
+<circle cx="122" cy="276" r="36" fill="url(#n)"/><circle cx="122" cy="276" r="15" fill="url(#w2)"/>
+<circle cx="288" cy="276" r="36" fill="url(#n)"/><circle cx="288" cy="276" r="15" fill="url(#w2)"/></g>`,
+
+  house: `
+<ellipse cx="204" cy="334" rx="150" ry="12" fill="#141830" opacity=".45"/>
+<rect x="252" y="104" width="30" height="70" rx="5" fill="url(#ws)"/><rect x="246" y="98" width="42" height="14" rx="5" fill="url(#n)"/>
+<rect x="100" y="176" width="200" height="156" rx="6" fill="url(#w)"/>
+<rect x="282" y="176" width="18" height="156" fill="#8a90bd" opacity=".4"/>
+<path d="M58 206 L200 84 L342 206" stroke="#141830" stroke-opacity=".45" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none" transform="translate(0 10)"/>
+<path d="M100 190 L200 104 L300 190 Z" fill="url(#w2)"/>
+<path d="M58 206 L200 84 L342 206" stroke="url(#o)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<circle cx="200" cy="158" r="20" fill="url(#n)"/><circle cx="200" cy="158" r="8" fill="#ffd27a"/>
+<rect x="176" y="252" width="48" height="80" rx="8" fill="url(#n)"/><circle cx="214" cy="294" r="4" fill="#ff6e27"/>
+<rect x="120" y="216" width="42" height="40" rx="6" fill="#ffd27a"/><rect x="238" y="216" width="42" height="40" rx="6" fill="#ffd27a"/>
+<path d="M141 216 v40 M120 236 h42 M259 216 v40 M238 236 h42" stroke="#fff" stroke-width="4"/>`,
+
+  factory: `
+<ellipse cx="200" cy="334" rx="160" ry="12" fill="#141830" opacity=".45"/>
+<g fill="#fff" fill-opacity=".55"><circle cx="292" cy="92" r="16"/><circle cx="312" cy="66" r="21"/><circle cx="342" cy="46" r="26"/></g>
+<rect x="266" y="104" width="44" height="228" rx="6" fill="url(#n)"/>
+<rect x="266" y="128" width="44" height="14" fill="url(#o)"/><rect x="266" y="160" width="44" height="14" fill="url(#o)"/>
+<path d="M50 332 V214 L116 176 V214 L182 176 V214 L248 176 V332 Z" fill="url(#w2)"/>
+<path d="M116 176 V214 L50 214 Z M182 176 V214 L116 214 Z M248 176 V214 L182 214 Z" fill="#8a90bd" opacity=".35"/>
+<rect x="240" y="226" width="110" height="106" rx="4" fill="url(#w)"/>
+<g fill="url(#o)">${[0, 1, 2].map(i => `<rect x="${70 + i * 58}" y="238" width="36" height="28" rx="5"/>`).join("")}</g>
+<g fill="#ffd27a">${[0, 1, 2].map(i => `<rect x="${70 + i * 58}" y="282" width="36" height="28" rx="5"/>`).join("")}<rect x="258" y="246" width="30" height="24" rx="4"/><rect x="302" y="246" width="30" height="24" rx="4"/></g>
+<rect x="272" y="288" width="48" height="44" rx="4" fill="url(#n)"/>`,
+
+  tag: `
+<g transform="rotate(-22 200 200)">
+<path d="${TAG}" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<path d="${TAG}" fill="url(#o)"/>
+<path d="${TAG}" fill="url(#shine)"/>
+<circle cx="282" cy="200" r="17" fill="url(#n)"/>
+<path d="M144 228 L196 168" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+<circle cx="148" cy="174" r="15" fill="none" stroke="#fff" stroke-width="9"/><circle cx="192" cy="222" r="15" fill="none" stroke="#fff" stroke-width="9"/>
+</g>
+<path d="M300 140 Q338 70 300 40" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-opacity=".8"/>`,
+
+  watch: `
+<rect x="148" y="32" width="104" height="336" rx="40" fill="url(#n)"/>
+<g fill="#fff" fill-opacity=".12"><rect x="164" y="48" width="72" height="10" rx="5"/><rect x="164" y="342" width="72" height="10" rx="5"/></g>
+<rect x="290" y="168" width="18" height="44" rx="7" fill="url(#ws)"/>
+<rect x="104" y="104" width="192" height="192" rx="52" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<rect x="104" y="104" width="192" height="192" rx="52" fill="url(#w2)"/>
+<rect x="120" y="120" width="160" height="160" rx="40" fill="#141830"/>
+<path d="M136 206 h26 l12 -30 l18 62 l16 -48 l10 16 h46" stroke="#ff6e27" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<path d="M200 140 a60 60 0 0 1 52 30" stroke="url(#g)" stroke-width="7" stroke-linecap="round" fill="none"/>
+<rect x="120" y="120" width="160" height="160" rx="40" fill="url(#shine)"/>`,
+
+  eye: `
+<g stroke="#ff6e27" stroke-width="8" stroke-linecap="round" fill="none"><path d="M54 92 V60 H86 M346 92 V60 H314 M54 308 V340 H86 M346 308 V340 H314"/></g>
+<path d="M46 200 Q200 66 354 200 Q200 334 46 200 Z" fill="#141830" opacity=".45" transform="translate(6 10)"/>
+<path d="M46 200 Q200 66 354 200 Q200 334 46 200 Z" fill="url(#w)"/>
+<circle cx="200" cy="200" r="74" fill="url(#o)"/>
+<circle cx="200" cy="200" r="74" fill="none" stroke="#b5400f" stroke-width="4" stroke-opacity=".5"/>
+<circle cx="200" cy="200" r="36" fill="url(#n)"/>
+<circle cx="180" cy="180" r="13" fill="#fff"/>
+<path d="M46 200 Q200 66 354 200" stroke="#a3a9d0" stroke-width="6" fill="none"/>`,
+
+  code: `
+<rect x="56" y="76" width="288" height="248" rx="26" fill="#141830" opacity=".5" transform="translate(8 12)"/>
+<rect x="56" y="76" width="288" height="248" rx="26" fill="url(#n)"/>
+<path d="M56 102 Q56 76 82 76 H318 Q344 76 344 102 V120 H56 Z" fill="url(#w2)"/>
+<circle cx="88" cy="98" r="9" fill="#ff6e27"/><circle cx="116" cy="98" r="9" fill="#ffd27a"/><circle cx="144" cy="98" r="9" fill="url(#g)"/>
+<g stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M150 176 L106 220 L150 264" stroke="url(#o)" stroke-width="18"/><path d="M250 176 L294 220 L250 264" stroke="url(#o)" stroke-width="18"/><path d="M222 164 L178 276" stroke="#fff" stroke-width="15"/></g>
+<rect x="56" y="76" width="288" height="248" rx="26" fill="url(#shine)"/>`,
+
+  target: `
+<circle cx="194" cy="210" r="140" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<circle cx="194" cy="210" r="140" fill="url(#w)"/>
+<circle cx="194" cy="210" r="106" fill="url(#o)"/>
+<circle cx="194" cy="210" r="72" fill="url(#w)"/>
+<circle cx="194" cy="210" r="38" fill="url(#o)"/>
+<circle cx="194" cy="210" r="140" fill="url(#shine)"/>
+<path d="M194 210 L322 82" stroke="url(#n)" stroke-width="11" stroke-linecap="round"/>
+<path d="M322 82 L318 50 L300 68 L304 100 Z M322 82 L354 86 L336 104 L304 100 Z" fill="#ff6e27"/>
+<path d="M322 82 L304 100" stroke="#fff" stroke-width="3"/>
+<circle cx="194" cy="210" r="9" fill="#1a1e3a"/>`,
+
+  trophy: `
+<path d="M128 104 H86 Q78 186 142 200" stroke="url(#goldd)" stroke-width="15" fill="none" stroke-linecap="round"/>
+<path d="M272 104 H314 Q322 186 258 200" stroke="url(#goldd)" stroke-width="15" fill="none" stroke-linecap="round"/>
+<path d="M118 76 H282 V150 Q282 232 200 244 Q118 232 118 150 Z" fill="url(#gold)"/>
+<path d="M200 118 l13 27 l29 4 l-21 20 l5 29 l-26 -14 l-26 14 l5 -29 l-21 -20 l29 -4 z" fill="#fff"/>
+<path d="M118 76 H282 V150 Q282 232 200 244 Q118 232 118 150 Z" fill="url(#shine)"/>
+<rect x="184" y="242" width="32" height="44" fill="url(#goldd)"/>
+<rect x="136" y="292" width="128" height="48" rx="10" fill="#141830" opacity=".45" transform="translate(6 10)"/>
+<rect x="150" y="280" width="100" height="18" rx="6" fill="url(#goldd)"/>
+<rect x="136" y="292" width="128" height="48" rx="10" fill="url(#n)"/>
+<rect x="168" y="306" width="64" height="18" rx="4" fill="url(#gold)"/>`,
+
+  envelope: `
+<g transform="rotate(-6 200 200)">
+<rect x="66" y="112" width="268" height="190" rx="22" fill="#141830" opacity=".45" transform="translate(8 12)"/>
+<rect x="66" y="112" width="268" height="190" rx="22" fill="url(#w)"/>
+<path d="M72 292 L176 204 M328 292 L224 204" stroke="#a3a9d0" stroke-width="7" stroke-linecap="round"/>
+<path d="M72 124 L200 222 L328 124" stroke="url(#ws)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+<path d="M72 120 L200 216 L328 120" stroke="#fff" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+</g>
+<circle cx="322" cy="112" r="40" fill="url(#o)"/>
+<circle cx="322" cy="112" r="40" fill="none" stroke="#383e65" stroke-width="6"/>
+<path d="M314 100 l10 -8 v42" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
 };
 
 // Ключові слова: корені з межею зліва (щоб "ші" не ловило "інші").
@@ -280,16 +557,16 @@ const KEYS = {
   chip: ["чип", "процесор", "nvidia", "напівпровідн", "gpu", "суперкомп", "дата-центр", "датацентр", "h200", "tsmc", "залізо"],
   robot: ["робот", "агент", "автоматиз", "гуманоїд"],
   spark: ["ші", "ai", "штучн", "нейромереж", "llm", "gpt", "chatgpt", "claude", "gemini", "openai", "anthropic", "генеративн", "модел"],
-  phone: ["смартфон", "iphone", "телефон", "android", "застосун", "додат"],
-  laptop: ["ноутбук", "macbook", "комп'ютер", "програміст", "розробник", "фронтенд", "бекенд", "айті", "іт-", "ітішн", "вакансі", "код"],
+  phone: ["смартфон", "iphone", "телефон", "android", "застосун", "додат", "xiaomi", "samsung", "galaxy", "pixel"],
+  laptop: ["ноутбук", "macbook", "комп'ютер", "програміст", "розробник", "фронтенд", "бекенд", "айті", "іт-", "ітішн", "вакансі"],
   passport: ["паспорт", "документ", "посвідч", "kyc", "ідентиф", "фейков", "підроб", "верифікац"],
-  shield: ["хакер", "злам", "кібер", "безпек", "шахра", "вразлив", "парол", "захист", "стеж", "шпигун", "прошивк", "дроп", "шкідлив"],
+  shield: ["хакер", "злам", "кібер", "безпек", "шахра", "вразлив", "парол", "захист", "прошивк", "дроп", "шкідлив"],
   energy: ["енерг", "світл", "генератор", "електр", "батаре", "акумулятор", "блекаут", "відключен", "сонячн"],
   chart: ["ринок", "ринк", "зростан", "бульбашк", "акці", "оцінк", "капіталіз", "статистик", "тренд", "аналітик", "падін", "біржа"],
   megaphone: ["маркетинг", "реклам", "бренд", "smm", "просуван", "соцмереж", "instagram", "tiktok", "аудитор", "увагу"],
   headphones: ["музик", "spotify", "трек", "пісн", "deezer", "аудіо", "подкаст", "артист"],
   tv: ["телевізор", "екран", "відео", "youtube", "стрім", "netflix", "фільм", "серіал"],
-  books: ["англійськ", "ielts", "toefl", "вивчен", "вивчит", "урок", "навчан", "сертифікат", "школ", "учн", "студент", "слов", "мов[аиу]", "граматик"],
+  books: ["англійськ", "ielts", "toefl", "вивчен", "вивчит", "уроки? англ", "навчан", "школ", "учн", "студент", "словник", "мов[аиу]", "граматик"],
   mic: ["виступ", "публічн", "говорит", "презентац", "промов", "розмов", "спікер"],
   rocket: ["стартап", "запуск", "ракет", "космос", "spacex", "раунд", "венчур", "єдиноріг"],
   satellite: ["супутник", "starlink", "starshield", "орбіт", "зв'язок", "інтернет-зв"],
@@ -299,22 +576,84 @@ const KEYS = {
   chat: ["чат", "месендж", "повідомлен", "бот", "telegram", "діалог", "ввічлив"],
   dna: ["біотех", "днк", "ген[иіо]", "генетик", "вірус", "медиц", "здоров", "лік[иа]", "біолог", "клітин"],
   globe: ["світ", "міжнарод", "країн", "експорт", "санкці", "китай", "сша", "європ", "глобальн"],
+  brain: ["мозок", "мозк", "мислен", "свідоміст", "розум", "інтелект", "когнітив", "пам'ят", "психолог"],
+  network: ["нейрон", "нейромереж", "алгоритм", "датасет", "дата-сет", "навчанн[яі] модел", "мереж[аі](?![а-яіїєґ])"],
+  server: ["сервер", "хостинг", "бекап", "резервн", "баз[аиу] даних", "витік", "витоку", "зли[вл]", "дата-центр", "датацентр"],
+  cloud: ["хмар", "cloud", "aws", "azure", "saas", "синхроніз", "icloud", "google drive", "підписк"],
+  key: ["ключ", "сертифікат", "ssl", "tls", "https", "шифруван", "доступ", "авторизац", "логін", "2fa", "двофактор"],
+  radar: ["ппо", "протиповітр", "радар", "шахед", "герань", "балістик", "перехопл", "обстріл", "збит", "ракет"],
+  ship: ["корабл", "корвет", "флот", "судн", "морськ", "порт(?:у|и|і|ом|ах)?(?![а-яіїєґ])", "контейнер", "логістик", "танкер", "підводн"],
+  gavel: ["суд(?!н)", "закон", "кримінал", "штраф", "заборон", "регулюв", "верховн", "постанов", "позов", "правоохорон", "поліці", "кіберполіц", "податков"],
+  parcel: ["посилк", "доставк", "нова пошта", "нової пошти", "новій пошті", "укрпошт", "meest", "кур'єр", "маркетплейс", "rozetka", "amazon", "temu", "aliexpress"],
+  bag: ["покуп", "магазин", "шопінг", "black friday", "чорн[аоу]? п'ятниц", "olx", "продаж", "продавц", "розпродаж", "e-commerce"],
+  bulb: ["ідея", "ідеї", "ідей", "порад", "лайфхак", "принцип", "інновац", "винахід", "винайш", "креатив"],
+  calendar: ["календар", "дедлайн", "з 1 січня", "з нового року", "щороку", "розклад"],
+  newspaper: ["журнал", "газет", "змі(?![а-яіїєґ])", "медіа", "новин", "economist", "редакц", "видання"],
+  camera: ["камер", "фото", "знімк", "об'єктив", "gopro"],
+  gamepad: ["ігор", "ігр[аиоуі]", "гр[аиуі](?![а-яіїєґ])", "геймер", "гейм", "gta", "playstation", "xbox", "nintendo", "steam", "консол", "кіберспорт"],
+  car: ["авто", "машин(?!н)", "tesla", "електромоб", "електрокар", "автопілот", "водій", "водії", "таксі", "uber", "bolt"],
+  house: ["дім(?![а-яіїєґ])", "дом[іуа](?![а-яіїєґ])", "будин", "квартир", "нерухом", "житл", "оренд", "іпотек", "автономн"],
+  factory: ["завод", "виробни", "фабрик", "комбінат", "промисл", "індустр", "цех", "руд[аиі](?![а-яіїєґ])"],
+  tag: ["ціна", "ціни", "цін[уіа]", "подорож", "дешев", "вартіст", "коштує", "коштуват", "знижк", "прайс", "тариф"],
+  watch: ["годинник", "watch", "фітнес", "трекер", "пульс", "носим"],
+  eye: ["стеж", "спостереж", "приватн", "конфіденц", "шпигу", "трекінг", "відстеж"],
+  code: ["код(?![а-яіїєґ]*екс)", "кодинг", "вайбкод", "програмуван", "програміст", "розробник", "github", "open source", "api", "javascript", "python"],
+  target: ["ціль", "цілі", "мет[аиу](?![а-яіїєґ])", "kpi", "стратегі", "план(?:и|ів|у)?(?![а-яіїєґ])", "результат", "конверс", "лід(?:и|ів|ам)?(?![а-яіїєґ])"],
+  trophy: ["перемог", "переможц", "рейтинг", "топ-", "найкращ", "лідер", "премі", "нагород", "рекорд", "чемпіон"],
+  envelope: ["email", "e-mail", "імейл", "розсилк", "лист(?:и|а|ів|ом)?(?![а-яіїєґ])", "спам", "gmail", "outlook", "електронн[аоуі] пошт"],
 };
-const TAG_FALLBACK = { AI: "spark", "технології": "chip", "маркетинг": "megaphone", "навички": "mic", "англійська": "books", "бізнес": "briefcase" };
+// Схожі предмети: якщо головний щойно був на обкладинці, беремо іншого з родини.
+const FAMILIES = [
+  ["spark", "brain", "network", "chip", "robot"],
+  ["drone", "radar", "rocket", "satellite", "ship"],
+  ["money", "coin", "card", "tag"],
+  ["shield", "key", "eye"],
+  ["server", "cloud", "code", "laptop"],
+  ["bag", "parcel", "tag"],
+  ["newspaper", "tv", "camera", "megaphone"],
+  ["phone", "watch", "camera"],
+  ["briefcase", "chart", "factory", "target"],
+  ["energy", "house"],
+  ["books", "bulb", "mic"],
+  ["chat", "envelope", "phone"],
+  ["gavel", "passport", "key"],
+];
+const TAG_FALLBACK = {
+  AI: ["spark", "brain", "network", "robot"],
+  "технології": ["chip", "laptop", "phone", "code", "server"],
+  "маркетинг": ["megaphone", "target", "bag"],
+  "навички": ["mic", "bulb", "trophy", "books"],
+  "англійська": ["books", "bulb", "chat"],
+  "бізнес": ["briefcase", "chart", "factory", "target"],
+};
 const L = "a-zа-яіїєґ'’";
 const RX = Object.fromEntries(Object.entries(KEYS).map(([k, words]) =>
   [k, new RegExp(`(?<![${L}])(?:${words.join("|")})`, "giu")]));
 
 export const OBJECT_NAMES = Object.keys(O);
 
-export function pickObject({ title = "", lead = "", text = "", tags = [] } = {}) {
-  const count = (k, s) => (String(s).toLowerCase().match(RX[k]) || []).length;
-  let best = null, bestScore = 0;
-  for (const k of OBJECT_NAMES) {
-    const score = count(k, title) * 6 + count(k, lead) * 3 + Math.min(count(k, text), 8);
-    if (score > bestScore) { best = k; bestScore = score; }
-  }
-  return bestScore >= 3 ? best : (TAG_FALLBACK[tags[0]] || "spark");
+const hash = s => [...String(s)].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7);
+const pickFrom = (list, seed, avoid) => {
+  const free = list.filter(x => !avoid.includes(x));
+  const pool = free.length ? free : list;
+  return pool[hash(seed) % pool.length];
+};
+
+// recent — предмети з кількох останніх обкладинок, щоб не повторюватися поспіль.
+export function pickObject({ title = "", lead = "", text = "", tags = [], recent = [] } = {}) {
+  const norm = s => String(s).toLowerCase().replace(/[’ʼ`]/g, "'");
+  const count = (k, s) => (norm(s).match(RX[k]) || []).length;
+  const ranked = OBJECT_NAMES
+    .map(k => [k, count(k, title) * 6 + count(k, lead) * 3 + Math.min(count(k, text), 8)])
+    .filter(([, sc]) => sc >= 3)
+    .sort((a, b) => b[1] - a[1]);
+  if (!ranked.length) return pickFrom(TAG_FALLBACK[tags[0]] || TAG_FALLBACK.AI, title, recent);
+  const [best, top] = ranked[0];
+  if (!recent.includes(best)) return best;
+  const next = ranked.find(([k, sc]) => !recent.includes(k) && sc >= top * 0.5);
+  if (next) return next[0];
+  const fam = FAMILIES.find(f => f.includes(best));
+  return fam ? pickFrom(fam.filter(k => k !== best), title, recent) : best;
 }
 
 export const objectSvg = name => O[name] || O.spark;
