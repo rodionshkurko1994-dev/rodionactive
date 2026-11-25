@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611201700";
+  const ASSET_V = "202611251300";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -782,7 +782,7 @@ ${html}
 
   // ---------- розділ «Інструменти» ----------
   const { TOOLS, ILLU: TOOL_ILLU } = SiteTools || { TOOLS: [], ILLU: {} };
-  const TOOLS_UPDATED = "2026-11-20";
+  const TOOLS_UPDATED = "2026-11-25";
   const toolUrl = t => `/instrumenty/${t.slug}/`;
   const toolImg = t => `assets/img/tools/${t.slug}.png`;
 
@@ -873,7 +873,7 @@ ${html}
 
   function renderTools() {
     const path = "/instrumenty/";
-    const description = "Безкоштовні онлайн-інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини, статус сервісів (чи працює ChatGPT, Telegram, monobank) та індекс ринку фрілансу.";
+    const description = "Безкоштовні онлайн-інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини, статус сервісів (чи працює ChatGPT, Telegram, monobank) та індекс ринку фрілансу.";
     const jsonld = [{
       "@context": "https://schema.org",
       "@graph": [
@@ -891,11 +891,11 @@ ${html}
         crumbs([["Головна", "/"], ["Інструменти", path]]),
       ],
     }];
-    const head = headHTML({ title: `Безкоштовні онлайн-інструменти: QR-коди, вартість сайту, статус сервісів, ринок фрілансу | ${SITE.name}`, description, path, jsonld });
+    const head = headHTML({ title: `Безкоштовні онлайн-інструменти: аудит сайту, QR-коди, вартість сайту, статус сервісів, ринок фрілансу | ${SITE.name}`, description, path, jsonld });
     const body = `  <header class="article-head">
     <p class="eyebrow rise">Інструменти</p>
     <h1 class="rise" style="--d:1">Безкоштовні <span style="color:var(--orange)">інструменти</span></h1>
-    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Створіть QR-код, дізнайтеся вартість сайту, порахуйте, скільки коштує ваша рутина, перевірте, чи працюють популярні сервіси, або подивіться, що зараз замовляють на ринку фрілансу.</p>
+    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Перевірте швидкість і SEO свого сайту, створіть QR-код, дізнайтеся вартість сайту, порахуйте, скільки коштує ваша рутина, перевірте, чи працюють популярні сервіси, або подивіться, що зараз замовляють на ринку фрілансу.</p>
   </header>
   <div class="svc-list tool-list">
     ${TOOLS.map((t, i) => `<a class="svc-tile reveal" href="${toolUrl(t)}" style="--i:${i}">

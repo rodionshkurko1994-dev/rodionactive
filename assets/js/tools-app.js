@@ -1,4 +1,4 @@
-/* Rodionactive — інструменти: генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини,
+/* Rodionactive — інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту, калькулятор рутини,
    статус сервісів і індекс ринку фрілансу (дані — з гілки data, див. .github/workflows/data.yml).
    Усе працює в браузері; дані нікуди не надсилаються, доки відвідувач сам не натисне «Обговорити в Telegram». */
 (function () {
@@ -516,6 +516,383 @@
     });
   }
 
-  const APPS = { qr: qrTool, site: siteCalc, routine: routineCalc, status: statusTool, freelance: freelanceTool };
+  /* ===================== Аудит сайту ===================== */
+  // Ключ Google PageSpeed Insights API: Google Cloud → APIs & Services → Credentials.
+  // Ключ безпечно тримати в коді сторінки, якщо в ньому дозволено лише PageSpeed Insights API.
+  // Без ключа перевірка теж працює, але зі спільним і значно меншим лімітом.
+  const PSI_KEY = "";
+  // Адреса Cloudflare Worker з папки workers/site-check (додаткові перевірки: sitemap, robots,
+  // HTTPS, Open Graph, schema.org). Поки порожньо — цей блок звіту просто не показується.
+  const SITE_CHECK = "";
+
+  const AU_CATS = [
+    ["performance", "Швидкість"],
+    ["seo", "SEO"],
+    ["accessibility", "Доступність"],
+    ["best-practices", "Якість"],
+  ];
+  // Пояснення найчастіших проблем без жаргону: [що не так, чому це важливо]
+  const AU_PLAIN = {
+    "first-contentful-paint": ["Довго видно порожній екран", "Відвідувач з телефону бачить білу сторінку кілька секунд і часто просто закриває вкладку."],
+    "largest-contentful-paint": ["Головний вміст з'являється повільно", "Це ключовий показник Google: якщо головний блок вантажиться довше 2,5 секунди, сайт програє в пошуку швидшим конкурентам."],
+    "total-blocking-time": ["Сторінка «зависає» на натискання", "Поки браузер виконує скрипти, кнопки й меню не реагують — людина тисне, нічого не відбувається."],
+    "cumulative-layout-shift": ["Вміст «стрибає» під час завантаження", "Через зсуви відвідувач натискає не туди. Google враховує це в рейтингу."],
+    "speed-index": ["Сторінка повільно промальовується", "Вміст з'являється частинами, і сайт здається повільним навіть на хорошому інтернеті."],
+    "interactive": ["Сторінка довго стає робочою", "Сайт уже видно, але натискати на кнопки ще не можна."],
+    "uses-optimized-images": ["Зображення завеликі", "Картинки зазвичай становлять більшу частину ваги сторінки. Стиснення прискорює сайт на телефоні в рази."],
+    "modern-image-formats": ["Зображення в застарілих форматах", "Формати WebP чи AVIF важать у 2–3 рази менше за JPG і PNG за тієї ж якості."],
+    "uses-responsive-images": ["На телефон вантажаться картинки для великих екранів", "Телефон завантажує зайві мегабайти, які все одно не видно на маленькому екрані."],
+    "offscreen-images": ["Картинки вантажаться заздалегідь", "Зображення внизу сторінки варто підвантажувати, лише коли до них догортають."],
+    "image-delivery-insight": ["Зображення можна суттєво полегшити", "Стиснення, сучасні формати і правильний розмір картинок — найпростіший спосіб пришвидшити сайт."],
+    "render-blocking-resources": ["Скрипти й стилі блокують показ сторінки", "Браузер чекає на ці файли, перш ніж показати хоч щось."],
+    "render-blocking-insight": ["Скрипти й стилі блокують показ сторінки", "Браузер чекає на ці файли, перш ніж показати хоч щось."],
+    "unused-javascript": ["На сторінці багато зайвого JavaScript", "Телефон завантажує й обробляє код, який на цій сторінці не використовується."],
+    "unused-css-rules": ["На сторінці багато зайвих стилів", "Зайвий CSS сповільнює перший показ сторінки."],
+    "unminified-javascript": ["Код JavaScript не стиснутий", "Мінімізація коду — швидке виправлення, яке зменшує вагу сторінки."],
+    "unminified-css": ["Код стилів не стиснутий", "Мінімізація CSS — швидке виправлення, яке зменшує вагу сторінки."],
+    "uses-text-compression": ["На сервері не ввімкнено стиснення", "Gzip або Brotli зменшують розмір коду сторінки в кілька разів одним налаштуванням."],
+    "server-response-time": ["Сервер повільно відповідає", "Повільний хостинг або важка CMS додають затримку ще до того, як почне вантажитися сторінка."],
+    "document-latency-insight": ["Сервер повільно відповідає", "Повільний хостинг, переадресації чи відсутність стиснення додають затримку ще до показу сторінки."],
+    "redirects": ["Зайві переадресації", "Кожна переадресація додає затримку, особливо на мобільному інтернеті."],
+    "total-byte-weight": ["Сторінка важить забагато", "Великий обсяг даних — це повільне завантаження і витрата мобільного трафіку відвідувачів."],
+    "third-party-summary": ["Сторонні сервіси гальмують сайт", "Віджети чатів, пікселі, вбудовані відео та інші сторонні скрипти уповільнюють сторінку."],
+    "third-parties-insight": ["Сторонні сервіси гальмують сайт", "Віджети чатів, пікселі, вбудовані відео та інші сторонні скрипти уповільнюють сторінку."],
+    "font-display": ["Шрифти затримують показ тексту", "Поки вантажиться шрифт, текст невидимий."],
+    "font-display-insight": ["Шрифти затримують показ тексту", "Поки вантажиться шрифт, текст невидимий."],
+    "uses-long-cache-ttl": ["Браузер не запам'ятовує файли сайту", "Під час повторного візиту все вантажиться заново, хоча могло б відкриватися миттєво."],
+    "cache-insight": ["Браузер не запам'ятовує файли сайту", "Під час повторного візиту все вантажиться заново, хоча могло б відкриватися миттєво."],
+    "dom-size": ["Сторінка надто складна", "Тисячі елементів сповільнюють прокручування й реакцію на дії на слабких телефонах."],
+    "dom-size-insight": ["Сторінка надто складна", "Тисячі елементів сповільнюють прокручування й реакцію на дії на слабких телефонах."],
+    "mainthread-work-breakdown": ["Телефон довго обробляє сторінку", "Важкі скрипти й стилі навантажують процесор, і сайт відгукується із запізненням."],
+    "bootup-time": ["Скрипти довго запускаються", "Телефон витрачає секунди на обробку JavaScript, перш ніж сторінка стане робочою."],
+    "largest-contentful-paint-element": ["Головний блок вантажиться пізно", "Найбільший елемент першого екрана варто показувати якомога раніше."],
+    "lcp-discovery-insight": ["Головне зображення вантажиться пізно", "Браузер дізнається про головну картинку надто пізно — її варто завантажувати першою."],
+    "lcp-phases-insight": ["Головний блок вантажиться пізно", "Найбільший елемент першого екрана варто показувати якомога раніше."],
+    "prioritize-lcp-image": ["Головне зображення вантажиться пізно", "Головну картинку першого екрана варто завантажувати першою."],
+    "layout-shifts": ["Елементи зсуваються під час завантаження", "Через зсуви відвідувач натискає не туди. Google враховує це в рейтингу."],
+    "cls-culprits-insight": ["Елементи зсуваються під час завантаження", "Через зсуви відвідувач натискає не туди. Google враховує це в рейтингу."],
+    "unsized-images": ["У картинок не вказано розміри", "Через це текст «стрибає», коли картинка довантажується."],
+    "legacy-javascript": ["Застарілий код для старих браузерів", "Сучасні телефони завантажують зайвий код, який їм не потрібен."],
+    "legacy-javascript-insight": ["Застарілий код для старих браузерів", "Сучасні телефони завантажують зайвий код, який їм не потрібен."],
+    "duplicated-javascript": ["Однаковий код завантажується двічі", "Одні й ті самі бібліотеки підключені кілька разів."],
+    "duplicated-javascript-insight": ["Однаковий код завантажується двічі", "Одні й ті самі бібліотеки підключені кілька разів."],
+    "network-dependency-tree-insight": ["Файли вантажаться ланцюжком", "Браузер чекає на один файл, щоб дізнатися про наступний, — це додає затримку."],
+    "forced-reflow-insight": ["Скрипти змушують сторінку перемальовуватися", "Це сповільнює реакцію сайту на дії відвідувача."],
+    "viewport-insight": ["Сайт не налаштований під телефон", "Без тегу viewport сторінка на телефоні виглядає як зменшена версія для комп'ютера."],
+    "document-title": ["Немає заголовка сторінки (title)", "Саме його Google показує в результатах пошуку. Без нього сторінку важко знайти і на неї рідко натискають."],
+    "meta-description": ["Немає опису для Google (meta description)", "Опис — це текст під посиланням у пошуку. Без нього Google підставить випадковий шматок сторінки."],
+    "http-status-code": ["Сторінка віддає код помилки", "Google не індексує сторінки, які повідомляють про помилку."],
+    "is-crawlable": ["Сторінку заборонено показувати в Google", "Налаштування сторінки забороняють пошуковим системам її індексувати."],
+    "robots-txt": ["Помилки у файлі robots.txt", "Через помилки пошукові системи можуть неправильно обходити сайт."],
+    "link-text": ["Посилання без змісту («детальніше», «тут»)", "Google і люди з програмами читання екрана не розуміють, куди веде таке посилання."],
+    "crawlable-anchors": ["Посилання, якими Google не може перейти", "Сторінки, на які ведуть лише такі посилання, можуть не потрапити в пошук."],
+    "hreflang": ["Помилки в мовних версіях сайту", "Google може показувати відвідувачам не ту мовну версію."],
+    "canonical": ["Помилка в головній адресі сторінки (canonical)", "Google може вважати сторінку дублікатом і не показувати її в пошуку."],
+    "font-size": ["Дрібний текст на телефоні", "Відвідувачам доводиться збільшувати сторінку пальцями, щоб прочитати текст."],
+    "tap-targets": ["Кнопки й посилання задрібні для пальця", "Легко натиснути не туди, особливо в меню й формах."],
+    "image-alt": ["Картинки без текстових підписів (alt)", "Google не розуміє, що на зображенні, і не показує його в пошуку картинок."],
+    "color-contrast": ["Слабкий контраст тексту", "Світлий текст на світлому фоні важко читати, особливо на телефоні на сонці."],
+    "button-name": ["Кнопки без назви", "Програми читання екрана і пошукові роботи не розуміють, що робить кнопка."],
+    "link-name": ["Посилання без тексту", "Посилання-іконки без підпису незрозумілі для пошуку і програм читання екрана."],
+    "label": ["Поля форм без підписів", "Незрозуміло, що вводити в поле, — люди частіше кидають заповнення форми."],
+    "html-has-lang": ["Не вказано мову сторінки", "Браузер і Google не знають, якою мовою сайт, — страждають переклад і озвучення."],
+    "html-lang-valid": ["Неправильно вказано мову сторінки", "Браузер і Google неправильно визначають мову сайту."],
+    "heading-order": ["Порушено порядок заголовків", "Заголовки йдуть не по черзі (наприклад, після H1 одразу H4), і структура сторінки незрозуміла."],
+    "meta-viewport": ["Заборонено збільшувати сторінку на телефоні", "Людям із поганим зором неможливо збільшити текст."],
+    "target-size": ["Кнопки й посилання задрібні для пальця", "Легко натиснути не туди, особливо в меню й формах."],
+    "document-title-a11y": ["Немає заголовка сторінки", "Заголовок потрібен і для пошуку, і для вкладок браузера."],
+    "image-redundant-alt": ["Підписи картинок дублюють текст", "Програми читання екрана повторюють той самий текст двічі."],
+    "aria-allowed-attr": ["Помилки в розмітці для доступності", "Програми читання екрана неправильно озвучують частину сторінки."],
+    "list": ["Помилки в розмітці списків", "Списки неправильно озвучуються програмами читання екрана."],
+    "frame-title": ["Вбудовані блоки без назви", "Вбудовані карти, відео чи форми незрозумілі для програм читання екрана."],
+    "is-on-https": ["Сайт працює без захищеного з'єднання", "Браузер позначає такий сайт як «Не захищено», а Google опускає його в пошуку."],
+    "redirects-http": ["Немає переадресації з http на https", "Частина відвідувачів потрапляє на незахищену версію сайту."],
+    "errors-in-console": ["На сторінці є помилки коду", "Частина функцій сайту може не працювати: форми, кнопки, аналітика."],
+    "image-aspect-ratio": ["Картинки спотворені", "Зображення розтягнуті або сплюснуті — сайт виглядає неохайно."],
+    "image-size-responsive": ["Картинки розмиті на телефоні", "Зображення замалі для сучасних екранів і виглядають нечітко."],
+    "deprecations": ["Використовуються застарілі функції браузера", "З оновленнями браузерів частина сайту може перестати працювати."],
+    "inspector-issues": ["Браузер знайшов проблеми на сторінці", "Попередження щодо безпеки, cookie або змішаного вмісту."],
+    "third-party-cookies": ["Сторонні cookie", "Браузери поступово блокують сторонні cookie — частина віджетів і аналітики може перестати працювати."],
+    "paste-preventing-inputs": ["Заборонено вставляти текст у поля", "Людям незручно вставляти пароль чи email у форму."],
+    "doctype": ["Немає DOCTYPE", "Браузер може відображати сторінку в режимі сумісності з помилками верстки."],
+    "charset": ["Не вказано кодування", "Текст може відображатися «кракозябрами»."],
+    "notification-on-start": ["Сайт одразу просить дозвіл на сповіщення", "Такі запити дратують відвідувачів і частіше їх відганяють."],
+    "geolocation-on-start": ["Сайт одразу просить доступ до геолокації", "Запит без пояснення відлякує відвідувачів."],
+  };
+  const auClean = s => String(s || "").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/`/g, "").replace(/\s+/g, " ").trim();
+  const auFirstSentence = s => { const t = auClean(s); const m = t.match(/^.{20,220}?[.!?](\s|$)/); return m ? m[0].trim() : t.slice(0, 220); };
+  const auColor = sc => sc >= 90 ? "good" : sc >= 50 ? "mid" : "bad";
+
+  // Розбирає відповідь PageSpeed Insights у компактний звіт (окрема функція — щоб її легко перевіряти)
+  function auParse(json) {
+    const lh = json.lighthouseResult;
+    if (!lh) throw new Error("NO_RESULT");
+    if (lh.runtimeError && lh.runtimeError.code && lh.runtimeError.code !== "NO_ERROR") {
+      const e = new Error(lh.runtimeError.code); e.detail = lh.runtimeError.message; throw e;
+    }
+    const A = lh.audits || {};
+    const scores = AU_CATS.map(([id, name]) => {
+      const c = lh.categories && lh.categories[id];
+      return { id, name, score: c && c.score !== null && c.score !== undefined ? Math.round(c.score * 100) : null };
+    });
+    const known = scores.filter(s => s.score !== null);
+    const overall = known.length ? Math.round(known.reduce((a, s) => a + s.score, 0) / known.length) : null;
+
+    const metric = id => A[id] ? { value: A[id].displayValue || "—", tone: A[id].score === null || A[id].score === undefined ? "" : auColor(A[id].score * 100) } : null;
+    const metrics = [
+      ["largest-contentful-paint", "Головний вміст", "LCP"],
+      ["first-contentful-paint", "Перший вміст", "FCP"],
+      ["total-blocking-time", "Блокування", "TBT"],
+      ["cumulative-layout-shift", "Зсуви", "CLS"],
+    ].map(([id, name, abbr]) => ({ id, name, abbr, ...(metric(id) || {}) })).filter(m => m.value);
+
+    const issues = new Map();
+    let passed = 0;
+    for (const [catId, catName] of AU_CATS) {
+      const c = lh.categories && lh.categories[catId];
+      if (!c) continue;
+      for (const ref of c.auditRefs || []) {
+        const a = A[ref.id];
+        if (!a || a.score === null || a.score === undefined) continue;
+        if (["notApplicable", "manual", "informative", "error"].includes(a.scoreDisplayMode)) continue;
+        if (ref.group === "metrics" && catId !== "performance") continue;
+        if (a.score >= 0.9) { passed++; continue; }
+        const savings = (a.details && a.details.overallSavingsMs) || (a.metricSavings ? Object.values(a.metricSavings).reduce((x, y) => x + (y || 0), 0) : 0);
+        if (!ref.weight && catId === "performance" && a.score >= 0.5 && savings < 150) continue; // дрібниці не показуємо
+        const priority = (1 - a.score) * ((ref.weight || 0) + 3) * (catId === "seo" ? 2 : 1) + Math.min(savings / 300, 8);
+        const plain = AU_PLAIN[ref.id];
+        const key = plain ? plain[0] : ref.id;
+        const prev = issues.get(key);
+        const item = {
+          id: ref.id, cat: catName,
+          title: plain ? plain[0] : auClean(a.title),
+          why: plain ? plain[1] : auFirstSentence(a.description),
+          value: a.displayValue ? auClean(a.displayValue) : "",
+          severity: a.score < 0.5 ? "bad" : "mid",
+          priority,
+        };
+        if (!prev || prev.priority < priority) issues.set(key, item);
+      }
+    }
+    const list = [...issues.values()].sort((a, b) => b.priority - a.priority);
+    const shot = A["final-screenshot"] && A["final-screenshot"].details && A["final-screenshot"].details.data;
+    return {
+      url: lh.finalDisplayedUrl || lh.finalUrl || lh.requestedUrl || json.id,
+      requested: lh.requestedUrl || json.id,
+      fetched: lh.fetchTime || json.analysisUTCTimestamp,
+      device: (lh.configSettings && lh.configSettings.formFactor) === "desktop" ? "desktop" : "mobile",
+      scores, overall, metrics, issues: list, passed,
+      screenshot: typeof shot === "string" && shot.startsWith("data:image/") ? shot : null,
+    };
+  }
+
+  // Додаткові перевірки за даними воркера: HTML сторінки, robots.txt, sitemap, https
+  function auExtra(w) {
+    const out = [];
+    const add = (ok, title, why) => out.push({ ok, title, why });
+    let doc = null;
+    try { doc = new DOMParser().parseFromString(w.html || "", "text/html"); } catch { /* ignore */ }
+    const meta = n => doc && (doc.querySelector(`meta[property="${n}"]`) || doc.querySelector(`meta[name="${n}"]`));
+    add(!!w.https, w.https ? "Сайт працює на HTTPS" : "Сайт без HTTPS", w.https ? "З'єднання захищене." : "Браузери позначають такі сайти як «Не захищено».");
+    if (w.httpRedirect !== null && w.httpRedirect !== undefined) add(!!w.httpRedirect, w.httpRedirect ? "http:// переадресовує на https://" : "Немає переадресації з http:// на https://", w.httpRedirect ? "Усі відвідувачі потрапляють на захищену версію." : "Частина відвідувачів і Google можуть потрапляти на незахищену версію.");
+    add(w.robots && w.robots.status === 200, w.robots && w.robots.status === 200 ? "Є файл robots.txt" : "Немає файлу robots.txt", "Він підказує пошуковим системам, які сторінки обходити.");
+    const sm = w.sitemap || {};
+    add(!!sm.found, sm.found ? "Є карта сайту (sitemap.xml)" : "Немає карти сайту (sitemap.xml)", sm.found ? "Google швидше знаходить нові сторінки." : "Без неї Google довше знаходить нові сторінки сайту.");
+    if (doc) {
+      const h1 = doc.querySelectorAll("h1").length;
+      add(h1 === 1, h1 === 1 ? "Один головний заголовок H1" : h1 ? `Заголовків H1 на сторінці: ${h1}` : "Немає головного заголовка H1", "H1 підказує Google, про що сторінка. Він має бути один.");
+      const og = meta("og:title") && meta("og:image");
+      add(!!og, og ? "Є прев'ю для соцмереж (Open Graph)" : "Немає прев'ю для соцмереж (Open Graph)", og ? "Посилання в Telegram, Facebook і Viber показуються з картинкою і назвою." : "Посилання на сайт у месенджерах показуються без картинки — на них менше натискають.");
+      const ld = [...doc.querySelectorAll('script[type="application/ld+json"]')];
+      add(ld.length > 0, ld.length ? "Є структуровані дані schema.org" : "Немає структурованих даних schema.org", ld.length ? "Google краще розуміє, що це за бізнес чи сторінка." : "Розмітка schema.org допомагає отримати розширені сніпети в Google: рейтинг, ціни, FAQ.");
+      const icon = doc.querySelector('link[rel~="icon"]');
+      add(!!icon || !!w.favicon, icon || w.favicon ? "Є іконка сайту (favicon)" : "Немає іконки сайту (favicon)", "Іконку видно у вкладці браузера та в результатах пошуку Google на телефоні.");
+      const contact = doc.querySelector('a[href^="tel:"], a[href*="t.me/"], a[href^="viber:"], a[href*="wa.me/"], a[href^="mailto:"], a[href*="m.me/"]');
+      add(!!contact, contact ? "Є кнопки зв'язку (телефон чи месенджер)" : "Не знайдено кнопок зв'язку", contact ? "Клієнт може зв'язатися в один дотик з телефону." : "Посилання tel: чи на месенджер дозволяють написати чи подзвонити в один дотик.");
+      const html = w.html || "";
+      const analytics = /googletagmanager\.com|google-analytics\.com|gtag\(|goatcounter|plausible|mc\.yandex|clarity\.ms|fbq\(|connect\.facebook\.net/.test(html);
+      add(analytics, analytics ? "Підключено аналітику" : "Не знайдено аналітики відвідувань", analytics ? "Ви бачите, звідки приходять відвідувачі." : "Без аналітики неможливо зрозуміти, звідки приходять клієнти і що працює.");
+    }
+    return out;
+  }
+
+  function auditTool(root) {
+    const tg = root.dataset.tg || "https://t.me/rodionactive";
+    const params = new URLSearchParams(location.search);
+    let device = params.get("device") === "desktop" ? "desktop" : "mobile";
+    let busy = false, last = null;
+
+    root.innerHTML = `<div class="au">
+      <form class="au-form" novalidate>
+        <label class="au-url"><span class="sr-only">Адреса сайту</span><input type="url" inputmode="url" autocomplete="url" placeholder="https://вашсайт.com.ua" required></label>
+        <div class="au-dev" role="group" aria-label="Пристрій">
+          <button type="button" data-dev="mobile" aria-pressed="${device === "mobile"}">Телефон</button>
+          <button type="button" data-dev="desktop" aria-pressed="${device === "desktop"}">Комп'ютер</button>
+        </div>
+        <button type="submit" class="btn">Перевірити <span class="arr">→</span></button>
+        <p class="au-err" role="alert" hidden></p>
+      </form>
+      <div class="au-out" aria-live="polite"></div>
+    </div>`;
+    const form = $(".au-form", root), input = $("input", form), err = $(".au-err", form), out = $(".au-out", root);
+
+    function normalize(v) {
+      v = String(v || "").trim();
+      if (!v) return null;
+      if (!/^https?:\/\//i.test(v)) v = "https://" + v.replace(/^\/+/, "");
+      try {
+        const u = new URL(v);
+        if (!/^https?:$/.test(u.protocol) || !u.hostname.includes(".") || /^(localhost|127\.|10\.|192\.168\.|0\.)/.test(u.hostname)) return null;
+        return u.href;
+      } catch { return null; }
+    }
+    function showErr(t) { err.textContent = t; err.hidden = !t; }
+
+    const STEPS = ["Відкриваю сайт як телефон у мобільній мережі…", "Вимірюю швидкість завантаження…", "Перевіряю SEO: заголовки, опис, індексацію…", "Перевіряю доступність і контраст…", "Шукаю помилки в коді сторінки…", "Збираю звіт…"];
+    function progress() {
+      out.innerHTML = `<div class="au-wait"><div class="au-spin" aria-hidden="true"></div><p><b>Перевіряю сайт</b><span class="au-step">${STEPS[0]}</span></p><div class="qz-bar"><i></i></div><small>Зазвичай це займає 20–40 секунд. Не закривайте сторінку.</small></div>`;
+      const step = $(".au-step", out), bar = $(".qz-bar i", out), t0 = Date.now();
+      const timer = setInterval(() => {
+        const s = (Date.now() - t0) / 1000;
+        if (step) step.textContent = STEPS[Math.min(STEPS.length - 1, Math.floor(s / 6))];
+        if (bar) bar.style.width = `${Math.round(95 * (1 - Math.exp(-s / 16)))}%`;
+      }, 400);
+      return () => clearInterval(timer);
+    }
+
+    async function runPSI(url) {
+      const q = new URLSearchParams({ url, strategy: device, locale: "uk" });
+      AU_CATS.forEach(([id]) => q.append("category", id.toUpperCase().replace("-", "_")));
+      if (PSI_KEY) q.set("key", PSI_KEY);
+      const res = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?${q}`, { signal: AbortSignal.timeout ? AbortSignal.timeout(120000) : undefined });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const msg = (json.error && json.error.message) || "";
+        const e = new Error(res.status === 429 ? "QUOTA" : /FAILED_DOCUMENT_REQUEST|ERRORED_DOCUMENT_REQUEST|DNS|NO_FCP|unable to resolve|Unable to process/i.test(msg) ? "UNREACHABLE" : "API");
+        e.detail = msg; throw e;
+      }
+      return auParse(json);
+    }
+    async function runExtra(url) {
+      if (!SITE_CHECK) return null;
+      try {
+        const r = await fetch(`${SITE_CHECK}?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout ? AbortSignal.timeout(25000) : undefined });
+        if (!r.ok) return null;
+        return auExtra(await r.json());
+      } catch { return null; }
+    }
+
+    const gauge = (s, big) => {
+      const r = big ? 52 : 34, c = 2 * Math.PI * r, v = s.score === null ? 0 : s.score, size = (r + 8) * 2;
+      return `<div class="au-g ${s.score === null ? "" : auColor(v)}${big ? " big" : ""}">
+        <svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" class="bg"/><circle cx="${size / 2}" cy="${size / 2}" r="${r}" class="fg" stroke-dasharray="${(c * v / 100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${size / 2} ${size / 2})"/></svg>
+        <b>${s.score === null ? "—" : v}</b><span>${esc(s.name)}</span></div>`;
+    };
+    const verdict = o => o >= 90 ? ["Відмінно", "Сайт швидкий і технічно в хорошому стані. Залишилися дрібниці."]
+      : o >= 70 ? ["Добре, але є що покращити", "Сайт працює непогано, проте кілька проблем коштують вам відвідувачів і позицій у Google."]
+      : o >= 50 ? ["Сайт втрачає відвідувачів", "Частина людей іде, не дочекавшись завантаження, а Google показує сайт нижче за конкурентів."]
+      : ["Серйозні проблеми", "Сайт повільний або має критичні помилки — це помітно і клієнтам, і пошуковим системам."];
+
+    function message(r) {
+      const host = new URL(r.url).hostname;
+      const top = r.issues.slice(0, 3).map((i, n) => `${n + 1}. ${i.title}`).join("\n");
+      return `Привіт! Перевірив сайт ${host} аудитом на rodionactive.com (${r.device === "desktop" ? "комп'ютер" : "телефон"}).\nЗагальна оцінка: ${r.overall}/100 — ${r.scores.map(s => `${s.name.toLowerCase()} ${s.score ?? "—"}`).join(", ")}.${top ? `\nГоловні проблеми:\n${top}` : ""}\nПідкажіть, що виправити в першу чергу і скільки це коштуватиме?`;
+    }
+
+    function render(r, extra) {
+      const [vt, vd] = verdict(r.overall);
+      const host = new URL(r.url).hostname;
+      const date = new Date(r.fetched || Date.now()).toLocaleString("uk-UA", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+      const crit = r.issues.filter(i => i.severity === "bad"), warn = r.issues.filter(i => i.severity !== "bad");
+      const item = i => `<li class="au-i ${i.severity}"><span class="au-dot" aria-hidden="true"></span><div><b>${esc(i.title)}</b>${i.value ? ` <em>${esc(i.value)}</em>` : ""}<p>${esc(i.why)}</p><small>${esc(i.cat)}</small></div></li>`;
+      const SHOW = 8;
+      const all = [...crit, ...warn];
+      const msg = message(r);
+      out.innerHTML = `<article class="au-report">
+        <div class="au-brand"><b>Rodionactive<i>.</i></b><span>Звіт аудиту сайту · rodionactive.com/instrumenty/audyt-saitu</span></div>
+        <header class="au-head">
+          <div class="au-sum">
+            ${gauge({ name: "Загалом", score: r.overall }, true)}
+            <div><p class="au-host">${esc(host)} · ${r.device === "desktop" ? "комп'ютер" : "телефон"} · ${esc(date)}</p><h2>${esc(vt)}</h2><p>${esc(vd)}</p></div>
+          </div>
+          ${r.screenshot ? `<figure class="au-shot ${r.device}"><img src="${r.screenshot}" alt="Як сайт виглядає на ${r.device === "desktop" ? "комп'ютері" : "телефоні"}"></figure>` : ""}
+        </header>
+        <div class="au-gs">${r.scores.map(s => gauge(s)).join("")}</div>
+        ${r.metrics.length ? `<div class="au-ms">${r.metrics.map(m => `<div class="${m.tone}"><span>${esc(m.name)} <abbr>${m.abbr}</abbr></span><b>${esc(m.value)}</b></div>`).join("")}</div>` : ""}
+
+        <section class="au-sec"><h3>Що варто виправити${all.length ? ` <span>${all.length}</span>` : ""}</h3>
+          ${all.length ? `<ol class="au-list">${all.slice(0, SHOW).map(item).join("")}</ol>
+            ${all.length > SHOW ? `<details class="au-more"><summary>Показати ще ${all.length - SHOW}</summary><ol class="au-list">${all.slice(SHOW).map(item).join("")}</ol></details>` : ""}`
+          : `<p class="st-muted">Суттєвих проблем не знайдено — так тримати!</p>`}
+          <p class="au-passed">✓ Пройдено перевірок без зауважень: ${r.passed}</p>
+        </section>
+
+        ${extra && extra.length ? `<section class="au-sec"><h3>Базові налаштування сайту</h3><ul class="au-checks">${extra.map(c => `<li class="${c.ok ? "ok" : "no"}"><span aria-hidden="true">${c.ok ? "✓" : "✕"}</span><div><b>${esc(c.title)}</b><p>${esc(c.why)}</p></div></li>`).join("")}</ul></section>` : ""}
+
+        <section class="au-cta">
+          <div><h3>Хочете виправити?</h3><p>Надішліть звіт мені в Telegram — підкажу, з чого почати, і скільки це коштуватиме. Або збережіть PDF для свого розробника.</p></div>
+          <div class="qz-cta">
+            <a class="btn" href="${tgLink(tg, msg)}" target="_blank" rel="noopener">Обговорити в Telegram <span class="arr">→</span></a>
+            <button type="button" class="btn ghost" data-pdf>Зберегти PDF</button>
+            <button type="button" class="qz-restart link" data-copy>Скопіювати посилання на звіт</button>
+          </div>
+          <p class="au-brand-foot">Telegram: ${esc(tg.replace(/^https?:\/\//, ""))} · rodionactive.com</p>
+          <p class="qz-fine">Оцінки розраховує Google Lighthouse через PageSpeed Insights. Результат швидкості може відрізнятися на кілька балів між перевірками.</p>
+        </section>
+      </article>`;
+      $("[data-pdf]", out).addEventListener("click", () => {
+        $$("details", out).forEach(d => (d.open = true));
+        document.documentElement.classList.add("au-print");
+        const done = () => { document.documentElement.classList.remove("au-print"); window.removeEventListener("afterprint", done); };
+        window.addEventListener("afterprint", done);
+        window.print();
+        setTimeout(done, 1500);
+      });
+      const cp = $("[data-copy]", out);
+      cp.addEventListener("click", () => copy(location.href, cp));
+    }
+
+    function fail(e) {
+      const code = e && e.message;
+      const text = code === "QUOTA" ? "Зараз забагато перевірок. Спробуйте ще раз за хвилину."
+        : code === "UNREACHABLE" || /DOCUMENT|DNS|NO_FCP|NO_NAVSTART|PAGE_HUNG|INSECURE/.test(code || "") ? "Не вдалося відкрити сайт. Перевірте адресу: можливо, сайт недоступний, закритий паролем або блокує автоматичні перевірки."
+        : code === "TimeoutError" || (e && e.name === "TimeoutError") ? "Перевірка триває надто довго — схоже, сайт відповідає дуже повільно. Спробуйте ще раз."
+        : "Сервіс перевірки тимчасово не відповів. Спробуйте ще раз за хвилину.";
+      out.innerHTML = `<div class="au-fail"><b>Перевірка не вдалася</b><p>${esc(text)}</p><button type="button" class="btn ghost small" data-retry>Спробувати ще раз</button></div>`;
+      $("[data-retry]", out).addEventListener("click", () => run(last));
+    }
+
+    async function run(url) {
+      if (busy || !url) return;
+      busy = true; last = url;
+      const btn = $("button[type=submit]", form); btn.disabled = true;
+      const q = new URLSearchParams({ url }); if (device === "desktop") q.set("device", "desktop");
+      history.replaceState(null, "", `${location.pathname}?${q}`);
+      const stop = progress();
+      root.scrollIntoView({ behavior: "smooth", block: "start" });
+      try {
+        const [r, extra] = await Promise.all([runPSI(url), runExtra(url)]);
+        render(r, extra);
+      } catch (e) { fail(e); } finally { stop(); busy = false; btn.disabled = false; }
+    }
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const url = normalize(input.value);
+      if (!url) return showErr("Введіть адресу сайту, наприклад example.com.ua");
+      showErr(""); input.value = url; run(url);
+    });
+    root.addEventListener("click", e => {
+      const b = e.target.closest("[data-dev]"); if (!b) return;
+      device = b.dataset.dev;
+      $$("[data-dev]", root).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    });
+    const start = normalize(params.get("url"));
+    if (start) { input.value = start; run(start); }
+  }
+  // для перевірки в Node
+  if (typeof module === "object" && module.exports) module.exports = { auParse, auExtra };
+
+  const APPS = { qr: qrTool, site: siteCalc, routine: routineCalc, status: statusTool, freelance: freelanceTool, audit: auditTool };
   $$("[data-tool-app]").forEach(el => { const f = APPS[el.dataset.toolApp]; if (f) f(el); });
 })();
