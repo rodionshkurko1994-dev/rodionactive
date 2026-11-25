@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611251600";
+  const ASSET_V = "202611251700";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -867,13 +867,13 @@ ${html}
     <p class="eyebrow">Інші інструменти</p>
     <div>${others.map(s => `<a class="svc-other" href="${toolUrl(s)}"><span>${esc(s.code)}</span><b>${esc(s.name)}</b><i aria-hidden="true">→</i></a>`).join("")}${RATING_ON ? `<a class="svc-other" href="${RATING_PATH}"><span>РЕЙТИНГ</span><b>Рейтинг швидкості сайтів України</b><i aria-hidden="true">→</i></a>` : ""}<a class="svc-other" href="/services/"><span>ПОСЛУГИ</span><b>Сайти, дизайн, автоматизація</b><i aria-hidden="true">→</i></a></div>
   </nav>`;
-    const scripts = (t.app === "qr" ? ["/assets/js/vendor/qr-code-styling.js"] : []).concat([`/assets/js/tools-app.js?v=${ASSET_V}`]);
+    const scripts = (t.app === "qr" ? ["/assets/js/vendor/qr-code-styling.js"] : t.app === "builder" ? [`/assets/js/builder.js?v=${ASSET_V}`] : []).concat([`/assets/js/tools-app.js?v=${ASSET_V}`]);
     return page({ head, page: "tools", body, scripts });
   }
 
   function renderTools() {
     const path = "/instrumenty/";
-    const description = "Безкоштовні онлайн-інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту, статус сервісів (чи працює ChatGPT, Telegram, monobank) та індекс ринку фрілансу.";
+    const description = "Безкоштовні онлайн-інструменти: конструктор сайту-візитки, аудит сайту, генератор QR-кодів, калькулятор вартості сайту, статус сервісів (чи працює ChatGPT, Telegram, monobank) та індекс ринку фрілансу.";
     const jsonld = [{
       "@context": "https://schema.org",
       "@graph": [
@@ -891,11 +891,11 @@ ${html}
         crumbs([["Головна", "/"], ["Інструменти", path]]),
       ],
     }];
-    const head = headHTML({ title: `Безкоштовні онлайн-інструменти: аудит сайту, QR-коди, вартість сайту, статус сервісів, ринок фрілансу | ${SITE.name}`, description, path, jsonld });
+    const head = headHTML({ title: `Безкоштовні онлайн-інструменти: конструктор сайту, аудит сайту, QR-коди, вартість сайту, статус сервісів, ринок фрілансу | ${SITE.name}`, description, path, jsonld });
     const body = `  <header class="article-head">
     <p class="eyebrow rise">Інструменти</p>
     <h1 class="rise" style="--d:1">Безкоштовні <span style="color:var(--orange)">інструменти</span></h1>
-    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Перевірте швидкість і SEO свого сайту, створіть QR-код, дізнайтеся вартість сайту, перевірте, чи працюють популярні сервіси, або подивіться, що зараз замовляють на ринку фрілансу.</p>
+    <p class="lead rise" style="--d:2;max-width:60ch">Корисні інструменти для бізнесу: працюють прямо в браузері, без реєстрації й безкоштовно. Зберіть превʼю свого сайту-візитки, перевірте швидкість і SEO свого сайту, створіть QR-код, дізнайтеся вартість сайту, перевірте, чи працюють популярні сервіси, або подивіться, що зараз замовляють на ринку фрілансу.</p>
   </header>
   <div class="svc-list tool-list">
     ${TOOLS.map((t, i) => `<a class="svc-tile reveal" href="${toolUrl(t)}" style="--i:${i}">

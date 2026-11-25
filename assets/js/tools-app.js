@@ -1,4 +1,4 @@
-/* Rodionactive — інструменти: аудит сайту, генератор QR-кодів, калькулятор вартості сайту,
+/* Rodionactive — інструменти: конструктор сайту (логіка — builder.js), аудит сайту, генератор QR-кодів, калькулятор вартості сайту,
    статус сервісів і індекс ринку фрілансу (дані — з гілки data, див. .github/workflows/data.yml).
    Усе працює в браузері; дані нікуди не надсилаються, доки відвідувач сам не натисне «Обговорити в Telegram». */
 (function () {
@@ -826,6 +826,6 @@
   // для перевірки в Node
   if (typeof module === "object" && module.exports) module.exports = { auParse, auExtra };
 
-  const APPS = { qr: qrTool, site: siteCalc, status: statusTool, freelance: freelanceTool, audit: auditTool };
+  const APPS = { builder: el => window.RodionBuilder && window.RodionBuilder.mount(el), qr: qrTool, site: siteCalc, status: statusTool, freelance: freelanceTool, audit: auditTool };
   $$("[data-tool-app]").forEach(el => { const f = APPS[el.dataset.toolApp]; if (f) f(el); });
 })();
