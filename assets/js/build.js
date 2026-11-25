@@ -38,6 +38,14 @@
   const projectUrl = p => `/portfolio/${p.slug}/`;
   const visible = list => (list || []).filter(x => !x.draft && x.slug).slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   const stripMd = md => String(md || "").replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[#>*_`~-]+/g, " ").replace(/\s+/g, " ").trim();
+  // внутрішні посилання між статтями: [слова](/blog/<slug>/).
+  // Посилання на статтю, якої вже немає (видалена чи чернетка), перетворюється на звичайний текст;
+  // absolute=true — повна адреса (для RSS).
+  function blogLinks(md, posts, absolute) {
+    const live = new Set((posts || []).map(x => x.slug));
+    return String(md || "").replace(/(!?)\[([^\]]+)\]\(\/blog\/([a-z0-9-]+)\/?\)/g, (m, img, label, slug) =>
+      img ? m : live.has(slug) ? `[${label}](${absolute ? SITE.url : ""}/blog/${slug}/)` : label);
+  }
   function clip(text, n = 158) {
     const t = String(text || "").replace(/\s+/g, " ").trim();
     if (t.length <= n) return t;
@@ -201,7 +209,7 @@ ${scripts.map(src => `<script src="${src}"></script>`).join("\n")}${scripts.leng
 
   // ---------- сторінка статті ----------
   function renderPost(p, posts, md) {
-    const html = md(p.body || "");
+    const html = md(blogLinks(p.body, posts));
     const text = stripMd(p.body);
     const description = clip(p.description || p.excerpt || text);
     const modified = p.updated || p.date;
@@ -946,7 +954,7 @@ ${items.map(p => `  <item>
     <guid isPermaLink="true">${SITE.url}${postUrl(p)}</guid>
     <pubDate>${rfc822(p.date)}</pubDate>
     <description>${xml(p.excerpt || clip(stripMd(p.body), 300))}</description>
-${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.tags || []).length ? "\n" : ""}    <content:encoded><![CDATA[${(p.cover ? `<p><img src="${abs(p.cover)}" alt=""></p>` : "") + md(p.body || "").replace(/]]>/g, "]]]]><![CDATA[>")}]]></content:encoded>
+${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.tags || []).length ? "\n" : ""}    <content:encoded><![CDATA[${(p.cover ? `<p><img src="${abs(p.cover)}" alt=""></p>` : "") + md(blogLinks(p.body, posts, true)).replace(/]]>/g, "]]]]><![CDATA[>")}]]></content:encoded>
   </item>`).join("\n")}
 </channel>
 </rss>
