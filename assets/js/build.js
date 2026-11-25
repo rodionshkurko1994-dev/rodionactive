@@ -945,7 +945,7 @@ ${html}
     const lcps = ok.map(s => s.lcp).filter(x => typeof x === "number").sort((a, b) => a - b);
     return {
       ok, cats,
-      failed: (r.sites || []).filter(s => !s.ok),
+      failed: (r.sites || []).filter(s => !s.ok || typeof s.perf !== "number"),
       avgPerf: avg(ok.map(s => s.perf)),
       green: ok.filter(s => s.perf >= 90).length,
       red: ok.filter(s => s.perf < 50).length,

@@ -43,6 +43,10 @@ async function psi(url) {
       const A = lh.audits || {}, C = lh.categories || {};
       const score = id => C[id] && typeof C[id].score === "number" ? Math.round(C[id].score * 100) : null;
       const num = id => A[id] && typeof A[id].numericValue === "number" ? A[id].numericValue : null;
+      // сайт віддав Google сторінку-заглушку (блок за країною, капча, «доступ заборонено»):
+      // код помилки або заборона індексації — така сторінка «швидка», але це не сам сайт
+      if ((A["http-status-code"] && A["http-status-code"].score === 0) || (A["is-crawlable"] && A["is-crawlable"].score === 0)) throw new Error("BLOCKED");
+      if (score("performance") === null) throw new Error("NO_SCORE");
       return {
         perf: score("performance"), seo: score("seo"), a11y: score("accessibility"), bp: score("best-practices"),
         lcp: num("largest-contentful-paint"), fcp: num("first-contentful-paint"), tbt: num("total-blocking-time"),
@@ -65,6 +69,7 @@ async function checkSite(site) {
     try { runs.push(await psi(site.url)); } catch (e) {
       errors.push(e.message);
       if (e.message === "API_KEY") throw e;
+      if (e.message === "BLOCKED") break; // заглушка не зміниться від повтору
       if (!runs.length && i === 1) break; // двічі поспіль не відкрився — далі не мучимо
     }
   }

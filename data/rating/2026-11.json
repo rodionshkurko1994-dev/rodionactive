@@ -1326,17 +1326,8 @@
    "name": "Дія",
    "url": "https://diia.gov.ua/",
    "cat": "Держсервіси",
-   "ok": true,
-   "runs": 3,
-   "perf": 100,
-   "seo": 40,
-   "a11y": 96,
-   "bp": 96,
-   "lcp": 759,
-   "fcp": 759,
-   "tbt": 0,
-   "si": 759,
-   "cls": 0
+   "ok": false,
+   "error": "BLOCKED"
   },
   {
    "name": "Урядовий портал",
@@ -1423,17 +1414,8 @@
    "name": "МВС",
    "url": "https://mvs.gov.ua/",
    "cat": "Держсервіси",
-   "ok": true,
-   "runs": 3,
-   "perf": 100,
-   "seo": 40,
-   "a11y": 96,
-   "bp": 96,
-   "lcp": 758,
-   "fcp": 758,
-   "tbt": 0,
-   "si": 758,
-   "cls": 0
+   "ok": false,
+   "error": "BLOCKED"
   },
   {
    "name": "Міграційна служба",
@@ -1519,17 +1501,8 @@
    "name": "Київська міська рада / КМДА",
    "url": "https://kyivcity.gov.ua/",
    "cat": "Держсервіси",
-   "ok": true,
-   "runs": 3,
-   "perf": 85,
-   "seo": 40,
-   "a11y": 93,
-   "bp": 96,
-   "lcp": 758,
-   "fcp": 758,
-   "tbt": 573,
-   "si": 3198,
-   "cls": 0.003
+   "ok": false,
+   "error": "BLOCKED"
   },
   {
    "name": "Митниця",
@@ -1551,17 +1524,8 @@
    "name": "ДСНС",
    "url": "https://dsns.gov.ua/",
    "cat": "Держсервіси",
-   "ok": true,
-   "runs": 3,
-   "perf": 86,
-   "seo": 40,
-   "a11y": 93,
-   "bp": 96,
-   "lcp": 767,
-   "fcp": 767,
-   "tbt": 550,
-   "si": 1607,
-   "cls": 0.003
+   "ok": false,
+   "error": "BLOCKED"
   },
   {
    "name": "Міноборони",
@@ -1617,17 +1581,8 @@
    "name": "Укренерго",
    "url": "https://ua.energy/",
    "cat": "Енергетика і АЗС",
-   "ok": true,
-   "runs": 3,
-   "perf": null,
-   "seo": 40,
-   "a11y": 93,
-   "bp": 96,
-   "lcp": 2527,
-   "fcp": 2527,
-   "tbt": 2748,
-   "si": null,
-   "cls": 0.016
+   "ok": false,
+   "error": "BLOCKED"
   },
   {
    "name": "Нафтогаз",
@@ -1721,17 +1676,8 @@
    "name": "БРСМ-Нафта",
    "url": "https://brsm-nafta.com/",
    "cat": "Енергетика і АЗС",
-   "ok": true,
-   "runs": 3,
-   "perf": 73,
-   "seo": 40,
-   "a11y": 93,
-   "bp": 96,
-   "lcp": 761,
-   "fcp": 761,
-   "tbt": 1815,
-   "si": 2445,
-   "cls": 0.004
+   "ok": false,
+   "error": "BLOCKED"
   },
   {
    "name": "OLX",
@@ -2353,5 +2299,6 @@
    "si": 19835,
    "cls": 0.443
   }
- ]
+ ],
+ "note": "6 сайтів позначено BLOCKED вручну 25.11.2026: Google отримав від них сторінку-заглушку (SEO 40, заборона індексації); з наступного запуску це визначається автоматично."
 }
