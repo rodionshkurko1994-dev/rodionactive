@@ -1,0 +1,657 @@
+{
+ "_readme": "Список сайтів для рейтингу швидкості (rodionactive.com/reitynh-saitiv/). Щоб додати сайт — допишіть {\"name\", \"url\"} у потрібну категорію; нову категорію можна створити так само. Зміни потраплять у наступний щомісячний рейтинг.",
+ "categories": [
+  {
+   "name": "Банки",
+   "sites": [
+    {
+     "name": "ПриватБанк",
+     "url": "https://privatbank.ua/"
+    },
+    {
+     "name": "monobank",
+     "url": "https://www.monobank.ua/"
+    },
+    {
+     "name": "Ощадбанк",
+     "url": "https://www.oschadbank.ua/"
+    },
+    {
+     "name": "Райффайзен Банк",
+     "url": "https://raiffeisen.ua/"
+    },
+    {
+     "name": "УкрСиббанк",
+     "url": "https://ukrsibbank.com/"
+    },
+    {
+     "name": "ПУМБ",
+     "url": "https://pumb.ua/"
+    },
+    {
+     "name": "А-Банк",
+     "url": "https://a-bank.com.ua/"
+    },
+    {
+     "name": "Сенс Банк",
+     "url": "https://sensebank.ua/"
+    },
+    {
+     "name": "ОТП Банк",
+     "url": "https://www.otpbank.com.ua/"
+    },
+    {
+     "name": "Укргазбанк",
+     "url": "https://www.ukrgasbank.com/"
+    },
+    {
+     "name": "Креді Агріколь",
+     "url": "https://credit-agricole.ua/"
+    },
+    {
+     "name": "ПроКредит Банк",
+     "url": "https://www.procreditbank.com.ua/"
+    },
+    {
+     "name": "Банк Восток",
+     "url": "https://bankvostok.com.ua/"
+    },
+    {
+     "name": "Таскомбанк",
+     "url": "https://tascombank.ua/"
+    },
+    {
+     "name": "Укрексімбанк",
+     "url": "https://www.eximb.com/"
+    },
+    {
+     "name": "izibank",
+     "url": "https://izibank.com.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Інтернет-магазини",
+   "sites": [
+    {
+     "name": "Rozetka",
+     "url": "https://rozetka.com.ua/"
+    },
+    {
+     "name": "Prom.ua",
+     "url": "https://prom.ua/"
+    },
+    {
+     "name": "Епіцентр",
+     "url": "https://epicentrk.ua/"
+    },
+    {
+     "name": "Comfy",
+     "url": "https://comfy.ua/"
+    },
+    {
+     "name": "Фокстрот",
+     "url": "https://www.foxtrot.com.ua/"
+    },
+    {
+     "name": "АЛЛО",
+     "url": "https://allo.ua/"
+    },
+    {
+     "name": "Eldorado",
+     "url": "https://eldorado.ua/"
+    },
+    {
+     "name": "MOYO",
+     "url": "https://www.moyo.ua/"
+    },
+    {
+     "name": "Цитрус",
+     "url": "https://www.ctrs.com.ua/"
+    },
+    {
+     "name": "MAKEUP",
+     "url": "https://makeup.com.ua/"
+    },
+    {
+     "name": "EVA",
+     "url": "https://eva.ua/"
+    },
+    {
+     "name": "Kasta",
+     "url": "https://kasta.ua/"
+    },
+    {
+     "name": "ANSWEAR",
+     "url": "https://answear.ua/"
+    },
+    {
+     "name": "Intertop",
+     "url": "https://intertop.ua/"
+    },
+    {
+     "name": "Brain",
+     "url": "https://brain.com.ua/"
+    },
+    {
+     "name": "Telemart",
+     "url": "https://telemart.ua/"
+    },
+    {
+     "name": "КТС",
+     "url": "https://ktc.ua/"
+    },
+    {
+     "name": "JYSK",
+     "url": "https://jysk.ua/"
+    },
+    {
+     "name": "IKEA Україна",
+     "url": "https://www.ikea.com/ua/uk/"
+    },
+    {
+     "name": "Watsons",
+     "url": "https://www.watsons.ua/"
+    },
+    {
+     "name": "Аврора",
+     "url": "https://avrora.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Супермаркети",
+   "sites": [
+    {
+     "name": "Сільпо",
+     "url": "https://silpo.ua/"
+    },
+    {
+     "name": "АТБ",
+     "url": "https://www.atbmarket.com/"
+    },
+    {
+     "name": "Novus",
+     "url": "https://novus.ua/"
+    },
+    {
+     "name": "METRO",
+     "url": "https://metro.ua/"
+    },
+    {
+     "name": "Ашан",
+     "url": "https://auchan.ua/"
+    },
+    {
+     "name": "Varus",
+     "url": "https://varus.ua/"
+    },
+    {
+     "name": "Фора",
+     "url": "https://fora.ua/"
+    },
+    {
+     "name": "Fozzy",
+     "url": "https://fozzyshop.ua/"
+    },
+    {
+     "name": "Zakaz.ua",
+     "url": "https://zakaz.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Доставка і пошта",
+   "sites": [
+    {
+     "name": "Нова пошта",
+     "url": "https://novaposhta.ua/"
+    },
+    {
+     "name": "Укрпошта",
+     "url": "https://www.ukrposhta.ua/"
+    },
+    {
+     "name": "Meest",
+     "url": "https://meest.com/"
+    },
+    {
+     "name": "Делівері",
+     "url": "https://www.delivery-auto.com/"
+    },
+    {
+     "name": "САТ",
+     "url": "https://www.sat.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Зв'язок, інтернет і ТБ",
+   "sites": [
+    {
+     "name": "Київстар",
+     "url": "https://kyivstar.ua/"
+    },
+    {
+     "name": "Vodafone Україна",
+     "url": "https://www.vodafone.ua/"
+    },
+    {
+     "name": "lifecell",
+     "url": "https://www.lifecell.ua/"
+    },
+    {
+     "name": "Воля",
+     "url": "https://volia.com/"
+    },
+    {
+     "name": "Датагруп",
+     "url": "https://www.datagroup.ua/"
+    },
+    {
+     "name": "Укртелеком",
+     "url": "https://www.ukrtelecom.ua/"
+    },
+    {
+     "name": "Ланет",
+     "url": "https://lanet.ua/"
+    },
+    {
+     "name": "MEGOGO",
+     "url": "https://megogo.net/ua"
+    },
+    {
+     "name": "SWEET.TV",
+     "url": "https://sweet.tv/"
+    }
+   ]
+  },
+  {
+   "name": "Новини і медіа",
+   "sites": [
+    {
+     "name": "Українська правда",
+     "url": "https://www.pravda.com.ua/"
+    },
+    {
+     "name": "Економічна правда",
+     "url": "https://www.epravda.com.ua/"
+    },
+    {
+     "name": "Укрінформ",
+     "url": "https://www.ukrinform.ua/"
+    },
+    {
+     "name": "УНІАН",
+     "url": "https://www.unian.ua/"
+    },
+    {
+     "name": "ТСН",
+     "url": "https://tsn.ua/"
+    },
+    {
+     "name": "НВ",
+     "url": "https://nv.ua/"
+    },
+    {
+     "name": "РБК-Україна",
+     "url": "https://www.rbc.ua/"
+    },
+    {
+     "name": "LIGA.net",
+     "url": "https://www.liga.net/"
+    },
+    {
+     "name": "Цензор.НЕТ",
+     "url": "https://censor.net/"
+    },
+    {
+     "name": "Дзеркало тижня",
+     "url": "https://zn.ua/"
+    },
+    {
+     "name": "Суспільне",
+     "url": "https://suspilne.media/"
+    },
+    {
+     "name": "Громадське",
+     "url": "https://hromadske.ua/"
+    },
+    {
+     "name": "Фокус",
+     "url": "https://focus.ua/"
+    },
+    {
+     "name": "24 Канал",
+     "url": "https://24tv.ua/"
+    },
+    {
+     "name": "Обозреватель",
+     "url": "https://www.obozrevatel.com/"
+    },
+    {
+     "name": "Бабель",
+     "url": "https://babel.ua/"
+    },
+    {
+     "name": "Forbes Україна",
+     "url": "https://forbes.ua/"
+    },
+    {
+     "name": "DOU",
+     "url": "https://dou.ua/"
+    },
+    {
+     "name": "AIN.UA",
+     "url": "https://ain.ua/"
+    },
+    {
+     "name": "dev.ua",
+     "url": "https://dev.ua/"
+    },
+    {
+     "name": "ITC.ua",
+     "url": "https://itc.ua/"
+    },
+    {
+     "name": "Mezha",
+     "url": "https://mezha.media/"
+    }
+   ]
+  },
+  {
+   "name": "Держсервіси",
+   "sites": [
+    {
+     "name": "Дія",
+     "url": "https://diia.gov.ua/"
+    },
+    {
+     "name": "Урядовий портал",
+     "url": "https://www.kmu.gov.ua/"
+    },
+    {
+     "name": "Податкова служба",
+     "url": "https://tax.gov.ua/"
+    },
+    {
+     "name": "Пенсійний фонд",
+     "url": "https://www.pfu.gov.ua/"
+    },
+    {
+     "name": "МОН",
+     "url": "https://mon.gov.ua/"
+    },
+    {
+     "name": "МОЗ",
+     "url": "https://moz.gov.ua/"
+    },
+    {
+     "name": "МВС",
+     "url": "https://mvs.gov.ua/"
+    },
+    {
+     "name": "Міграційна служба",
+     "url": "https://dmsu.gov.ua/"
+    },
+    {
+     "name": "Мін'юст",
+     "url": "https://minjust.gov.ua/"
+    },
+    {
+     "name": "Верховна Рада",
+     "url": "https://www.rada.gov.ua/"
+    },
+    {
+     "name": "Президент України",
+     "url": "https://www.president.gov.ua/"
+    },
+    {
+     "name": "Нацбанк",
+     "url": "https://bank.gov.ua/"
+    },
+    {
+     "name": "Київська міська рада / КМДА",
+     "url": "https://kyivcity.gov.ua/"
+    },
+    {
+     "name": "Митниця",
+     "url": "https://customs.gov.ua/"
+    },
+    {
+     "name": "ДСНС",
+     "url": "https://dsns.gov.ua/"
+    },
+    {
+     "name": "Міноборони",
+     "url": "https://www.mil.gov.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Енергетика і АЗС",
+   "sites": [
+    {
+     "name": "YASNO",
+     "url": "https://yasno.com.ua/"
+    },
+    {
+     "name": "ДТЕК",
+     "url": "https://dtek.com/"
+    },
+    {
+     "name": "Укренерго",
+     "url": "https://ua.energy/"
+    },
+    {
+     "name": "Нафтогаз",
+     "url": "https://www.naftogaz.com/"
+    },
+    {
+     "name": "Газопостачальна компанія (gas.ua)",
+     "url": "https://gas.ua/"
+    },
+    {
+     "name": "ОККО",
+     "url": "https://www.okko.ua/"
+    },
+    {
+     "name": "WOG",
+     "url": "https://wog.ua/"
+    },
+    {
+     "name": "UPG",
+     "url": "https://upg.ua/"
+    },
+    {
+     "name": "SOCAR",
+     "url": "https://socar.ua/"
+    },
+    {
+     "name": "БРСМ-Нафта",
+     "url": "https://brsm-nafta.com/"
+    }
+   ]
+  },
+  {
+   "name": "Оголошення і нерухомість",
+   "sites": [
+    {
+     "name": "OLX",
+     "url": "https://www.olx.ua/"
+    },
+    {
+     "name": "AUTO.RIA",
+     "url": "https://auto.ria.com/"
+    },
+    {
+     "name": "DIM.RIA",
+     "url": "https://dom.ria.com/"
+    },
+    {
+     "name": "ЛУН",
+     "url": "https://lun.ua/"
+    },
+    {
+     "name": "Rieltor",
+     "url": "https://rieltor.ua/"
+    },
+    {
+     "name": "SHAFA",
+     "url": "https://shafa.ua/"
+    },
+    {
+     "name": "IZI",
+     "url": "https://izi.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Робота й освіта",
+   "sites": [
+    {
+     "name": "Work.ua",
+     "url": "https://www.work.ua/"
+    },
+    {
+     "name": "robota.ua",
+     "url": "https://robota.ua/"
+    },
+    {
+     "name": "Djinni",
+     "url": "https://djinni.co/"
+    },
+    {
+     "name": "Freelancehunt",
+     "url": "https://freelancehunt.com/"
+    },
+    {
+     "name": "Prometheus",
+     "url": "https://prometheus.org.ua/"
+    },
+    {
+     "name": "Дія.Освіта",
+     "url": "https://osvita.diia.gov.ua/"
+    },
+    {
+     "name": "Освіта.ua",
+     "url": "https://osvita.ua/"
+    },
+    {
+     "name": "Projector",
+     "url": "https://prjctr.com/"
+    },
+    {
+     "name": "GoIT",
+     "url": "https://goit.global/ua/"
+    },
+    {
+     "name": "Мій клас",
+     "url": "https://miyklas.com.ua/"
+    },
+    {
+     "name": "На Урок",
+     "url": "https://naurok.com.ua/"
+    },
+    {
+     "name": "Всеосвіта",
+     "url": "https://vseosvita.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Медицина й аптеки",
+   "sites": [
+    {
+     "name": "Helsi",
+     "url": "https://helsi.me/"
+    },
+    {
+     "name": "Doc.ua",
+     "url": "https://doc.ua/"
+    },
+    {
+     "name": "Liki24",
+     "url": "https://liki24.com/"
+    },
+    {
+     "name": "Аптека 911",
+     "url": "https://apteka911.ua/"
+    },
+    {
+     "name": "АНЦ",
+     "url": "https://anc.ua/"
+    },
+    {
+     "name": "Tabletki.ua",
+     "url": "https://tabletki.ua/"
+    },
+    {
+     "name": "Подорожник",
+     "url": "https://podorozhnyk.ua/"
+    },
+    {
+     "name": "Добробут",
+     "url": "https://dobrobut.com/"
+    },
+    {
+     "name": "Медіком",
+     "url": "https://medikom.ua/"
+    },
+    {
+     "name": "Synevo",
+     "url": "https://www.synevo.ua/"
+    },
+    {
+     "name": "ДІЛА",
+     "url": "https://dila.ua/"
+    },
+    {
+     "name": "Оберіг",
+     "url": "https://oberig.ua/"
+    }
+   ]
+  },
+  {
+   "name": "Транспорт і подорожі",
+   "sites": [
+    {
+     "name": "Укрзалізниця",
+     "url": "https://uz.gov.ua/"
+    },
+    {
+     "name": "Uklon",
+     "url": "https://uklon.com.ua/"
+    },
+    {
+     "name": "Busfor",
+     "url": "https://busfor.ua/"
+    },
+    {
+     "name": "Tickets.ua",
+     "url": "https://tickets.ua/"
+    },
+    {
+     "name": "FlixBus Україна",
+     "url": "https://www.flixbus.com.ua/"
+    },
+    {
+     "name": "Gunsel",
+     "url": "https://gunsel.ua/"
+    },
+    {
+     "name": "Join UP!",
+     "url": "https://joinup.ua/"
+    },
+    {
+     "name": "Anex Tour",
+     "url": "https://anextour.com.ua/"
+    },
+    {
+     "name": "Coral Travel",
+     "url": "https://www.coraltravel.ua/"
+    }
+   ]
+  }
+ ]
+}

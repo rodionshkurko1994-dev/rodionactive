@@ -88,17 +88,21 @@ async function publish(kind, message) {
   const headSha = ref.object.sha;
   const head = await gh(`/git/commits/${headSha}`);
   const other = kind === "posts" ? "projects" : "posts";
-  const [otherData, indexFile, treeList] = await Promise.all([
+  const [otherData, indexFile, treeList, ratingFile] = await Promise.all([
     readFile(other),
     gh(`/contents/index.html?ref=${branch}`),
     gh(`/git/trees/${head.tree.sha}?recursive=1`),
+    gh(`/contents/data/rating/latest.json?ref=${branch}`).catch(() => null), // рейтинг швидкості сайтів (може ще не бути)
   ]);
+  let rating = null;
+  try { rating = ratingFile && ratingFile.content ? JSON.parse(fromB64(ratingFile.content)) : null; } catch { rating = null; }
   state.data[other] = otherData;
   const result = SiteBuild.build({
     posts: state.data.posts,
     projects: state.data.projects,
     indexHtml: fromB64(indexFile.content),
     markdown: md => marked.parse(md || ""),
+    rating,
   });
   const existing = treeList.tree.map(t => t.path).filter(p => /^(blog|portfolio)\/[^/]+\/index\.html$/.test(p));
   const stale = existing.filter(p => !result.files[p]);

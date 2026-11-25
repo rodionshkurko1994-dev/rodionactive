@@ -1,0 +1,58 @@
+name: Рейтинг швидкості сайтів України
+
+# Раз на місяць перевіряє сайти з data/rating/sites.json через Google PageSpeed Insights
+# (мобільна версія, 3 запуски на сайт, медіана), записує data/rating/<рік-місяць>.json і latest.json,
+# перебудовує сайт і публікує сторінку rodionactive.com/reitynh-saitiv/.
+#
+# Запуск вручну: Actions → «Рейтинг швидкості сайтів України» → Run workflow.
+# Або змініть файл data/rating/run-request.txt (наприклад, впишіть дату) — це теж запустить рейтинг.
+
+on:
+  schedule:
+    - cron: "17 3 1 * *"   # 1-го числа щомісяця, ≈05:17–06:17 за Києвом
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [data/rating/run-request.txt]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rating
+  cancel-in-progress: false
+
+jobs:
+  rating:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Перевірка сайтів (≈30–60 хвилин)
+        env:
+          PSI_KEY: ${{ secrets.PSI_KEY }}
+        run: node tools/rating-collect.mjs
+
+      - name: Збірка сайту і публікація
+        run: |
+          npm ci --no-audit --no-fund
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp -r data/rating /tmp/rating
+          for i in 1 2 3 4 5; do
+            # беремо свіжий main (за час перевірки могли вийти нові статті) і накладаємо нові дані рейтингу
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            mkdir -p data/rating && cp /tmp/rating/*.json data/rating/
+            npm run build
+            git add -A data/rating reitynh-saitiv sitemap.xml llms.txt instrumenty
+            git diff --cached --quiet && { echo "Змін немає"; exit 0; }
+            git commit -q -m "Рейтинг швидкості сайтів: $(node -p "require('./data/rating/latest.json').month")"
+            git push -q origin HEAD:main && exit 0
+            sleep 10
+          done
+          exit 1

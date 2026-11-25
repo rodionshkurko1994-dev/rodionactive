@@ -14,7 +14,9 @@ const read = p => readFileSync(join(root, p), "utf8");
 
 const posts = JSON.parse(read("data/posts.json"));
 const projects = JSON.parse(read("data/projects.json"));
-const result = SiteBuild.build({ posts, projects, indexHtml: read("index.html"), markdown: md => marked.parse(md) });
+// рейтинг швидкості сайтів (data/rating/latest.json) — сторінка з'являється, лише коли є дані
+const rating = existsSync(join(root, "data/rating/latest.json")) ? JSON.parse(read("data/rating/latest.json")) : null;
+const result = SiteBuild.build({ posts, projects, indexHtml: read("index.html"), markdown: md => marked.parse(md), rating });
 
 // прибираємо сторінки записів, яких більше немає
 for (const dir of ["blog", "portfolio", "services", "instrumenty"]) {

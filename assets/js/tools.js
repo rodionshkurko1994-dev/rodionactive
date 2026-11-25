@@ -76,6 +76,17 @@
   ${[0, 1, 2].map(i => `<circle cx="74" cy="${226 + i * 26}" r="7" fill="${i === 1 ? O : N}"/><rect x="92" y="${220 + i * 26}" width="${[170, 130, 150][i]}" height="12" rx="6" fill="#e4e5ee"/>`).join("")}
   <g class="il-float"><circle cx="356" cy="250" r="62" fill="${N}"/><circle cx="350" cy="244" r="28" stroke="#fff" stroke-width="7"/><path d="M370 264l22 22" stroke="${O}" stroke-width="9" stroke-linecap="round"/></g>
 </svg>`,
+    rating: `<svg viewBox="0 0 480 380" role="img" aria-label="Ілюстрація: рейтинг швидкості сайтів" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <circle class="il-spin" cx="392" cy="86" r="58" stroke="${O}" stroke-width="1.5" stroke-dasharray="4 10" opacity=".6"/>
+  <path d="M40 322h400" stroke="${N}" stroke-width="3" stroke-linecap="round"/>
+  <rect x="176" y="118" width="128" height="204" rx="14" fill="${N}"/>
+  <rect x="44" y="178" width="120" height="144" rx="14" fill="#fff" stroke="${N}" stroke-width="3"/>
+  <rect x="316" y="214" width="120" height="108" rx="14" fill="#fff" stroke="${N}" stroke-width="3"/>
+  <text x="240" y="196" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="700" font-size="54" fill="#fff">1</text>
+  <text x="104" y="252" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="700" font-size="44" fill="${N}">2</text>
+  <text x="376" y="284" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="700" font-size="40" fill="${N}">3</text>
+  <g class="il-float"><circle cx="240" cy="70" r="38" fill="${O}"/><path d="M240 70l16-14" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="240" cy="70" r="6" fill="#fff"/></g>
+</svg>`,
   };
 
   const TOOLS = [

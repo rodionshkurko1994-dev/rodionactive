@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611251400";
+  const ASSET_V = "202611251500";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -865,7 +865,7 @@ ${html}
 
   <nav class="svc-others" aria-label="Інші інструменти">
     <p class="eyebrow">Інші інструменти</p>
-    <div>${others.map(s => `<a class="svc-other" href="${toolUrl(s)}"><span>${esc(s.code)}</span><b>${esc(s.name)}</b><i aria-hidden="true">→</i></a>`).join("")}<a class="svc-other" href="/services/"><span>ПОСЛУГИ</span><b>Сайти, дизайн, автоматизація</b><i aria-hidden="true">→</i></a></div>
+    <div>${others.map(s => `<a class="svc-other" href="${toolUrl(s)}"><span>${esc(s.code)}</span><b>${esc(s.name)}</b><i aria-hidden="true">→</i></a>`).join("")}${RATING_ON ? `<a class="svc-other" href="${RATING_PATH}"><span>РЕЙТИНГ</span><b>Рейтинг швидкості сайтів України</b><i aria-hidden="true">→</i></a>` : ""}<a class="svc-other" href="/services/"><span>ПОСЛУГИ</span><b>Сайти, дизайн, автоматизація</b><i aria-hidden="true">→</i></a></div>
   </nav>`;
     const scripts = (t.app === "qr" ? ["/assets/js/vendor/qr-code-styling.js"] : []).concat([`/assets/js/tools-app.js?v=${ASSET_V}`]);
     return page({ head, page: "tools", body, scripts });
@@ -906,14 +906,206 @@ ${html}
         <p>${esc(t.short)}</p>
         <span class="link">Відкрити <span class="arr">→</span></span>
       </span>
-    </a>`).join("\n    ")}
+    </a>`).join("\n    ")}${RATING_ON ? `
+    <a class="svc-tile reveal" href="${RATING_PATH}" style="--i:${TOOLS.length}">
+      <span class="svc-tile-illu" aria-hidden="true">${(TOOL_ILLU.rating || "").replace(/ role="img" aria-label="[^"]*"/, "")}</span>
+      <span class="svc-tile-body">
+        <span class="code">★ РЕЙТИНГ</span>
+        <h2>Рейтинг швидкості сайтів України</h2>
+        <p>Як швидко відкриваються на телефоні сайти банків, магазинів, доставки, медіа й держсервісів. Оновлюється щомісяця.</p>
+        <span class="link">Дивитися рейтинг <span class="arr">→</span></span>
+      </span>
+    </a>` : ""}
   </div>
   ${serviceCTA(`Потрібно щось <em>своє</em>?`, "Калькулятор для вашого сайту, квіз чи автоматизація під ваші процеси — напишіть, і я підкажу, як це зробити.")}`;
     return page({ head, page: "tools", body });
   }
 
+  // ---------- рейтинг швидкості сайтів України (дані: data/rating/latest.json) ----------
+  const RATING_PATH = "/reitynh-saitiv/";
+  let RATING_ON = false; // чи є дані рейтингу в поточній збірці (для посилань з інших сторінок)
+  const RATING_IMG = "assets/img/rating-og.png";
+  const MONTHS_NOM = ["січень", "лютий", "березень", "квітень", "травень", "червень", "липень", "серпень", "вересень", "жовтень", "листопад", "грудень"];
+  const ratingMonth = m => { const [y, mo] = String(m || "").split("-").map(Number); return y && mo ? `${MONTHS_NOM[mo - 1]} ${y}` : ""; };
+  const sec = ms => typeof ms === "number" ? (ms / 1000).toFixed(1).replace(".", ",") + " с" : "—";
+  const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return u; } };
+  const tone = v => typeof v !== "number" ? "" : v >= 90 ? "good" : v >= 50 ? "mid" : "bad";
+  const auditLink = u => `/instrumenty/audyt-saitu/?url=${encodeURIComponent(u)}`;
+  const avg = xs => xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : 0;
+  const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; };
+
+  function ratingStats(r) {
+    const ok = (r.sites || []).filter(s => s.ok && typeof s.perf === "number")
+      .sort((a, b) => b.perf - a.perf || (a.lcp ?? 1e9) - (b.lcp ?? 1e9));
+    ok.forEach((s, i) => { s.rank = i + 1; });
+    const cats = [...new Set(ok.map(s => s.cat))].map(cat => {
+      const xs = ok.filter(s => s.cat === cat);
+      return { cat, n: xs.length, avg: avg(xs.map(s => s.perf)), leader: xs[0], last: xs[xs.length - 1] };
+    }).sort((a, b) => b.avg - a.avg);
+    const lcps = ok.map(s => s.lcp).filter(x => typeof x === "number").sort((a, b) => a - b);
+    return {
+      ok, cats,
+      failed: (r.sites || []).filter(s => !s.ok),
+      avgPerf: avg(ok.map(s => s.perf)),
+      green: ok.filter(s => s.perf >= 90).length,
+      red: ok.filter(s => s.perf < 50).length,
+      medLcp: lcps.length ? lcps[Math.floor(lcps.length / 2)] : null,
+      fastLcp: ok.filter(s => typeof s.lcp === "number" && s.lcp <= 2500).length,
+    };
+  }
+
+  const RATING_FAQ = [
+    ["Як складається рейтинг швидкості сайтів?", "Головну сторінку кожного сайту тричі перевіряє Google Lighthouse через PageSpeed Insights у режимі мобільного телефону, і в рейтинг іде медіанний результат. Сайти впорядковано за оцінкою швидкості від 0 до 100, а за однакової оцінки вище той, у якого швидше з'являється головний вміст (LCP)."],
+    ["Чому перевіряється саме мобільна версія?", "Більшість відвідувачів в Україні заходить із телефону, і Google оцінює сайти для пошуку переважно за мобільною версією. Lighthouse імітує телефон середнього класу з повільним мобільним інтернетом, тому оцінки нижчі, ніж на комп'ютері, — але саме так сайт бачить значна частина клієнтів."],
+    ["Чому деяких відомих сайтів немає в рейтингу?", "Перевірка виконується з серверів Google за межами України. Частина сайтів, особливо державних, блокує такі запити або не відкривається з-за кордону — їх перелічено окремо внизу сторінки. Список сайтів поступово розширюється."],
+    ["Наскільки точні оцінки?", "Це лабораторне вимірювання: оцінка залежить від навантаження на сервер сайту й мережі в момент тесту і може коливатися на кілька балів. Саме тому кожен сайт перевіряється тричі й береться медіана. Реальна швидкість для конкретного відвідувача може відрізнятися."],
+    ["Як часто оновлюється рейтинг?", "Щомісяця, на початку місяця. Біля кожного сайту показано, як змінилася його оцінка порівняно з попереднім рейтингом."],
+    ["Як перевірити свій сайт так само?", "Скористайтеся безкоштовним аудитом сайту на Rodionactive: той самий движок Google Lighthouse, оцінки швидкості, SEO, доступності та якості й зрозумілий список того, що виправити."],
+  ];
+
+  function renderRating(r) {
+    const path = RATING_PATH, st = ratingStats(r), label = ratingMonth(r.month);
+    const title = `Рейтинг швидкості сайтів України — ${label}`;
+    const description = clip(`Наскільки швидко відкриваються на телефоні сайти банків, магазинів, доставки, медіа й держсервісів. ${st.ok.length} сайтів, оцінки Google Lighthouse, ${label}. Оновлюється щомісяця.`, 160);
+    const top = st.ok.slice(0, 10), bottom = st.ok.slice(-10).reverse();
+    const date = (r.generated || "").slice(0, 10);
+    const jsonld = [{
+      "@context": "https://schema.org",
+      "@graph": [
+        orgLD(),
+        {
+          "@type": "Dataset",
+          "@id": SITE.url + path + "#dataset",
+          name: "Рейтинг швидкості сайтів України",
+          description: `Щомісячні оцінки Google Lighthouse (мобільна версія) для ${st.ok.length} відомих українських сайтів: швидкість, SEO, доступність, якість, Core Web Vitals.`,
+          url: SITE.url + path,
+          inLanguage: "uk",
+          isAccessibleForFree: true,
+          license: "https://creativecommons.org/licenses/by/4.0/",
+          creator: orgRef,
+          dateModified: date,
+          temporalCoverage: r.month,
+          spatialCoverage: { "@type": "Country", name: "Україна" },
+          variableMeasured: ["Оцінка швидкості Lighthouse", "Largest Contentful Paint", "SEO", "Доступність", "Найкращі практики"],
+          distribution: { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: SITE.url + "/data/rating/latest.json" },
+        },
+        {
+          "@type": "ItemList",
+          "@id": SITE.url + path + "#top",
+          name: `Найшвидші сайти України — ${label}`,
+          itemListElement: top.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: s.url })),
+        },
+        {
+          "@type": "FAQPage",
+          "@id": SITE.url + path + "#faq",
+          mainEntity: RATING_FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+        },
+        crumbs([["Головна", "/"], ["Інструменти", "/instrumenty/"], ["Рейтинг швидкості сайтів", path]]),
+      ],
+    }];
+    const head = headHTML({ title: `${title} | ${SITE.name}`, description, path, image: RATING_IMG, jsonld });
+    const delta = s => typeof s.prev !== "number" ? `<span class="rt-d new" title="Немає даних за попередній місяць">—</span>`
+      : s.perf === s.prev ? `<span class="rt-d">0</span>`
+      : `<span class="rt-d ${s.perf > s.prev ? "up" : "down"}" title="Попередній місяць: ${s.prev}">${s.perf > s.prev ? "▲" : "▼"} ${Math.abs(s.perf - s.prev)}</span>`;
+    const badge = v => `<b class="rt-s ${tone(v)}">${typeof v === "number" ? v : "—"}</b>`;
+    const mini = (s, i) => `<li><span class="rt-n">${i + 1}</span><span class="rt-site"><b>${esc(s.name)}</b><small>${esc(host(s.url))} · ${esc(s.cat)}</small></span>${badge(s.perf)}</li>`;
+    const body = `  <nav class="crumbs rise" aria-label="Навігація"><a href="/">Головна</a><span>/</span><a href="/instrumenty/">Інструменти</a><span>/</span><span aria-current="page">Рейтинг швидкості сайтів</span></nav>
+  <header class="tool-head">
+    <p class="eyebrow rise" style="--d:1">РЕЙТИНГ · ${esc(label)}</p>
+    <h1 class="rise" style="--d:2">Рейтинг швидкості сайтів <span style="color:var(--orange)">України</span></h1>
+    <p class="lead rise" style="--d:3;max-width:62ch">Як швидко відкриваються на телефоні сайти, якими щодня користуються українці: банки, магазини, доставка, медіа, держсервіси. ${st.ok.length} ${plural(st.ok.length, "сайт", "сайти", "сайтів")} у ${st.cats.length} категоріях, оцінки Google Lighthouse. Оновлюється щомісяця.</p>
+  </header>
+
+  <section class="rt-kpis rise" style="--d:4" aria-label="Підсумки">
+    <div><b>${st.ok.length}</b><span>${plural(st.ok.length, "сайт перевірено", "сайти перевірено", "сайтів перевірено")}</span></div>
+    <div><b class="${tone(st.avgPerf)}">${st.avgPerf}<small>/100</small></b><span>середня оцінка швидкості</span></div>
+    <div><b class="good">${st.green}</b><span>${plural(st.green, "сайт має", "сайти мають", "сайтів мають")} «зелену» оцінку 90+</span></div>
+    <div><b>${sec(st.medLcp)}</b><span>медіанний час до появи головного вмісту (норма Google — до 2,5 с)</span></div>
+  </section>
+
+  <section class="svc-section rt-tops" aria-label="Лідери й аутсайдери">
+    <div class="reveal"><h2>Найшвидші</h2><ol class="rt-mini">${top.map(mini).join("")}</ol></div>
+    <div class="reveal"><h2>Найповільніші</h2><ol class="rt-mini slow">${bottom.map((s, i) => mini(s, i).replace(`<span class="rt-n">${i + 1}</span>`, `<span class="rt-n">${s.rank}</span>`)).join("")}</ol></div>
+  </section>
+
+  <section class="svc-section" aria-labelledby="rt-cats-title">
+    <div class="section-head"><div><p class="eyebrow">Категорії</p><h2 id="rt-cats-title">Хто швидший: за галузями</h2></div></div>
+    <div class="rt-cats">
+      ${st.cats.map(c => `<div class="reveal"><p class="rt-cat-name">${esc(c.cat)}</p><b class="rt-cat-avg ${tone(c.avg)}">${c.avg}</b><p class="rt-cat-meta">середня оцінка · ${c.n} ${plural(c.n, "сайт", "сайти", "сайтів")}</p><p class="rt-cat-lead">Лідер: <b>${esc(c.leader.name)}</b> (${c.leader.perf})</p></div>`).join("\n      ")}
+    </div>
+  </section>
+
+  <section class="svc-section" id="tablytsia" aria-labelledby="rt-table-title">
+    <div class="section-head"><div><p class="eyebrow">Повний рейтинг</p><h2 id="rt-table-title">Усі сайти</h2></div></div>
+    <div class="rt-filter" role="group" aria-label="Категорія">
+      <button type="button" data-cat="" aria-pressed="true">Усі</button>${st.cats.slice().sort((a, b) => a.cat.localeCompare(b.cat, "uk")).map(c => `<button type="button" data-cat="${esc(c.cat)}" aria-pressed="false">${esc(c.cat)}</button>`).join("")}
+    </div>
+    <div class="rt-wrap">
+      <table class="rt-table">
+        <thead><tr>
+          <th scope="col" data-sort="rank" aria-sort="ascending">#</th>
+          <th scope="col">Сайт</th>
+          <th scope="col" data-sort="perf">Швидкість</th>
+          <th scope="col" data-sort="lcp" title="Largest Contentful Paint — час до появи головного вмісту">Головний вміст</th>
+          <th scope="col" data-sort="seo">SEO</th>
+          <th scope="col" data-sort="a11y">Доступність</th>
+          <th scope="col" data-sort="bp">Якість</th>
+          <th scope="col" data-sort="delta" title="Зміна оцінки швидкості порівняно з попереднім рейтингом">За місяць</th>
+          <th scope="col"><span class="sr-only">Перевірити</span></th>
+        </tr></thead>
+        <tbody>
+${st.ok.map(s => `          <tr data-cat="${esc(s.cat)}" data-rank="${s.rank}" data-perf="${s.perf}" data-lcp="${s.lcp ?? 999999}" data-seo="${s.seo ?? -1}" data-a11y="${s.a11y ?? -1}" data-bp="${s.bp ?? -1}" data-delta="${typeof s.prev === "number" ? s.perf - s.prev : -999}">
+            <td class="rt-n">${s.rank}</td>
+            <td class="rt-site"><b>${esc(s.name)}</b><small>${esc(host(s.url))} · ${esc(s.cat)}</small></td>
+            <td>${badge(s.perf)}</td>
+            <td class="rt-lcp ${s.lcp <= 2500 ? "good" : s.lcp <= 4000 ? "mid" : "bad"}">${sec(s.lcp)}</td>
+            <td>${badge(s.seo)}</td>
+            <td>${badge(s.a11y)}</td>
+            <td>${badge(s.bp)}</td>
+            <td>${delta(s)}</td>
+            <td><a class="rt-check" href="${auditLink(s.url)}" aria-label="Перевірити ${esc(s.name)} аудитом">Аудит →</a></td>
+          </tr>`).join("\n")}
+        </tbody>
+      </table>
+    </div>
+    <p class="rt-note">Оцінки 90–100 — добре, 50–89 — потребує уваги, нижче 50 — погано. Головний вміст (LCP): до 2,5 с — добре, понад 4 с — погано. Дані перевірки: ${esc(fmtDate(date))}${r.lighthouse ? `, Lighthouse ${esc(r.lighthouse)}` : ""}.</p>
+    ${st.failed.length ? `<details class="rt-failed"><summary>Не вдалося перевірити: ${st.failed.length} ${plural(st.failed.length, "сайт", "сайти", "сайтів")}</summary><p>Ці сайти не відкрилися для перевірки з серверів Google (блокують автоматичні запити, недоступні з-за кордону або відповідали надто довго), тому в рейтинг не потрапили:</p><p>${st.failed.map(s => `${esc(s.name)} (${esc(host(s.url))})`).join(", ")}.</p></details>` : ""}
+  </section>
+
+  <section class="svc-cta reveal" aria-label="Перевірити свій сайт">
+    <div>
+      <p class="eyebrow">Ваш сайт</p>
+      <h2>А як швидко відкривається <em>ваш</em> сайт?</h2>
+      <p>Той самий движок Google Lighthouse: оцінки швидкості, SEO й мобільної версії за 30 секунд і конкретні поради, що виправити. Безкоштовно.</p>
+    </div>
+    <div class="svc-cta-actions">
+      <a class="btn" href="/instrumenty/audyt-saitu/">Перевірити свій сайт <span class="arr">→</span></a>
+      <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">або замовити пришвидшення в Telegram</a>
+    </div>
+  </section>
+
+  <section class="svc-section tool-text" aria-label="Методика">
+    <div class="reveal"><h2>Як ми вимірюємо</h2><p>Головну сторінку кожного сайту перевіряє Google Lighthouse через PageSpeed Insights у режимі мобільного телефону: емуляція смартфона середнього класу й повільного мобільного інтернету. Кожен сайт перевіряється ${r.runs || 3} рази, у рейтинг іде медіанний результат. Сайти впорядковано за оцінкою швидкості; за однакової оцінки вище той, у кого швидше з'являється головний вміст.</p></div>
+    <div class="reveal"><h2>Що означають показники</h2><p>Швидкість — зведена оцінка Lighthouse від 0 до 100: як швидко сторінка показує вміст, чи не «стрибає» під час завантаження і чи не гальмує на натискання. Головний вміст (Largest Contentful Paint) — за скільки секунд з'являється найбільший елемент першого екрана; Google вважає нормою до 2,5 секунди. SEO, доступність і якість — технічні перевірки тієї ж сторінки.</p></div>
+    <div class="reveal"><h2>Незалежність</h2><p>Рейтинг складає Rodionactive автоматично за публічними даними Google; компанії зі списку не платять за участь і не впливають на результати. Перевірки виконуються з-за кордону, тож деякі сайти недоступні для тесту. Хочете додати сайт до рейтингу або помітили помилку — напишіть у Telegram.</p></div>
+  </section>
+
+  <section class="svc-section" id="faq" aria-labelledby="faq-title">
+    <div class="section-head"><div><p class="eyebrow">FAQ</p><h2 id="faq-title">Часті питання</h2></div></div>
+    <div class="svc-faq">
+      ${RATING_FAQ.map(([q, a], i) => `<details class="reveal"${i === 0 ? " open" : ""}><summary><h3>${esc(q)}</h3><span class="plus" aria-hidden="true"></span></summary><p>${esc(a)}</p></details>`).join("\n      ")}
+    </div>
+  </section>
+
+  <nav class="svc-others" aria-label="Інструменти">
+    <p class="eyebrow">Інструменти</p>
+    <div>${TOOLS.slice(0, 4).map(s => `<a class="svc-other" href="${toolUrl(s)}"><span>${esc(s.code)}</span><b>${esc(s.name)}</b><i aria-hidden="true">→</i></a>`).join("")}</div>
+  </nav>`;
+    return page({ head, page: "tools", body, scripts: [`/assets/js/rating.js?v=${ASSET_V}`] });
+  }
+
   // ---------- sitemap і RSS ----------
-  function sitemap(posts, projects) {
+  function sitemap(posts, projects, rating) {
     const latest = (list, k = "date") => list.map(x => x.updated || x[k] || "").sort().pop() || "";
     const all = [
       ["/", latest([...posts, ...projects]), "weekly", "1.0"],
@@ -922,6 +1114,7 @@ ${html}
       ["/services/", SERVICES_UPDATED, "monthly", "0.9"],
       ["/instrumenty/", TOOLS_UPDATED, "monthly", "0.8"],
       ...TOOLS.map(t => [toolUrl(t), TOOLS_UPDATED, "monthly", "0.8", toolImg(t)]),
+      ...(rating ? [[RATING_PATH, (rating.generated || "").slice(0, 10), "monthly", "0.9", RATING_IMG]] : []),
       ...SERVICES.map(x => [serviceUrl(x), SERVICES_UPDATED, "monthly", "0.9", serviceImg(x)]),
       ...NICHES.map(n => [nicheUrl(n), NICHES_UPDATED, "monthly", "0.8"]),
       ...posts.map(p => [postUrl(p), p.updated || p.date, "monthly", "0.7", p.cover]),
@@ -962,7 +1155,7 @@ ${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.
   }
 
   // llms.txt — короткий опис сайту для ШІ-асистентів (ChatGPT, Claude, Perplexity, Gemini)
-  function llmsTxt(posts, projects) {
+  function llmsTxt(posts, projects, rating) {
     const line = (title, url, desc) => `- [${title}](${SITE.url}${url})${desc ? `: ${desc}` : ""}`;
     const own = posts.filter(p => !p.sourceId).slice(0, 15);
     return `# ${SITE.name}
@@ -982,7 +1175,7 @@ ${NICHES.map(n => line(n.h1, nicheUrl(n), n.description)).join("\n")}
 ## Безкоштовні інструменти
 
 ${TOOLS.map(t => line(t.name, toolUrl(t), t.description)).join("\n")}
-
+${rating ? `\n## Дослідження\n\n${line("Рейтинг швидкості сайтів України", RATING_PATH, `Щомісячний рейтинг швидкості мобільних версій ${ratingStats(rating).ok.length} відомих українських сайтів (банки, магазини, доставка, медіа, держсервіси) за оцінками Google Lighthouse.`)}\n` : ""}
 ## Портфоліо
 
 ${projects.map(p => line(p.title, projectUrl(p), [p.url, clip(p.summary || p.excerpt || p.description || stripMd(String(p.body || "").replace(/^#+.*$/gm, "")), 160)].filter(Boolean).join(" — "))).join("\n")}
@@ -1004,8 +1197,10 @@ ${own.map(p => line(p.title, postUrl(p), clip(p.excerpt || p.description || "", 
   // ---------- усе разом ----------
   // input: { posts, projects, indexHtml?, markdown(md) -> html }
   // output: { files: {path: content}, postPaths: [...], projectPaths: [...] }
-  function build({ posts, projects, indexHtml, markdown }) {
+  function build({ posts, projects, indexHtml, markdown, rating }) {
     const P = visible(posts), J = visible(projects);
+    const R = rating && Array.isArray(rating.sites) && rating.sites.some(x => x.ok) ? rating : null;
+    RATING_ON = !!R;
     const files = {};
     P.forEach(p => { files[`blog/${p.slug}/index.html`] = renderPost(p, P, markdown); });
     J.forEach(p => { files[`portfolio/${p.slug}/index.html`] = renderProject(p, J, markdown); });
@@ -1013,12 +1208,13 @@ ${own.map(p => line(p.title, postUrl(p), clip(p.excerpt || p.description || "", 
     files["portfolio/index.html"] = renderPortfolio(J);
     files["services/index.html"] = renderServices(P);
     files["instrumenty/index.html"] = renderTools();
+    if (R) files["reitynh-saitiv/index.html"] = renderRating(R);
     TOOLS.forEach(t => { files[`${toolUrl(t).slice(1)}index.html`] = renderTool(t); });
     SERVICES.forEach(x => { files[`${serviceUrl(x).slice(1)}index.html`] = renderService(x, P, J); });
     NICHES.forEach(n => { files[`${nicheUrl(n).slice(1)}index.html`] = renderNiche(n, J); });
-    files["llms.txt"] = llmsTxt(P, J);
+    files["llms.txt"] = llmsTxt(P, J, R);
     files["blog/feed.xml"] = feed(P, markdown);
-    files["sitemap.xml"] = sitemap(P, J);
+    files["sitemap.xml"] = sitemap(P, J, R);
     if (indexHtml) files["index.html"] = renderIndex(indexHtml, P, J);
     return { files, postPaths: P.map(p => `blog/${p.slug}/index.html`), projectPaths: J.map(p => `portfolio/${p.slug}/index.html`) };
   }
