@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611251300";
+  const ASSET_V = "202611251400";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",

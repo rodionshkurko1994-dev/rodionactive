@@ -520,7 +520,7 @@
   // Ключ Google PageSpeed Insights API: Google Cloud → APIs & Services → Credentials.
   // Ключ безпечно тримати в коді сторінки, якщо в ньому дозволено лише PageSpeed Insights API.
   // Без ключа перевірка теж працює, але зі спільним і значно меншим лімітом.
-  const PSI_KEY = "";
+  const PSI_KEY = "AIzaSyCGva-uwyBlXCf28JjRYqFwZvejlcePdP0";
   // Адреса Cloudflare Worker з папки workers/site-check (додаткові перевірки: sitemap, robots,
   // HTTPS, Open Graph, schema.org). Поки порожньо — цей блок звіту просто не показується.
   const SITE_CHECK = "";
