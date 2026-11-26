@@ -127,6 +127,7 @@ ${extra}<link rel="alternate" type="application/rss+xml" title="Блог ${SITE.
 <link rel="stylesheet" href="${FONTS}">
 <link rel="stylesheet" href="/assets/css/style.css?v=${ASSET_V}">
 <script data-goatcounter="${SITE.goatcounter}" async src="https://gc.zgo.at/count.js"></script>
+<script src="/assets/js/analytics.js" defer></script>
 ${jsonld.map(ld).join("\n")}`;
   }
 
