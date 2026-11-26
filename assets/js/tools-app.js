@@ -21,7 +21,7 @@
   }
 
   /* ===================== Квіз-движок ===================== */
-  function quiz(root, { questions, compute, render }) {
+  function quiz(root, { questions, compute, render, onResult }) {
     const answers = {};
     questions.forEach(q => {
       if (q.kind === "multi") answers[q.id] = [];
@@ -88,6 +88,7 @@
       $("[data-restart]", body).addEventListener("click", () => { step = 0; $(".qz-nav", root).hidden = false; draw(); });
       const cp = $("[data-copy]", body);
       if (cp) cp.addEventListener("click", () => copy(res.message, cp));
+      if (onResult) try { onResult(res, body); } catch {}
       root.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     next.addEventListener("click", () => { if (valid(questions[step])) { step++; draw(); } });
@@ -111,6 +112,23 @@
       </div>
       <p class="qz-fine">У Telegram відкриється чат зі мною з уже заповненим повідомленням — ваші відповіді й розрахунок. Залишиться натиснути «Надіслати».</p>
     </div>`;
+  }
+
+  /* ===================== Заявки калькулятора → Google Таблиця ===================== */
+  // Google Apps Script (код у workers/leads/Code.gs) дописує кожну заповнену форму в таблицю,
+  // а адмінка показує їх у вкладці «Заявки».
+  const LEADS_URL = "https://script.google.com/macros/s/AKfycbzKchxytHmt23YP3CCYueYO1ecb28X6xM5TKswdnEYKES5r7P656wo1bPJb4avRmew/exec";
+  function sendLead(data) {
+    if (!LEADS_URL) return;
+    try {
+      fetch(LEADS_URL, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) }).catch(() => {});
+    } catch {}
+  }
+  function leadMeta() {
+    let src = "", own = false;
+    try { src = sessionStorage.getItem("ra_src") || ""; own = localStorage.getItem("skipgc") === "t"; } catch {}
+    const mobile = matchMedia("(pointer: coarse)").matches || innerWidth < 760;
+    return { ref: (src || "невідомо") + (own ? " · ваш браузер (тест)" : ""), device: mobile ? "телефон" : "комп'ютер" };
   }
 
   /* ===================== Калькулятор вартості сайту ===================== */
@@ -196,6 +214,13 @@
           ? "Для інтернет-магазину з онлайн-оплатою безкоштовний хостинг GitHub Pages не підходить за його правилами — підберу інший хостинг або платформу."
           : "Домен оплачується окремо. Остаточну ціну я фіксую після короткого обговорення задачі.";
         return { range, market: money(market), rows, message, note };
+      },
+      onResult(r, body) {
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+        sendLead({ id, range: r.range, market: r.market, rows: r.rows, ...leadMeta() });
+        if (window.raTrack) window.raTrack("calc_complete", { calc: "site_cost" });
+        const tgBtn = body.querySelector(".qz-cta a.btn");
+        if (tgBtn) tgBtn.addEventListener("click", () => sendLead({ id, action: "tg" }), { once: true });
       },
       render(r) {
         return resultCard({ title: "Орієнтовна вартість вашого сайту", range: r.range, market: r.market, rows: r.rows, note: esc(r.note), tg, message: r.message });

@@ -54,11 +54,12 @@ blog.html, portfolio.html, post.html, project.html   переадресації 
 
 Контакти (Telegram, Instagram, Freelancehunt) задаються в блоці `SITE` у двох файлах: `assets/js/build.js` і `assets/js/main.js`, а також у блоці контактів в `index.html`.
 
-## Статистика
+## Статистика і заявки
 
-Відвідування рахує [GoatCounter](https://www.goatcounter.com) (лічильник підключений у `<head>` усіх сторінок через `assets/js/build.js`, код сайту `rodionactive`).
-Адмінка → вкладка «Статистика» читає дані через API GoatCounter: потрібен ключ із дозволом **Read statistics** (User → API у кабінеті GoatCounter).
-Браузер, у якому відкривали адмінку, у статистиці не враховується.
+- **Google Analytics 4** (`G-BGX5T51JQR`, ресурс 565923699) і **Microsoft Clarity** (`zjqatulujh`) підключені на всіх сторінках через `assets/js/analytics.js`. Там же ключові події: `generate_lead` (кнопки Telegram / пошта / телефон), `click_channel`, `click_social`, `form_submit`, `calc_complete`.
+- **Заявки калькулятора вартості сайту** записуються в Google Таблицю «Rodionactive — заявки калькулятора» через Google Apps Script (код — `workers/leads/Code.gs`, адреса веб-застосунку — `LEADS_URL` у `assets/js/tools-app.js`).
+- **Адмінка → «Статистика» / «Заявки»** читає GA4, Search Console і таблицю напряму з браузера після входу через Google (OAuth-клієнт «Rodionactive admin» у Google Cloud, проєкт `golden-medium-515811-p9`; доступ лише на читання). Налаштування — блок `CFG` на початку `admin/stats.js`.
+- Браузер, у якому відкривали адмінку, у статистиці не враховується (прапорець `skipgc` у localStorage).
 
 ## Автопублікація статей
 

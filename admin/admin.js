@@ -476,7 +476,7 @@ $("#logout").addEventListener("click", async () => {
 // ---------- вкладки й список ----------
 window.__adminPosts = () => state.data.posts || [];
 document.querySelectorAll("[data-tab]").forEach(t => t.addEventListener("click", () => {
-  const isStats = t.dataset.tab === "stats";
+  const isStats = t.dataset.tab === "stats" || t.dataset.tab === "leads";
   const statsOpen = !$("#stats").hidden;
   if (!isStats && t.dataset.tab === state.tab && !statsOpen) return;
   if (state.dirty && !leaveOk()) return;
@@ -484,7 +484,7 @@ document.querySelectorAll("[data-tab]").forEach(t => t.addEventListener("click",
   $("#stats").hidden = !isStats;
   $("#workspace").hidden = isStats;
   $("#bannerBox").hidden = isStats;
-  if (isStats) { window.AdminStats && AdminStats.show(); return; }
+  if (isStats) { window.AdminStats && AdminStats.show(t.dataset.tab === "leads" ? "leads" : "visits"); return; }
   state.tab = t.dataset.tab;
   state.current = null; state.draft = null; state.dirty = false;
   renderAll();

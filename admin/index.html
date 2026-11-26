@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="../assets/css/style.css?v=202611181755">
+<link rel="stylesheet" href="../assets/css/style.css?v=202611261720">
 <style>
   body { background: var(--mist); }
   .a-top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: #fff; border-bottom: 1px solid var(--line); }
@@ -126,6 +126,34 @@
   .st-list .st-num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
   .st-note { font-size: .85rem; }
   .st-note a { color: var(--navy); }
+  .st-views { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+  .st-views [role="tab"] { background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 14px; font: 500 .95rem var(--f-body, inherit); color: var(--muted); cursor: pointer; margin-bottom: -1px; display: inline-flex; gap: 8px; align-items: center; }
+  .st-views [role="tab"][aria-selected="true"] { color: var(--navy); border-bottom-color: var(--orange); }
+  .st-views .spacer { flex: 1; }
+  .st-ext { font-size: .85rem; color: var(--navy); text-decoration: none; padding: 6px 8px; }
+  .st-ext:hover { text-decoration: underline; }
+  .st-badge { background: var(--orange); color: #fff; font: 600 .72rem var(--f-mono); border-radius: 999px; padding: 2px 7px; }
+  .st-delta { font: 500 .78rem var(--f-mono); color: var(--muted); }
+  .st-delta i { font-style: normal; opacity: .7; }
+  .st-delta.up { color: #1e8e3e; } .st-delta.down { color: #c0392b; }
+  .st-live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #1e8e3e; margin-right: 6px; animation: stPulse 1.6s infinite; }
+  @keyframes stPulse { 50% { opacity: .3; } }
+  .st-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .st-login .actions { margin-top: 8px; }
+  .st-warn { color: #c0392b; font-weight: 500; }
+  .st-note .link { color: var(--navy); }
+  .ld-list { display: grid; }
+  .ld-item { border-bottom: 1px solid var(--line); }
+  .ld-item summary { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto auto; gap: 14px; align-items: center; padding: 12px 0; cursor: pointer; list-style: none; }
+  .ld-item summary::-webkit-details-marker { display: none; }
+  .ld-date { font: 400 .82rem var(--f-mono); color: var(--muted); }
+  .ld-type { font-weight: 600; }
+  .ld-price { font-family: var(--f-display); font-weight: 600; color: var(--navy); white-space: nowrap; }
+  .ld-tag { font: 500 .72rem var(--f-mono); padding: 3px 8px; border-radius: 999px; background: var(--line); color: var(--muted); white-space: nowrap; }
+  .ld-tag.ok { background: #e6f4ea; color: #1e8e3e; }
+  .ld-dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; margin: 0 0 14px; padding: 14px 16px; background: var(--bg-soft, #f6f7fb); border-radius: 10px; }
+  .ld-dl div { display: grid; gap: 2px; } .ld-dl dt { font: 500 .72rem var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); } .ld-dl dd { margin: 0; }
+  @media (max-width: 900px) { .st-grid2 { grid-template-columns: 1fr; } .ld-item summary { grid-template-columns: 1fr auto; } .ld-dl { grid-template-columns: 1fr; } }
   @media (max-width: 900px) { .st-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .st-grid3 { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -137,6 +165,7 @@
       <button class="tab" role="tab" aria-selected="true" data-tab="posts">Блог</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="projects">Портфоліо</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="stats">Статистика</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="leads">Заявки</button>
     </div>
     <span class="spacer"></span>
     <span class="status" id="status">Не підключено</span>
@@ -188,10 +217,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
-<script src="../assets/js/services.js?v=202611181755"></script>
-<script src="../assets/js/tools.js?v=202611181755"></script>
-<script src="../assets/js/build.js?v=202611181755"></script>
-<script src="stats.js?v=202611181755"></script>
-<script src="admin.js?v=202611181755"></script>
+<script src="../assets/js/services.js?v=202611261720"></script>
+<script src="../assets/js/tools.js?v=202611261720"></script>
+<script src="../assets/js/build.js?v=202611261720"></script>
+<script src="stats.js?v=202611261720"></script>
+<script src="admin.js?v=202611261720"></script>
 </body>
 </html>

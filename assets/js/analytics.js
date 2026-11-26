@@ -7,6 +7,16 @@
   const GA4_ID = "G-BGX5T51JQR";      // формат G-XXXXXXXXXX  (analytics.google.com → Адміністратор → Потоки даних)
   const CLARITY_ID = "zjqatulujh";  // формат ~10 символів (clarity.microsoft.com → Settings → Overview → Project ID)
 
+  // Джерело першого заходу в цій сесії (для заявок калькулятора): utm_source, сайт-реферер або прямий захід.
+  try {
+    if (!sessionStorage.getItem("ra_src")) {
+      const utm = new URLSearchParams(location.search).get("utm_source");
+      let ref = "";
+      try { const h = document.referrer && new URL(document.referrer).hostname.replace(/^www\./, ""); if (h && h !== location.hostname.replace(/^www\./, "")) ref = h; } catch {}
+      sessionStorage.setItem("ra_src", utm ? "utm: " + utm : ref || "прямий захід");
+    }
+  } catch {}
+
   try { if (localStorage.getItem("skipgc") === "t") return; } catch {}
   if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
 
