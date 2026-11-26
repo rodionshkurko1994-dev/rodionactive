@@ -87,6 +87,15 @@
   ${[0, 1, 2].map(i => `<rect x="${216 + i * 72}" y="208" width="60" height="92" rx="10" fill="#f4f5f9" stroke="#e4e5ee" stroke-width="2"/>`).join("")}
   <g class="il-float"><circle cx="186" cy="300" r="30" fill="${N}"/><path d="M174 300h24M186 288v24" stroke="#fff" stroke-width="6" stroke-linecap="round"/></g>
 </svg>`,
+    english: `<svg viewBox="0 0 480 380" role="img" aria-label="Ілюстрація: англійська щодня" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <circle class="il-spin" cx="396" cy="84" r="56" stroke="${O}" stroke-width="1.5" stroke-dasharray="4 10" opacity=".6"/>
+  <rect x="96" y="96" width="250" height="176" rx="18" fill="#e4e5ee" transform="rotate(-8 221 184)"/>
+  <rect x="120" y="92" width="260" height="184" rx="18" fill="#fff" stroke="${N}" stroke-width="3"/>
+  <text x="250" y="168" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="600" font-size="38" fill="${N}">hello</text>
+  <text x="250" y="200" text-anchor="middle" font-family="monospace" font-size="16" fill="#8a8fae">/həˈləʊ/</text>
+  <rect x="190" y="222" width="120" height="14" rx="7" fill="${O}"/>
+  <g class="il-float"><circle cx="372" cy="292" r="40" fill="${N}"/><text x="372" y="304" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="700" font-size="30" fill="#fff">5</text></g>
+</svg>`,
   };
 
   const TOOLS = [

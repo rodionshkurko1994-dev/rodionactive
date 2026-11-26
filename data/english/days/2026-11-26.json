@@ -1,0 +1,93 @@
+{
+ "date": "2026-11-26",
+ "source": "manual",
+ "words": [
+  {
+   "word": "schedule",
+   "ipa": "/ˈʃedjuːl/",
+   "pos": "noun",
+   "level": "A2",
+   "uk": "розклад, графік",
+   "example": "The power outage schedule changes every day.",
+   "example_uk": "Графік відключень змінюється щодня."
+  },
+  {
+   "word": "borrow",
+   "ipa": "/ˈbɒrəʊ/",
+   "pos": "verb",
+   "level": "A2",
+   "uk": "позичати (у когось)",
+   "example": "Can I borrow your charger for a minute?",
+   "example_uk": "Можна позичити твою зарядку на хвилинку?"
+  },
+  {
+   "word": "reliable",
+   "ipa": "/rɪˈlaɪəbl/",
+   "pos": "adjective",
+   "level": "B1",
+   "uk": "надійний",
+   "example": "I need a reliable internet connection to work from home.",
+   "example_uk": "Мені потрібен надійний інтернет, щоб працювати з дому."
+  },
+  {
+   "word": "deadline",
+   "ipa": "/ˈdedlaɪn/",
+   "pos": "noun",
+   "level": "B1",
+   "uk": "кінцевий термін, дедлайн",
+   "example": "The deadline for this report is Friday.",
+   "example_uk": "Кінцевий термін здачі цього звіту — п'ятниця."
+  },
+  {
+   "word": "overwhelmed",
+   "ipa": "/ˌəʊvəˈwelmd/",
+   "pos": "adjective",
+   "level": "B2",
+   "uk": "перевантажений, приголомшений",
+   "example": "I feel overwhelmed with all these tasks.",
+   "example_uk": "Я почуваюся перевантаженим усіма цими завданнями."
+  }
+ ],
+ "phrases": [
+  {
+   "phrase": "It's up to you.",
+   "level": "A2",
+   "uk": "Вирішувати тобі.",
+   "usage": "Коли даєте співрозмовнику право вибору.",
+   "example": "Pizza or sushi? — It's up to you.",
+   "example_uk": "Піца чи суші? — Вирішуй сам."
+  },
+  {
+   "phrase": "I'm on my way.",
+   "level": "A2",
+   "uk": "Я вже в дорозі.",
+   "usage": "Щоб повідомити, що ви вже йдете чи їдете.",
+   "example": "Don't worry, I'm on my way.",
+   "example_uk": "Не хвилюйся, я вже їду."
+  },
+  {
+   "phrase": "Let me think about it.",
+   "level": "A2",
+   "uk": "Дай мені подумати.",
+   "usage": "Щоб увічливо відкласти рішення.",
+   "example": "It's a great offer, but let me think about it.",
+   "example_uk": "Чудова пропозиція, але дай мені подумати."
+  },
+  {
+   "phrase": "That makes sense.",
+   "level": "B1",
+   "uk": "Це логічно. / Тепер зрозуміло.",
+   "usage": "Коли погоджуєтеся з поясненням.",
+   "example": "Oh, that makes sense now. Thanks!",
+   "example_uk": "А, тепер зрозуміло. Дякую!"
+  },
+  {
+   "phrase": "Better late than never.",
+   "level": "B1",
+   "uk": "Краще пізно, ніж ніколи.",
+   "usage": "Коли щось нарешті сталося, хоч і із запізненням.",
+   "example": "You finally started learning English? Better late than never!",
+   "example_uk": "Ти нарешті почав учити англійську? Краще пізно, ніж ніколи!"
+  }
+ ]
+}

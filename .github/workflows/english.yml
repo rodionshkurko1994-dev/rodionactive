@@ -1,0 +1,61 @@
+name: Англійська щодня
+
+# Генерує набір «5 слів + 5 висловів» на сьогодні й завтра (за Києвом) через API Claude
+# і перебудовує сторінку rodionactive.com/anhliiska-shchodnia/.
+#  - удень (≈11:17 за Києвом) — готує набір на завтра із запасом;
+#  - біля півночі (21:03 і 22:03 UTC — літній і зимовий час) — перебудовує сторінку під новий день.
+# Опівночі браузер відвідувача сам підвантажує новий набір, тож затримки GitHub не страшні.
+#
+# Потрібен секрет ANTHROPIC_API_KEY (Settings → Secrets and variables → Actions).
+# Модель можна змінити змінною ENGLISH_MODEL (Settings → Variables), за замовчуванням claude-haiku-5-5.
+
+on:
+  schedule:
+    - cron: "17 9 * * *"
+    - cron: "3 21 * * *"
+    - cron: "3 22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: english
+  cancel-in-progress: false
+
+jobs:
+  english:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Генерація слів і висловів
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ENGLISH_MODEL: ${{ vars.ENGLISH_MODEL }}
+        run: node tools/english-generate.mjs
+
+      - name: Збірка сайту і публікація
+        if: always()
+        run: |
+          npm ci --no-audit --no-fund
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp -r data/english /tmp/english
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            mkdir -p data/english && cp -r /tmp/english/. data/english/
+            npm run build
+            git add -A data/english anhliiska-shchodnia sitemap.xml llms.txt
+            git diff --cached --quiet && { echo "Змін немає"; exit 0; }
+            git commit -q -m "Англійська щодня: $(TZ=Europe/Kiev date +%F)"
+            git push -q origin HEAD:main && exit 0
+            sleep 10
+          done
+          exit 1

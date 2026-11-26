@@ -94,6 +94,16 @@ async function publish(kind, message) {
     gh(`/git/trees/${head.tree.sha}?recursive=1`),
     gh(`/contents/data/rating/latest.json?ref=${branch}`).catch(() => null), // рейтинг швидкості сайтів (може ще не бути)
   ]);
+  // Англійська щодня: адмінка перебудовує лише головну сторінку розділу (архів збирає GitHub Action)
+  let english = null;
+  try {
+    const idx = await gh(`/contents/data/english/index.json?ref=${branch}`).catch(() => null);
+    const dates = idx && idx.content ? JSON.parse(fromB64(idx.content)).dates || [] : [];
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Kiev", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    const d = dates.filter(x => x <= today).pop();
+    const f = d ? await gh(`/contents/data/english/days/${d}.json?ref=${branch}`).catch(() => null) : null;
+    if (f && f.content) english = { dates, days: { [d]: JSON.parse(fromB64(f.content)) }, mainOnly: true };
+  } catch { english = null; }
   let rating = null;
   try { rating = ratingFile && ratingFile.content ? JSON.parse(fromB64(ratingFile.content)) : null; } catch { rating = null; }
   state.data[other] = otherData;
@@ -103,6 +113,7 @@ async function publish(kind, message) {
     indexHtml: fromB64(indexFile.content),
     markdown: md => marked.parse(md || ""),
     rating,
+    english,
   });
   const existing = treeList.tree.map(t => t.path).filter(p => /^(blog|portfolio)\/[^/]+\/index\.html$/.test(p));
   const stale = existing.filter(p => !result.files[p]);

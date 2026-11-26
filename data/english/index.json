@@ -1,0 +1,7 @@
+{
+ "_readme": "Англійська щодня: data/english/days/<дата>.json генерує tools/english-generate.mjs (GitHub Action english.yml).",
+ "dates": [
+  "2026-11-26",
+  "2026-11-27"
+ ]
+}

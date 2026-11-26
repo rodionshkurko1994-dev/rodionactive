@@ -16,7 +16,10 @@ const posts = JSON.parse(read("data/posts.json"));
 const projects = JSON.parse(read("data/projects.json"));
 // рейтинг швидкості сайтів (data/rating/latest.json) — сторінка з'являється, лише коли є дані
 const rating = existsSync(join(root, "data/rating/latest.json")) ? JSON.parse(read("data/rating/latest.json")) : null;
-const result = SiteBuild.build({ posts, projects, indexHtml: read("index.html"), markdown: md => marked.parse(md), rating });
+// Англійська щодня (data/english/days/*.json)
+const enDir = join(root, "data/english/days");
+const english = existsSync(enDir) ? { days: Object.fromEntries(readdirSync(enDir).filter(f => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).map(f => [f.slice(0, 10), JSON.parse(read(`data/english/days/${f}`))])) } : null;
+const result = SiteBuild.build({ posts, projects, indexHtml: read("index.html"), markdown: md => marked.parse(md), rating, english });
 
 // прибираємо сторінки записів, яких більше немає
 for (const dir of ["blog", "portfolio", "services", "instrumenty"]) {

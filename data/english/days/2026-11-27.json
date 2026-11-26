@@ -1,0 +1,93 @@
+{
+ "date": "2026-11-27",
+ "source": "manual",
+ "words": [
+  {
+   "word": "receipt",
+   "ipa": "/rɪˈsiːt/",
+   "pos": "noun",
+   "level": "A2",
+   "uk": "чек, квитанція",
+   "example": "Could I have the receipt, please?",
+   "example_uk": "Можна мені чек, будь ласка?"
+  },
+  {
+   "word": "appointment",
+   "ipa": "/əˈpɔɪntmənt/",
+   "pos": "noun",
+   "level": "A2",
+   "uk": "запис (до лікаря), домовлена зустріч",
+   "example": "I have a dentist appointment at 3 pm.",
+   "example_uk": "У мене запис до стоматолога о 15:00."
+  },
+  {
+   "word": "grateful",
+   "ipa": "/ˈɡreɪtfl/",
+   "pos": "adjective",
+   "level": "B1",
+   "uk": "вдячний",
+   "example": "I'm really grateful for your help.",
+   "example_uk": "Я дуже вдячний за твою допомогу."
+  },
+  {
+   "word": "improve",
+   "ipa": "/ɪmˈpruːv/",
+   "pos": "verb",
+   "level": "B1",
+   "uk": "покращувати",
+   "example": "I want to improve my English this year.",
+   "example_uk": "Я хочу покращити свою англійську цього року."
+  },
+  {
+   "word": "reluctant",
+   "ipa": "/rɪˈlʌktənt/",
+   "pos": "adjective",
+   "level": "B2",
+   "uk": "неохочий; той, хто вагається",
+   "example": "He was reluctant to ask for help.",
+   "example_uk": "Він не дуже хотів просити про допомогу."
+  }
+ ],
+ "phrases": [
+  {
+   "phrase": "No worries.",
+   "level": "A2",
+   "uk": "Нічого страшного. / Без проблем.",
+   "usage": "Відповідь на подяку чи вибачення.",
+   "example": "Sorry I'm late! — No worries.",
+   "example_uk": "Вибач, що спізнився! — Нічого страшного."
+  },
+  {
+   "phrase": "Could you say that again?",
+   "level": "A2",
+   "uk": "Можете повторити?",
+   "usage": "Щоб увічливо перепитати.",
+   "example": "Sorry, could you say that again? The connection is bad.",
+   "example_uk": "Вибачте, можете повторити? Поганий зв'язок."
+  },
+  {
+   "phrase": "I'm looking forward to it.",
+   "level": "B1",
+   "uk": "Чекаю на це з нетерпінням.",
+   "usage": "Про приємну подію в майбутньому.",
+   "example": "The trip is next week — I'm looking forward to it!",
+   "example_uk": "Подорож наступного тижня — чекаю не дочекаюся!"
+  },
+  {
+   "phrase": "It's not a big deal.",
+   "level": "B1",
+   "uk": "Нічого серйозного. / Це дрібниця.",
+   "usage": "Щоб заспокоїти співрозмовника.",
+   "example": "Don't worry, it's not a big deal.",
+   "example_uk": "Не переймайся, це дрібниця."
+  },
+  {
+   "phrase": "To make a long story short…",
+   "level": "B2",
+   "uk": "Якщо коротко…",
+   "usage": "Коли переходите до суті історії.",
+   "example": "To make a long story short, we missed the train.",
+   "example_uk": "Якщо коротко — ми запізнилися на потяг."
+  }
+ ]
+}

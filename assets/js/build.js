@@ -8,7 +8,7 @@
 })(typeof self !== "undefined" ? self : this, function (SiteServices, SiteTools) {
   "use strict";
 
-  const ASSET_V = "202611251700";
+  const ASSET_V = "202611261600";
   const SITE = {
     indexnow: "12cba8b8fd8282671bc005a053c7c109",
     name: "Rodionactive",
@@ -56,7 +56,7 @@
   const ld = obj => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, "\\u003c")}</script>`;
 
   // ---------- спільні шматки сторінки ----------
-  const NAV = [["/services/", "Послуги", "services"], ["/instrumenty/", "Інструменти", "tools"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
+  const NAV = [["/services/", "Послуги", "services"], ["/instrumenty/", "Інструменти", "tools"], ["/anhliiska-shchodnia/", "Англійська", "english"], ["/portfolio/", "Портфоліо", "portfolio"], ["/blog/", "Блог", "blog"], ["/#contact", "Контакти", "contact"]];
   const logo = () => [...SITE.name].map(c => `<span>${c}</span>`).join("") + '<span class="dot" aria-hidden="true"></span>';
 
   function headerHTML(page) {
@@ -1104,6 +1104,104 @@ ${st.ok.map(s => `          <tr data-cat="${esc(s.cat)}" data-rank="${s.rank}" d
     return page({ head, page: "tools", body, scripts: [`/assets/js/rating.js?v=${ASSET_V}`] });
   }
 
+  // ---------- Англійська щодня (дані: data/english/days/<дата>.json) ----------
+  const EN_PATH = "/anhliiska-shchodnia/";
+  const EN_IMG = "assets/img/english-og.png";
+  const WEEKDAYS = ["неділя", "понеділок", "вівторок", "середа", "четвер", "пʼятниця", "субота"];
+  const kyivToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Kiev", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  const dayLabel = d => { const [y, m, dd] = d.split("-").map(Number); return `${WEEKDAYS[new Date(Date.UTC(y, m - 1, dd)).getUTCDay()]}, ${dd} ${MONTHS[m - 1]}`; };
+  const POS_UK = { noun: "іменник", verb: "дієслово", adjective: "прикметник", adverb: "прислівник", "phrasal verb": "фразове дієслово", preposition: "прийменник", conjunction: "сполучник" };
+
+  // та сама розмітка, що й у assets/js/english.js (оновлення опівночі в браузері)
+  function enWords(day) {
+    return day.words.map(w => `<article class="en-card">
+        <div class="en-top"><h3 lang="en">${esc(w.word)}</h3><span class="en-lvl">${esc(w.level)}</span></div>
+        <p class="en-ipa"><span lang="en">${esc(w.ipa)}</span> · ${esc(POS_UK[w.pos] || w.pos)} <button type="button" class="en-say" data-say="${esc(w.word)}" aria-label="Послухати вимову: ${esc(w.word)}">🔊</button></p>
+        <p class="en-uk">${esc(w.uk)}</p>
+        <p class="en-ex"><span lang="en">${esc(w.example)}</span><em>${esc(w.example_uk)}</em></p>
+      </article>`).join("\n      ");
+  }
+  function enPhrases(day) {
+    return day.phrases.map(p => `<article class="en-card en-phrase">
+        <div class="en-top"><h3 lang="en">${esc(p.phrase)}</h3><span class="en-lvl">${esc(p.level)}</span></div>
+        <p class="en-uk">${esc(p.uk)} <button type="button" class="en-say" data-say="${esc(p.phrase)}" aria-label="Послухати вимову">🔊</button></p>
+        <p class="en-use">${esc(p.usage)}</p>
+        <p class="en-ex"><span lang="en">${esc(p.example)}</span><em>${esc(p.example_uk)}</em></p>
+      </article>`).join("\n      ");
+  }
+
+  function renderEnglish(E, date, isArchive) {
+    const day = E.days[date];
+    const path = isArchive ? `${EN_PATH}${date}/` : EN_PATH;
+    const [y, m, d] = date.split("-").map(Number);
+    const full = `${d} ${MONTHS[m - 1]} ${y}`;
+    const title = isArchive ? `Англійська на ${full}: 5 слів і 5 висловів з перекладом` : "Англійська щодня: 5 нових слів і 5 висловів з перекладом";
+    const words = day.words.map(w => w.word).join(", ");
+    const description = clip(isArchive
+      ? `Слова дня ${full}: ${words}. Плюс 5 розмовних висловів з перекладом, транскрипцією і прикладами.`
+      : `Щодня опівночі — 5 корисних англійських слів і 5 розмовних висловів з перекладом, транскрипцією і прикладами. Сьогодні: ${words}.`, 160);
+    const past = E.dates.filter(x => x !== date && x <= kyivToday()).slice(-30).reverse();
+    const jsonld = [{
+      "@context": "https://schema.org",
+      "@graph": [
+        orgLD(),
+        {
+          "@type": "DefinedTermSet",
+          "@id": SITE.url + path + "#words",
+          name: `Англійські слова дня — ${full}`,
+          inLanguage: ["en", "uk"],
+          hasDefinedTerm: day.words.map(w => ({ "@type": "DefinedTerm", name: w.word, description: w.uk, inDefinedTermSet: SITE.url + path + "#words" })),
+        },
+        crumbs(isArchive ? [["Головна", "/"], ["Англійська щодня", EN_PATH], [full, path]] : [["Головна", "/"], ["Англійська щодня", EN_PATH]]),
+      ],
+    }];
+    const head = headHTML({ title: `${title} | ${SITE.name}`, description, path, image: EN_IMG, jsonld });
+    const body = `  <nav class="crumbs rise" aria-label="Навігація"><a href="/">Головна</a><span>/</span>${isArchive ? `<a href="${EN_PATH}">Англійська щодня</a><span>/</span><span aria-current="page">${esc(full)}</span>` : `<span aria-current="page">Англійська щодня</span>`}</nav>
+  <header class="tool-head">
+    <p class="eyebrow rise" style="--d:1">АНГЛІЙСЬКА ЩОДНЯ · <span data-en-label>${esc(dayLabel(date))}</span></p>
+    <h1 class="rise" style="--d:2">${isArchive ? `Англійська на ${esc(full)}` : `Англійська <span style="color:var(--orange)">щодня</span>`}</h1>
+    <p class="lead rise" style="--d:3;max-width:60ch">${isArchive ? "Слова й вислови цього дня з перекладом, транскрипцією і прикладами. Нові — щодня опівночі на головній сторінці розділу." : "Щодня опівночі — 5 корисних слів і 5 розмовних висловів з перекладом, транскрипцією та прикладами. Від простіших до складніших: кожен знайде щось нове. 5 хвилин на день — і за місяць у вас +300 фраз."}</p>
+  </header>
+
+  <section class="en" data-en${isArchive ? ' data-en-archive' : ""} data-date="${date}" aria-label="Слова й вислови дня">
+    <div class="en-bar">
+      <label class="en-quiz"><input type="checkbox" data-en-quiz> Перевір себе <small>(сховати переклад)</small></label>
+      ${isArchive ? `<a class="link" href="${EN_PATH}">Слова на сьогодні →</a>` : `<p class="en-next" data-en-next hidden>Нові слова через <b data-en-timer>—</b></p>`}
+    </div>
+    <h2 class="en-h">5 слів дня</h2>
+    <div class="en-grid" data-en-words>
+      ${enWords(day)}
+    </div>
+    <h2 class="en-h">5 висловів дня</h2>
+    <div class="en-grid" data-en-phrases>
+      ${enPhrases(day)}
+    </div>
+  </section>
+
+  ${past.length ? `<section class="svc-section" aria-labelledby="en-archive-title">
+    <div class="section-head"><div><p class="eyebrow">Архів</p><h2 id="en-archive-title">Попередні дні</h2></div></div>
+    <ul class="en-archive">${past.map(x => `<li><a href="${EN_PATH}${x}/"><b>${esc(dayLabel(x))}</b><span lang="en">${esc((E.days[x] ? E.days[x].words.map(w => w.word).join(", ") : ""))}</span></a></li>`).join("")}</ul>
+  </section>` : ""}
+
+  <section class="svc-section tool-text" aria-label="Як це працює">
+    <div class="reveal"><h2>Як займатися</h2><p>Прочитайте слова й вислови вголос — кнопка 🔊 підкаже вимову. Потім увімкніть «Перевір себе»: переклад сховається, і ви перевірите, що запам'ятали (натисніть на картку, щоб побачити відповідь). Спробуйте скласти власне речення з кожним словом — так воно запам'ятається найкраще.</p></div>
+    <div class="reveal"><h2>Що за рівні A2, B1, B2</h2><p>Це рівні за загальноєвропейською шкалою: A2 — базові повсякденні слова, B1 — впевнене спілкування на звичні теми, B2 — вільніша мова для роботи й складніших розмов. Щодня — два простіших слова, два середніх і одне складніше.</p></div>
+  </section>
+
+  <section class="svc-cta reveal" aria-label="Переклад">
+    <div>
+      <p class="eyebrow">Потрібна допомога з англійською?</p>
+      <h2>Переклад текстів і <em>документів</em></h2>
+      <p>Перекладаю між українською, англійською та російською: тексти, документи, сайти й презентації.</p>
+    </div>
+    <div class="svc-cta-actions">
+      <a class="btn" href="/services/pereklady/">Детальніше про переклад <span class="arr">→</span></a>
+      <a class="link" href="${SITE.telegram}" target="_blank" rel="noopener">або напишіть у Telegram</a>
+    </div>
+  </section>`;
+    return page({ head, page: "english", body, scripts: [`/assets/js/english.js?v=${ASSET_V}`] });
+  }
+
   // ---------- переадресації зі сторінок, яких більше немає ----------
   // GitHub Pages не вміє серверних редиректів, тож на старій адресі лишається легка сторінка,
   // яка одразу веде на нову (Google трактує миттєвий meta refresh як переадресацію).
@@ -1129,7 +1227,7 @@ ${st.ok.map(s => `          <tr data-cat="${esc(s.cat)}" data-rank="${s.rank}" d
   }
 
   // ---------- sitemap і RSS ----------
-  function sitemap(posts, projects, rating) {
+  function sitemap(posts, projects, rating, enToday) {
     const latest = (list, k = "date") => list.map(x => x.updated || x[k] || "").sort().pop() || "";
     const all = [
       ["/", latest([...posts, ...projects]), "weekly", "1.0"],
@@ -1139,6 +1237,7 @@ ${st.ok.map(s => `          <tr data-cat="${esc(s.cat)}" data-rank="${s.rank}" d
       ["/instrumenty/", TOOLS_UPDATED, "monthly", "0.8"],
       ...TOOLS.map(t => [toolUrl(t), TOOLS_UPDATED, "monthly", "0.8", toolImg(t)]),
       ...(rating ? [[RATING_PATH, (rating.generated || "").slice(0, 10), "monthly", "0.9", RATING_IMG]] : []),
+      ...(enToday ? [[EN_PATH, enToday, "daily", "0.8", EN_IMG]] : []),
       ...SERVICES.map(x => [serviceUrl(x), SERVICES_UPDATED, "monthly", "0.9", serviceImg(x)]),
       ...NICHES.map(n => [nicheUrl(n), NICHES_UPDATED, "monthly", "0.8"]),
       ...posts.map(p => [postUrl(p), p.updated || p.date, "monthly", "0.7", p.cover]),
@@ -1179,7 +1278,7 @@ ${(p.tags || []).map(t => `    <category>${xml(t)}</category>`).join("\n")}${(p.
   }
 
   // llms.txt — короткий опис сайту для ШІ-асистентів (ChatGPT, Claude, Perplexity, Gemini)
-  function llmsTxt(posts, projects, rating) {
+  function llmsTxt(posts, projects, rating, enToday) {
     const line = (title, url, desc) => `- [${title}](${SITE.url}${url})${desc ? `: ${desc}` : ""}`;
     const own = posts.filter(p => !p.sourceId).slice(0, 15);
     return `# ${SITE.name}
@@ -1199,7 +1298,7 @@ ${NICHES.map(n => line(n.h1, nicheUrl(n), n.description)).join("\n")}
 ## Безкоштовні інструменти
 
 ${TOOLS.map(t => line(t.name, toolUrl(t), t.description)).join("\n")}
-${rating ? `\n## Дослідження\n\n${line("Рейтинг швидкості сайтів України", RATING_PATH, `Щомісячний рейтинг швидкості мобільних версій ${ratingStats(rating).ok.length} відомих українських сайтів (банки, магазини, доставка, медіа, держсервіси) за оцінками Google Lighthouse.`)}\n` : ""}
+${enToday ? `\n## Навчання\n\n${line("Англійська щодня", EN_PATH, "Щодня опівночі — 5 корисних англійських слів і 5 розмовних висловів з перекладом, транскрипцією і прикладами (рівні A2–B2).")}\n` : ""}${rating ? `\n## Дослідження\n\n${line("Рейтинг швидкості сайтів України", RATING_PATH, `Щомісячний рейтинг швидкості мобільних версій ${ratingStats(rating).ok.length} відомих українських сайтів (банки, магазини, доставка, медіа, держсервіси) за оцінками Google Lighthouse.`)}\n` : ""}
 ## Портфоліо
 
 ${projects.map(p => line(p.title, projectUrl(p), [p.url, clip(p.summary || p.excerpt || p.description || stripMd(String(p.body || "").replace(/^#+.*$/gm, "")), 160)].filter(Boolean).join(" — "))).join("\n")}
@@ -1221,7 +1320,7 @@ ${own.map(p => line(p.title, postUrl(p), clip(p.excerpt || p.description || "", 
   // ---------- усе разом ----------
   // input: { posts, projects, indexHtml?, markdown(md) -> html }
   // output: { files: {path: content}, postPaths: [...], projectPaths: [...] }
-  function build({ posts, projects, indexHtml, markdown, rating }) {
+  function build({ posts, projects, indexHtml, markdown, rating, english }) {
     const P = visible(posts), J = visible(projects);
     const R = rating && Array.isArray(rating.sites) && rating.sites.some(x => x.ok) ? rating : null;
     RATING_ON = !!R;
@@ -1233,13 +1332,25 @@ ${own.map(p => line(p.title, postUrl(p), clip(p.excerpt || p.description || "", 
     files["services/index.html"] = renderServices(P);
     files["instrumenty/index.html"] = renderTools();
     if (R) files["reitynh-saitiv/index.html"] = renderRating(R);
+    // Англійська щодня: головна сторінка — останній день не пізніше сьогоднішнього за Києвом;
+    // архівні сторінки — для всіх минулих днів, дані яких передано (у адмінці — лише головна)
+    const E = english && english.days && Object.keys(english.days).length ? english : null;
+    let enToday = null;
+    if (E) {
+      E.dates = (E.dates || Object.keys(E.days)).slice().sort();
+      enToday = E.dates.filter(x => x <= kyivToday() && E.days[x]).pop() || null;
+      if (enToday) {
+        files["anhliiska-shchodnia/index.html"] = renderEnglish(E, enToday, false);
+        E.dates.filter(x => x < enToday && E.days[x] && !english.mainOnly).forEach(x => { files[`anhliiska-shchodnia/${x}/index.html`] = renderEnglish(E, x, true); });
+      }
+    }
     Object.entries(REDIRECTS).forEach(([from, to]) => { files[`${from.slice(1)}index.html`] = redirectPage(from, to); });
     TOOLS.forEach(t => { files[`${toolUrl(t).slice(1)}index.html`] = renderTool(t); });
     SERVICES.forEach(x => { files[`${serviceUrl(x).slice(1)}index.html`] = renderService(x, P, J); });
     NICHES.forEach(n => { files[`${nicheUrl(n).slice(1)}index.html`] = renderNiche(n, J); });
-    files["llms.txt"] = llmsTxt(P, J, R);
+    files["llms.txt"] = llmsTxt(P, J, R, enToday);
     files["blog/feed.xml"] = feed(P, markdown);
-    files["sitemap.xml"] = sitemap(P, J, R);
+    files["sitemap.xml"] = sitemap(P, J, R, enToday);
     if (indexHtml) files["index.html"] = renderIndex(indexHtml, P, J);
     return { files, postPaths: P.map(p => `blog/${p.slug}/index.html`), projectPaths: J.map(p => `portfolio/${p.slug}/index.html`) };
   }
