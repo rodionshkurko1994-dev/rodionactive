@@ -4,8 +4,8 @@
    Власні заходи не рахуються: у браузері, де відкривали адмінку, стоїть прапорець skipgc. */
 (function () {
   "use strict";
-  const GA4_ID = "";      // формат G-XXXXXXXXXX  (analytics.google.com → Адміністратор → Потоки даних)
-  const CLARITY_ID = "";  // формат ~10 символів (clarity.microsoft.com → Settings → Overview → Project ID)
+  const GA4_ID = "G-BGX5T51JQR";      // формат G-XXXXXXXXXX  (analytics.google.com → Адміністратор → Потоки даних)
+  const CLARITY_ID = "zjqatulujh";  // формат ~10 символів (clarity.microsoft.com → Settings → Overview → Project ID)
 
   try { if (localStorage.getItem("skipgc") === "t") return; } catch {}
   if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
