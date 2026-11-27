@@ -39,7 +39,7 @@
 
 ## Портфоліо
 
-- [Project X](https://rodionactive.com/portfolio/project-x/): https://projectx.vision — Браузерна гра: збиття повітряних цілей над Україною в єдиному спільному світі для всіх гравців.
+- [Project X](https://rodionactive.com/portfolio/project-x/): https://projectx.vision — Щоденний факт-чекінг 25 найпопулярніших новин України з рейтингом довіри для кожної.
 - [Садок «Бджілка»](https://rodionactive.com/portfolio/bee-kyiv/): https://bee.kyiv.ua — Лендинг під ключ для приватного дитячого садка в Києві на Позняках.
 - [Cyber Kyiv](https://rodionactive.com/portfolio/svitlo-kyiva/): https://cyber-kyiv.online — Публічна 3D-карта Києва: де зараз є світло за графіками YASNO, громадський транспорт за розкладом і погода в реальному часі.
 - [CarGo](https://rodionactive.com/portfolio/cargo/): Багатомовний сайт під ключ для виробника пристроїв GPS-моніторингу.
