@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://rodionactive.com/</loc>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/</loc>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -149,6 +149,13 @@
     <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rodionactive.com/blog/tvoi-rozmovy-z-shi-na-auktsioni-character-ai-khoche-prodaty-chaty-21-m/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://rodionactive.com/assets/uploads/20261127-tvoi-rozmovy-z-shi-na-auktsioni-character-ai-khoch.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://rodionactive.com/blog/sim-kartka-za-pasportom-chy-spravdi-tobi-mozhut-vymknuty-mobilnyi-inte/</loc>
