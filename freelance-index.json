@@ -1,0 +1,410 @@
+{
+ "updated": "2026-11-27T14:01:48.353Z",
+ "source": "Freelancehunt API",
+ "period": 30,
+ "since": "2026-10-26",
+ "hasTrend": false,
+ "total": {
+  "count": 602,
+  "withBudget": 44.2,
+  "medianBudget": 3000,
+  "avgBids": 54.4,
+  "perDay": 20,
+  "trend": null
+ },
+ "groups": [
+  {
+   "id": "design",
+   "name": "Дизайн і графіка",
+   "count": 143,
+   "withBudget": 37.1,
+   "medianBudget": 3000,
+   "avgBids": 54.1,
+   "share": 23.8,
+   "trend": null
+  },
+  {
+   "id": "marketing",
+   "name": "Маркетинг і просування",
+   "count": 130,
+   "withBudget": 47.7,
+   "medianBudget": 3750,
+   "avgBids": 45.3,
+   "share": 21.6,
+   "trend": null
+  },
+  {
+   "id": "other",
+   "name": "Інше",
+   "count": 120,
+   "withBudget": 40.8,
+   "medianBudget": 3000,
+   "avgBids": 18.1,
+   "share": 19.9,
+   "trend": null
+  },
+  {
+   "id": "sites",
+   "name": "Сайти та веброзробка",
+   "count": 105,
+   "withBudget": 44.8,
+   "medianBudget": 6000,
+   "avgBids": 118.8,
+   "share": 17.4,
+   "trend": null
+  },
+  {
+   "id": "video",
+   "name": "Відео, аудіо й анімація",
+   "count": 88,
+   "withBudget": 50,
+   "medianBudget": 1500,
+   "avgBids": 39.5,
+   "share": 14.6,
+   "trend": null
+  },
+  {
+   "id": "ai",
+   "name": "ШІ, боти й автоматизація",
+   "count": 84,
+   "withBudget": 44,
+   "medianBudget": 4000,
+   "avgBids": 75.3,
+   "share": 14,
+   "trend": null
+  },
+  {
+   "id": "texts",
+   "name": "Тексти й переклади",
+   "count": 53,
+   "withBudget": 45.3,
+   "medianBudget": 2000,
+   "avgBids": 56.6,
+   "share": 8.8,
+   "trend": null
+  },
+  {
+   "id": "dev",
+   "name": "Програмування",
+   "count": 41,
+   "withBudget": 43.9,
+   "medianBudget": 9000,
+   "avgBids": 123.1,
+   "share": 6.8,
+   "trend": null
+  },
+  {
+   "id": "mobile",
+   "name": "Мобільні застосунки",
+   "count": 9,
+   "withBudget": 55.6,
+   "medianBudget": 12000,
+   "avgBids": 52.6,
+   "share": 1.5,
+   "trend": null
+  }
+ ],
+ "topSkills": [
+  {
+   "name": "Аудіо та відео монтаж",
+   "count": 52,
+   "withBudget": 50,
+   "medianBudget": 1500,
+   "avgBids": 42.9,
+   "share": 8.6
+  },
+  {
+   "name": "Просування у соціальних мережах (SMM)",
+   "count": 38,
+   "withBudget": 60.5,
+   "medianBudget": 7777,
+   "avgBids": 32.1,
+   "share": 6.3
+  },
+  {
+   "name": "Контекстна реклама",
+   "count": 28,
+   "withBudget": 39.3,
+   "medianBudget": 3314,
+   "avgBids": 54.5,
+   "share": 4.7
+  },
+  {
+   "name": "Пошукова оптимізація (SEO)",
+   "count": 27,
+   "withBudget": 55.6,
+   "medianBudget": 2000,
+   "avgBids": 63.9,
+   "share": 4.5
+  },
+  {
+   "name": "Веб-програмування",
+   "count": 26,
+   "withBudget": 38.5,
+   "medianBudget": 11000,
+   "avgBids": 129.6,
+   "share": 4.3
+  },
+  {
+   "name": "Створення сайту під ключ",
+   "count": 24,
+   "withBudget": 33.3,
+   "medianBudget": 8389,
+   "avgBids": 164.2,
+   "share": 4
+  },
+  {
+   "name": "Дизайн сайтів",
+   "count": 22,
+   "withBudget": 50,
+   "medianBudget": 5200,
+   "avgBids": 109.9,
+   "share": 3.7
+  },
+  {
+   "name": "Поліграфічний дизайн",
+   "count": 22,
+   "withBudget": 31.8,
+   "medianBudget": 1000,
+   "avgBids": 56,
+   "share": 3.7
+  },
+  {
+   "name": "Реклама у соціальних медіа",
+   "count": 21,
+   "withBudget": 42.9,
+   "medianBudget": 6752,
+   "avgBids": 39.4,
+   "share": 3.5
+  },
+  {
+   "name": "Ілюстрації та малюнки",
+   "count": 21,
+   "withBudget": 33.3,
+   "medianBudget": 1000,
+   "avgBids": 32.9,
+   "share": 3.5
+  },
+  {
+   "name": "Інтернет-магазини та електронна комерція",
+   "count": 20,
+   "withBudget": 40,
+   "medianBudget": 4259,
+   "avgBids": 98.4,
+   "share": 3.3
+  },
+  {
+   "name": "AI створення відео",
+   "count": 20,
+   "withBudget": 50,
+   "medianBudget": 1750,
+   "avgBids": 47.2,
+   "share": 3.3
+  },
+  {
+   "name": "Креслення та схеми",
+   "count": 18,
+   "withBudget": 38.9,
+   "medianBudget": 2500,
+   "avgBids": 13.9,
+   "share": 3
+  },
+  {
+   "name": "Обробка відео",
+   "count": 18,
+   "withBudget": 55.6,
+   "medianBudget": 1500,
+   "avgBids": 36,
+   "share": 3
+  },
+  {
+   "name": "Векторна графіка",
+   "count": 17,
+   "withBudget": 29.4,
+   "medianBudget": 2961,
+   "avgBids": 45.5,
+   "share": 2.8
+  }
+ ],
+ "lowCompetition": [
+  {
+   "name": "Юридичні послуги",
+   "count": 10,
+   "withBudget": 20,
+   "medianBudget": 1503,
+   "avgBids": 8.8,
+   "share": 1.7
+  },
+  {
+   "name": "Інжиніринг",
+   "count": 10,
+   "withBudget": 40,
+   "medianBudget": 5436,
+   "avgBids": 9.8,
+   "share": 1.7
+  },
+  {
+   "name": "Креслення та схеми",
+   "count": 18,
+   "withBudget": 38.9,
+   "medianBudget": 2500,
+   "avgBids": 13.9,
+   "share": 3
+  },
+  {
+   "name": "Консалтинг",
+   "count": 9,
+   "withBudget": 44.4,
+   "medianBudget": 8095,
+   "avgBids": 18.3,
+   "share": 1.5
+  },
+  {
+   "name": "Архітектурні проєкти",
+   "count": 10,
+   "withBudget": 30,
+   "medianBudget": 14996,
+   "avgBids": 18.8,
+   "share": 1.7
+  },
+  {
+   "name": "Управління проєктами",
+   "count": 8,
+   "withBudget": 50,
+   "medianBudget": 8095,
+   "avgBids": 19.5,
+   "share": 1.3
+  },
+  {
+   "name": "3D моделювання та візуалізація",
+   "count": 13,
+   "withBudget": 61.5,
+   "medianBudget": 2000,
+   "avgBids": 27.6,
+   "share": 2.2
+  },
+  {
+   "name": "Відеореклама",
+   "count": 10,
+   "withBudget": 20,
+   "medianBudget": 850,
+   "avgBids": 27.9,
+   "share": 1.7
+  }
+ ],
+ "topPaid": [
+  {
+   "name": "Архітектурні проєкти",
+   "count": 10,
+   "withBudget": 30,
+   "medianBudget": 14996,
+   "avgBids": 18.8,
+   "share": 1.7
+  },
+  {
+   "name": "Розробка ботів",
+   "count": 12,
+   "withBudget": 50,
+   "medianBudget": 14253,
+   "avgBids": 152.1,
+   "share": 2
+  },
+  {
+   "name": "AI та машинне навчання",
+   "count": 15,
+   "withBudget": 26.7,
+   "medianBudget": 12500,
+   "avgBids": 97.8,
+   "share": 2.5
+  },
+  {
+   "name": "Веб-програмування",
+   "count": 26,
+   "withBudget": 38.5,
+   "medianBudget": 11000,
+   "avgBids": 129.6,
+   "share": 4.3
+  },
+  {
+   "name": "Супровід сайтів",
+   "count": 9,
+   "withBudget": 44.4,
+   "medianBudget": 10376,
+   "avgBids": 91.3,
+   "share": 1.5
+  },
+  {
+   "name": "Створення сайту під ключ",
+   "count": 24,
+   "withBudget": 33.3,
+   "medianBudget": 8389,
+   "avgBids": 164.2,
+   "share": 4
+  },
+  {
+   "name": "Консалтинг",
+   "count": 9,
+   "withBudget": 44.4,
+   "medianBudget": 8095,
+   "avgBids": 18.3,
+   "share": 1.5
+  },
+  {
+   "name": "Управління проєктами",
+   "count": 8,
+   "withBudget": 50,
+   "medianBudget": 8095,
+   "avgBids": 19.5,
+   "share": 1.3
+  }
+ ],
+ "weeks": [
+  {
+   "week": "2026-11-02",
+   "count": 9
+  },
+  {
+   "week": "2026-11-09",
+   "count": 129
+  },
+  {
+   "week": "2026-11-16",
+   "count": 240
+  }
+ ],
+ "budgets": [
+  {
+   "label": "до 1 000",
+   "share": 10.5
+  },
+  {
+   "label": "1–3 тис.",
+   "share": 35
+  },
+  {
+   "label": "3–10 тис.",
+   "share": 29.7
+  },
+  {
+   "label": "10–30 тис.",
+   "share": 21.4
+  },
+  {
+   "label": "понад 30 тис.",
+   "share": 3.4
+  }
+ ],
+ "weekdays": [
+  14.1,
+  17.8,
+  19.4,
+  20.9,
+  16.6,
+  6,
+  5.1
+ ],
+ "rates": {
+  "USD": 45.0165,
+  "EUR": 49.3532
+ }
+}
